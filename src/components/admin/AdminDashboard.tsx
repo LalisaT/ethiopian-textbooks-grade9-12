@@ -106,7 +106,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const handleConfirmDeleteAll = () => {
     const confirmation = window.prompt(
-      '⚠️ DANGER: This will delete ALL textbooks in the catalog. Type "DELETE ALL" to confirm:'
+      'DANGER: This will delete ALL textbooks in the catalog. Type "DELETE ALL" to confirm:'
     );
     if (confirmation === 'DELETE ALL') {
       onDeleteAllBooks();
@@ -138,7 +138,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-md transition-transform active:scale-95 flex items-center gap-1.5"
             >
               <Zap className="w-4 h-4 fill-current text-slate-950" />
-              <span>⚡ Bulk Upload All</span>
+              <span>Bulk Upload All</span>
             </button>
 
             <button
@@ -214,7 +214,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div className="text-xs text-slate-400">Custom Uploaded</div>
             <div className="text-2xl font-black text-amber-400 mt-1">{customBooks.length}</div>
-            <div className="text-[11px] text-emerald-400 mt-0.5">✓ Saved Permanently</div>
+            <div className="text-[11px] text-emerald-400 mt-0.5 flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" />
+              <span>Saved Permanently</span>
+            </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">

@@ -22,6 +22,7 @@ import {
   Layers,
   History,
   TrendingUp,
+  Compass,
   RotateCcw,
   FileText,
   Download,
@@ -185,13 +186,14 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedStream('all')}
-                className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
+                className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 ${
                   selectedStream === 'all'
                     ? 'bg-amber-400 text-slate-950 shadow-lg ring-2 ring-amber-300'
                     : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
-                🌟 All Streams
+                <Compass className="w-3.5 h-3.5" />
+                <span>All Streams</span>
               </button>
               <button
                 onClick={() => setSelectedStream('natural_science')}
@@ -202,7 +204,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                 }`}
               >
                 <Atom className="w-3.5 h-3.5" />
-                <span>🔬 Natural Science Stream</span>
+                <span>Natural Science Stream</span>
               </button>
               <button
                 onClick={() => setSelectedStream('social_science')}
@@ -213,7 +215,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                 }`}
               >
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>📈 Social Science Stream</span>
+                <span>Social Science Stream</span>
               </button>
             </div>
           </div>
@@ -399,7 +401,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                       : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
                   }`}
                 >
-                  <span>{lang.colorDot || '🟢'}</span>
+                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
                   <span>{lang.name}</span>
                 </button>
               ))}
@@ -423,7 +425,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-xs rounded-full">
-                          {pack.stream === 'natural_science' ? '🔬 Natural Sci' : pack.stream === 'social_science' ? '📈 Social Sci' : 'All Streams'}
+                          {pack.stream === 'natural_science' ? 'Natural Sci' : pack.stream === 'social_science' ? 'Social Sci' : 'All Streams'}
                         </span>
                         <span className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
                           pack.language === 'am'

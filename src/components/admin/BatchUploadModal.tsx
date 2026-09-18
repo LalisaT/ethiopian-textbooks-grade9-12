@@ -270,8 +270,9 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                   <span className="font-extrabold text-sm text-slate-900 dark:text-white">
                     Queued Books to Upload ({drafts.length})
                   </span>
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                    ✓ Metadata Auto-Detected
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Metadata Auto-Detected</span>
                   </span>
                 </div>
 
@@ -372,8 +373,8 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200'
                         }`}
                       >
-                        <option value="textbook">📖 Student Book</option>
-                        <option value="teacher_guide">🧑‍🏫 Teacher Guide</option>
+                        <option value="textbook">Student Book</option>
+                        <option value="teacher_guide">Teacher Guide</option>
                       </select>
 
                       {/* Subject */}

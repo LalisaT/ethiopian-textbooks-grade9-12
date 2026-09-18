@@ -134,7 +134,7 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
-                📱 Mobile Device Storage (100% Offline Binder)
+                Mobile Device Storage (100% Offline Binder)
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                 All downloaded textbooks are stored directly on your phone / computer storage and open instantly offline without internet.

@@ -81,7 +81,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="relative z-10 max-w-3xl space-y-4 sm:space-y-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] sm:text-xs font-black backdrop-blur-md">
-            <span>🇪🇹</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span>Ethiopian National High School Portal • Grades 9–12</span>
           </div>
 
@@ -111,7 +111,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               onClick={onNavigateToTeacherGuides || onNavigateToExplore}
               className="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 ring-2 ring-amber-400/40"
             >
-              <span>🧑‍🏫 Teacher Guides</span>
+              <GraduationCap className="w-4 h-4" />
+              <span>Teacher Guides</span>
               <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-950/20 font-black">የመምህር መመሪያ</span>
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -141,8 +142,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               <span>Grade 12 ESSLCE Past Exams</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
-              <BookOpen className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>🧑‍🏫 Teacher Guides (የመምህር መመሪያ)</span>
+              <GraduationCap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>Teacher Guides (የመምህር መመሪያ)</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
               <BookMarked className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -173,7 +174,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               subtitle: 'Preparatory & Matric',
               desc: 'Calculus, Physics, Chemistry, Biology, Economics, History & ESSLCE Matric Prep',
               color: 'from-amber-600 to-yellow-800',
-              badge: '🎓 ESSLCE Matric',
+              badge: 'ESSLCE Matric',
             },
             {
               grade: 11 as GradeLevel,
@@ -181,7 +182,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               subtitle: 'Stream Separation',
               desc: 'Natural Science & Social Science specialization, Vectors, Bonding & Consumer Theory',
               color: 'from-blue-600 to-indigo-800',
-              badge: '🔬 Stream Choice',
+              badge: 'Stream Choice',
             },
             {
               grade: 10 as GradeLevel,
@@ -189,7 +190,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               subtitle: 'General Secondary',
               desc: 'Newton Laws, Hydrocarbons, Physiology, Relations, Trigonometry & ICT',
               color: 'from-emerald-600 to-teal-800',
-              badge: '🏫 Secondary',
+              badge: 'Secondary',
             },
             {
               grade: 9 as GradeLevel,
@@ -197,7 +198,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               subtitle: 'High School Entry',
               desc: 'Quadratic Equations, Real Numbers, Physical Quantities & Foundation STEM',
               color: 'from-purple-600 to-violet-800',
-              badge: '🎒 Freshman',
+              badge: 'Freshman',
             },
           ].map((item) => (
             <div
@@ -347,8 +348,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-2xl self-start sm:self-auto overflow-x-auto no-scrollbar">
             {[
               { id: 'all' as AcademicStream, label: 'All Subjects' },
-              { id: 'natural_science' as AcademicStream, label: '🔬 Natural Science' },
-              { id: 'social_science' as AcademicStream, label: '📈 Social Science' },
+              { id: 'natural_science' as AcademicStream, label: 'Natural Science' },
+              { id: 'social_science' as AcademicStream, label: 'Social Science' },
             ].map((stream) => (
               <button
                 key={stream.id}

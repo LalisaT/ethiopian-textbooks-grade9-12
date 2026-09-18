@@ -1,7 +1,7 @@
 import React from 'react';
 import { LanguageCode } from '../../types/book';
 import { useTranslation } from '../../i18n/useTranslation';
-import { Globe, BookOpen, CheckCircle2 } from 'lucide-react';
+import { Globe, BookOpen, CheckCircle2, MapPin } from 'lucide-react';
 
 interface LanguageBrowseSectionProps {
   selectedLanguage: LanguageCode | 'all';
@@ -21,7 +21,7 @@ const LANGUAGE_LIST: {
     code: 'all',
     title: 'All Languages',
     nativeTitle: 'ሁሉም ቋንቋዎች / Afaanota Hunda',
-    flag: '🇪🇹',
+    flag: 'ET',
     regions: 'Nationwide & All Regional States',
     sampleSubjects: 'All Subjects (Amharic, Oromo, Tigrinya, Somali, English)',
     badgeColor: 'from-slate-900 to-slate-800 text-white',
@@ -30,7 +30,7 @@ const LANGUAGE_LIST: {
     code: 'am',
     title: 'Amharic Medium',
     nativeTitle: 'አማርኛ ቋንቋ መማሪያ መጽሐፍት',
-    flag: '🇪🇹',
+    flag: 'AM',
     regions: 'አማራ፣ አዲስ አበባ፣ ደቡብ፣ ሲዳማ፣ ቤንሻንጉል ወዘተ',
     sampleSubjects: 'ሒሳብ፣ አጠቃላይ ሳይንስ፣ ማህበራዊ ሳይንስ፣ የዜግነት ትምህርት፣ የአካባቢ ሳይንስ',
     badgeColor: 'from-amber-600 to-yellow-700 text-white',
@@ -39,7 +39,7 @@ const LANGUAGE_LIST: {
     code: 'om',
     title: 'Afaan Oromoo Medium',
     nativeTitle: 'Kitaabota Afaan Oromoo',
-    flag: '🇪🇹',
+    flag: 'OM',
     regions: 'Mootummaa Naannoo Oromiyaa fi Finfinnee',
     sampleSubjects: 'Herrega, Saayinsii Waliigalaa, Saayinsii Hawaasaa, Barnoota Lammummaa',
     badgeColor: 'from-red-600 to-amber-700 text-white',
@@ -48,7 +48,7 @@ const LANGUAGE_LIST: {
     code: 'ti',
     title: 'Tigrinya Medium',
     nativeTitle: 'መጻሕፍቲ ቋንቋ ትግርኛ',
-    flag: '🇪🇹',
+    flag: 'TI',
     regions: 'ክልላዊ መንግስቲ ትግራይ',
     sampleSubjects: 'ሒሳብ፣ ሓፈሻዊ ሳይንስ፣ ማሕበራዊ ሳይንስ፣ ትምህርቲ ዜግነት',
     badgeColor: 'from-yellow-600 to-rose-700 text-white',
@@ -57,7 +57,7 @@ const LANGUAGE_LIST: {
     code: 'so',
     title: 'Somali Medium',
     nativeTitle: 'Buugaagta Afka Soomaaliga',
-    flag: '🇸🇴',
+    flag: 'SO',
     regions: 'Dowlad Deegaanka Soomaalida Itoobiya',
     sampleSubjects: 'Xisaab, Sayniska Guud, Cilmiga Bulshada, Waddaniyadda',
     badgeColor: 'from-teal-600 to-cyan-800 text-white',
@@ -66,7 +66,7 @@ const LANGUAGE_LIST: {
     code: 'en',
     title: 'English Medium',
     nativeTitle: 'English Standard Edition',
-    flag: '🇬🇧',
+    flag: 'EN',
     regions: 'Federal Standard / All Regions',
     sampleSubjects: 'Mathematics, General Science, Social Studies, English, Citizenship, IT, CTE',
     badgeColor: 'from-blue-600 to-indigo-800 text-white',
@@ -127,8 +127,9 @@ export const LanguageBrowseSection: React.FC<LanguageBrowseSectionProps> = ({
                   {langItem.nativeTitle}
                 </div>
 
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mb-2">
-                  📍 {langItem.regions}
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mb-2 flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                  <span>{langItem.regions}</span>
                 </p>
               </div>
 

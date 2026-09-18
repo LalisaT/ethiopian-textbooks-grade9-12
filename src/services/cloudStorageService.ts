@@ -66,7 +66,7 @@ export const CloudStorageService = {
 
     // Fast CDN Primary
     mirrors.push({
-      name: '⚡ High-Speed Ethiopian Curriculum CDN (Direct)',
+      name: 'High-Speed Ethiopian Curriculum CDN (Direct)',
       url: book.cdnPdfUrl || `${DEFAULT_CLOUD_CONFIG.cdnBaseUrl}/grade-${book.grade}/${book.subject}-${book.language}.pdf`,
       provider: 'cdn',
       direct: true,
@@ -76,7 +76,7 @@ export const CloudStorageService = {
     // Cloud Storage Mirror
     if (book.cloudStorageUrl) {
       mirrors.push({
-        name: '☁️ Cloud Storage Mirror (Firebase / R2)',
+        name: 'Cloud Storage Mirror (Firebase / R2)',
         url: book.cloudStorageUrl,
         provider: 'firebase',
         direct: true,
@@ -87,7 +87,7 @@ export const CloudStorageService = {
     // Google Drive Mirror
     if (book.googleDriveId) {
       mirrors.push({
-        name: '📂 Google Drive Official Mirror',
+        name: 'Google Drive Official Mirror',
         url: `${DEFAULT_CLOUD_CONFIG.googleDriveBaseUrl}${book.googleDriveId}`,
         provider: 'googledrive',
         direct: true,
@@ -98,7 +98,7 @@ export const CloudStorageService = {
     // Kehulum / MoE portals
     if (book.moeUrl) {
       mirrors.push({
-        name: '🏛️ Ministry of Education Portal (study.moe.gov.et)',
+        name: 'Ministry of Education Portal (study.moe.gov.et)',
         url: book.moeUrl,
         provider: 'moe',
         direct: false,
@@ -107,7 +107,7 @@ export const CloudStorageService = {
 
     if (book.kehulumUrl) {
       mirrors.push({
-        name: '🌐 Kehulum Educational Digital Library',
+        name: 'Kehulum Educational Digital Library',
         url: book.kehulumUrl,
         provider: 'mirror',
         direct: false,
@@ -116,7 +116,7 @@ export const CloudStorageService = {
 
     if (book.telegramUrl) {
       mirrors.push({
-        name: '✈️ Telegram Fast Textbook Bot & Channel',
+        name: 'Telegram Fast Textbook Bot & Channel',
         url: book.telegramUrl,
         provider: 'mirror',
         direct: false,

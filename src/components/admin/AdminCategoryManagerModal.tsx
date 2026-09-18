@@ -37,7 +37,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
   const [langName, setLangName] = useState('');
   const [langNative, setLangNative] = useState('');
   const [langRegion, setLangRegion] = useState('');
-  const [langColorDot, setLangColorDot] = useState('🟢');
+  const [langColorDot, setLangColorDot] = useState('emerald');
 
   // Subject form
   const [subId, setSubId] = useState('');
@@ -67,7 +67,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
       id,
       name: langName,
       nativeName: langNative || langName,
-      colorDot: langColorDot || '🟢',
+      colorDot: langColorDot || 'emerald',
       region: langRegion || 'Ethiopia',
     });
 
@@ -75,7 +75,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
     setLangName('');
     setLangNative('');
     setLangRegion('');
-    setLangColorDot('🟢');
+    setLangColorDot('emerald');
     loadData();
     onCategoriesUpdated();
   };
@@ -229,20 +229,19 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-400 mb-1">Region / Color Emoji</label>
+                    <label className="block text-[11px] font-bold text-slate-400 mb-1">Color Accent</label>
                     <div className="flex gap-2">
                       <select
                         value={langColorDot}
                         onChange={(e) => setLangColorDot(e.target.value)}
-                        className="w-16 px-2 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none"
+                        className="w-24 px-2 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none"
                       >
-                        <option value="🟢">🟢 Green</option>
-                        <option value="🔵">🔵 Blue</option>
-                        <option value="🟡">🟡 Yellow</option>
-                        <option value="🟣">🟣 Purple</option>
-                        <option value="🟠">🟠 Orange</option>
-                        <option value="🔴">🔴 Red</option>
-                        <option value="🌐">🌐 Universal</option>
+                        <option value="emerald">Emerald</option>
+                        <option value="blue">Blue</option>
+                        <option value="amber">Amber</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                        <option value="red">Red</option>
                       </select>
                       <button
                         type="submit"
@@ -266,7 +265,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
                       className="p-3 bg-slate-950 border border-slate-800 rounded-2xl flex items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-base">{l.colorDot || '🟢'}</span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block shrink-0"></span>
                         <div>
                           <div className="font-bold text-xs text-white">{l.name}</div>
                           <div className="text-[10px] text-slate-400 font-mono">Code: {l.id}</div>

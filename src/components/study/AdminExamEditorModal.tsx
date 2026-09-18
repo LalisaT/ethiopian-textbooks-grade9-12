@@ -279,8 +279,8 @@ export const AdminExamEditorModal: React.FC<AdminExamEditorModalProps> = ({
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white focus:ring-2 focus:ring-amber-500 focus:outline-none"
               >
                 <option value="all">Common / All Streams</option>
-                <option value="natural_science">🔬 Natural Science</option>
-                <option value="social_science">📈 Social Science</option>
+                <option value="natural_science">Natural Science</option>
+                <option value="social_science">Social Science</option>
               </select>
             </div>
 
@@ -384,7 +384,7 @@ export const AdminExamEditorModal: React.FC<AdminExamEditorModalProps> = ({
                   className="px-2.5 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1 transition-all shadow-md"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>100 Qs 🔥</span>
+                  <span>100 Qs</span>
                 </button>
 
                 <button

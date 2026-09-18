@@ -200,8 +200,8 @@ export const EditBookModal: React.FC<EditBookModalProps> = ({
                 onChange={(e) => setBookType(e.target.value as BookType)}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
               >
-                <option value="textbook">📖 Student Textbook</option>
-                <option value="teacher_guide">🧑‍🏫 Teacher's Guide (የመምህር መመሪያ)</option>
+                <option value="textbook">Student Textbook</option>
+                <option value="teacher_guide">Teacher's Guide (የመምህር መመሪያ)</option>
               </select>
             </div>
 
@@ -231,8 +231,8 @@ export const EditBookModal: React.FC<EditBookModalProps> = ({
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
               >
                 <option value="all">Common / All Streams</option>
-                <option value="natural_science">🔬 Natural Science</option>
-                <option value="social_science">📈 Social Science</option>
+                <option value="natural_science">Natural Science</option>
+                <option value="social_science">Social Science</option>
               </select>
             </div>
 

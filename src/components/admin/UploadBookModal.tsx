@@ -225,8 +225,9 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                   <div className="text-xs font-bold text-slate-900 dark:text-white">
                     {selectedFile.name}
                   </div>
-                  <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                    ✓ {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB • Click to change
+                  <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center justify-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>{(selectedFile.size / (1024 * 1024)).toFixed(1)} MB • Click to change</span>
                   </div>
                 </div>
               ) : (
@@ -256,8 +257,8 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                 onChange={(e) => setBookType(e.target.value as BookType)}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
               >
-                <option value="textbook">📖 Student Textbook</option>
-                <option value="teacher_guide">🧑‍🏫 Teacher's Guide (የመምህር መመሪያ)</option>
+                <option value="textbook">Student Textbook</option>
+                <option value="teacher_guide">Teacher's Guide (የመምህር መመሪያ)</option>
               </select>
             </div>
 
@@ -287,8 +288,8 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
               >
                 <option value="all">Common / All Streams</option>
-                <option value="natural_science">🔬 Natural Science</option>
-                <option value="social_science">📈 Social Science</option>
+                <option value="natural_science">Natural Science</option>
+                <option value="social_science">Social Science</option>
               </select>
             </div>
 

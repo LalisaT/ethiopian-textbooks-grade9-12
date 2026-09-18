@@ -25,7 +25,7 @@ export interface NotificationSettings {
 const DEFAULT_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-welcome',
-    title: '🇪🇹 Welcome to Ethiopian Digital Textbooks!',
+    title: 'Welcome to Ethiopian Digital Textbooks!',
     body: 'Your offline digital library for Grades 9-12 & ESSLCE is ready. Download books and study anytime without internet connection.',
     date: new Date().toISOString(),
     read: false,
@@ -33,7 +33,7 @@ const DEFAULT_NOTIFICATIONS: AppNotification[] = [
   },
   {
     id: 'notif-exam-prep',
-    title: '🏆 Grade 12 ESSLCE / Matric Exam Simulation',
+    title: 'Grade 12 ESSLCE / Matric Exam Simulation',
     body: 'Practice with authentic national entrance exam questions covering Grades 9-12 across Natural & Social Science streams with instant feedback.',
     date: new Date(Date.now() - 3600000 * 2).toISOString(),
     read: false,
@@ -134,7 +134,7 @@ export const NotificationService = {
 
       if (enabled) {
         this.sendSystemNotification(
-          '🔔 Notifications & Sound Activated!',
+          'Notifications & Sound Activated!',
           'You will receive real-time push alerts with sound on your phone/device whenever new books are posted or exam alerts arrive.'
         );
       }
@@ -244,14 +244,14 @@ export const NotificationService = {
     grade: string = 'All Grades',
     actionUrl: string = 'tab:community'
   ): AppNotification {
-    const fullTitle = `📢 ${title}`;
+    const fullTitle = title;
     const body = `${message} (Target: ${grade} • Category: ${category})`;
     return this.addNotification(fullTitle, body, 'admin_broadcast', actionUrl, category, grade);
   },
 
   // Auto-Broadcast on Single Book Upload
   broadcastBookPublished(bookTitle: string, grade: number, subject: string, bookId?: string): AppNotification {
-    const title = `📚 New Textbook Added: ${bookTitle}`;
+    const title = `New Textbook Added: ${bookTitle}`;
     const body = `Official Grade ${grade} ${subject} textbook has been uploaded and is ready for offline reading and 25-50 question quizzes!`;
     const actionUrl = bookId ? `book:${bookId}` : `book:${bookTitle}`;
     return this.addNotification(title, body, 'book_update', actionUrl, 'Textbook Upload', `Grade ${grade}`);
@@ -259,7 +259,7 @@ export const NotificationService = {
 
   // Auto-Broadcast on Multi-PDF Batch Upload
   broadcastBatchPublished(count: number, firstBookId?: string): AppNotification {
-    const title = `⚡ ${count} New Textbooks Uploaded!`;
+    const title = `${count} New Textbooks Uploaded!`;
     const body = `A batch of ${count} new textbooks have been published to your library with auto-generated practice quizzes.`;
     const actionUrl = firstBookId ? `book:${firstBookId}` : 'tab:explore';
     return this.addNotification(title, body, 'book_update', actionUrl, 'Batch Upload', 'Multi-Grade');
@@ -268,7 +268,7 @@ export const NotificationService = {
   // Trigger "App Downloaded / Installed" Notification
   notifyAppInstalled(): void {
     this.addNotification(
-      '🎉 App Successfully Installed!',
+      'App Successfully Installed!',
       'Ethiopian Textbooks is now installed on your device. You can launch it directly from your home screen and study 100% offline!',
       'download'
     );
@@ -277,7 +277,7 @@ export const NotificationService = {
   // Trigger "Book Downloaded Offline" Notification
   notifyBookDownloaded(bookTitle: string): void {
     this.addNotification(
-      '📥 Book Saved Offline',
+      'Book Saved Offline',
       `"${bookTitle}" is now stored on your device. You can read it anytime without consuming mobile data.`,
       'download'
     );

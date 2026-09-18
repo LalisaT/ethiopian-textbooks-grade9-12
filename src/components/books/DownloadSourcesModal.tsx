@@ -170,8 +170,9 @@ export const DownloadSourcesModal: React.FC<DownloadSourcesModalProps> = ({
 
               {/* Direct CDN & Cloud Mirrors */}
               <div className="pt-2 border-t border-white/20">
-                <span className="text-xs font-bold uppercase tracking-wider text-white/90 block mb-2">
-                  ⚡ Direct Cloud & CDN Download Mirrors
+                <span className="text-xs font-bold uppercase tracking-wider text-white/90 flex items-center gap-1.5 mb-2">
+                  <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                  <span>Direct Cloud & CDN Download Mirrors</span>
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {directMirrors.slice(0, 4).map((mirror, idx) => (
@@ -196,7 +197,7 @@ export const DownloadSourcesModal: React.FC<DownloadSourcesModalProps> = ({
             <HardDrive className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
             <div>
               <strong className="text-emerald-800 dark:text-emerald-300 font-bold">
-                📱 Mobile Device Storage & In-App Offline Reading:
+                Mobile Device Storage & In-App Offline Reading:
               </strong>{' '}
               When you download via Telegram, Google Drive, or Direct Mirrors, the textbook saves into your phone's <strong>Downloads</strong> storage. You can then open and study any of these PDFs right inside this app without using any mobile data!
             </div>

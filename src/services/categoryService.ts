@@ -19,13 +19,13 @@ const STORAGE_KEY_LANG_CATEGORIES = 'ethio_custom_lang_categories_v2';
 const STORAGE_KEY_SUBJECT_CATEGORIES = 'ethio_custom_sub_categories_v2';
 
 export const DEFAULT_LANGUAGE_CATEGORIES: LanguageCategoryItem[] = [
-  { id: 'all', name: 'All Languages', colorDot: '🌐', region: 'All' },
-  { id: 'om', name: 'Afaan Oromoo (Oromia)', nativeName: 'Afaan Oromoo', colorDot: '🟢', region: 'Oromia' },
-  { id: 'am', name: 'Amharic (አማርኛ)', nativeName: 'አማርኛ', colorDot: '🔵', region: 'Amhara / National' },
-  { id: 'en', name: 'English (National)', nativeName: 'English', colorDot: '🟡', region: 'National' },
-  { id: 'ti', name: 'Tigrinya (ትግርኛ)', nativeName: 'ትግርኛ', colorDot: '🟣', region: 'Tigray' },
-  { id: 'so', name: 'Somali (Af-Soomaali)', nativeName: 'Af-Soomaali', colorDot: '🟠', region: 'Somali' },
-  { id: 'sid', name: 'Sidama (Sidaamu Afoo)', nativeName: 'Sidaamu Afoo', colorDot: '🔴', region: 'Sidama' },
+  { id: 'all', name: 'All Languages', colorDot: 'indigo', region: 'All' },
+  { id: 'om', name: 'Afaan Oromoo (Oromia)', nativeName: 'Afaan Oromoo', colorDot: 'emerald', region: 'Oromia' },
+  { id: 'am', name: 'Amharic (አማርኛ)', nativeName: 'አማርኛ', colorDot: 'blue', region: 'Amhara / National' },
+  { id: 'en', name: 'English (National)', nativeName: 'English', colorDot: 'amber', region: 'National' },
+  { id: 'ti', name: 'Tigrinya (ትግርኛ)', nativeName: 'ትግርኛ', colorDot: 'purple', region: 'Tigray' },
+  { id: 'so', name: 'Somali (Af-Soomaali)', nativeName: 'Af-Soomaali', colorDot: 'orange', region: 'Somali' },
+  { id: 'sid', name: 'Sidama (Sidaamu Afoo)', nativeName: 'Sidaamu Afoo', colorDot: 'red', region: 'Sidama' },
 ];
 
 export const DEFAULT_ACADEMIC_SUBJECTS: SubjectCategoryItem[] = [

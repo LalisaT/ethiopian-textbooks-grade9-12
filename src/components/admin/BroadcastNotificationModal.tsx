@@ -213,7 +213,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }`}
                   >
                     <ImageIcon className="w-4 h-4" />
-                    <span>📷 Picture</span>
+                    <span>Picture</span>
                     {imageUrl && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>
                     )}
@@ -229,7 +229,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }`}
                   >
                     <LinkIcon className="w-4 h-4" />
-                    <span>🔗 Link</span>
+                    <span>Link</span>
                     {linkUrl && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>
                     )}
@@ -245,7 +245,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }`}
                   >
                     <BookOpen className="w-4 h-4" />
-                    <span>📚 Textbook</span>
+                    <span>Textbook</span>
                     {attachedBookId && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>
                     )}
@@ -303,7 +303,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-amber-300 border border-slate-800 font-bold"
                     >
-                      🏆 Exam Session
+                      Exam Session
                     </button>
                     <button
                       type="button"
@@ -313,7 +313,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-emerald-300 border border-slate-800 font-bold"
                     >
-                      📚 Textbooks Library
+                      Textbooks Library
                     </button>
                     <button
                       type="button"
@@ -323,7 +323,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-sky-300 border border-slate-800 font-bold"
                     >
-                      🔬 Science Lab
+                      Science Lab
                     </button>
                     <button
                       type="button"
@@ -333,7 +333,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-purple-300 border border-slate-800 font-bold"
                     >
-                      🎓 Student Group
+                      Student Group
                     </button>
                   </div>
 
@@ -398,11 +398,11 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         onChange={(e) => setLinkType(e.target.value as any)}
                         className="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
                       >
-                        <option value="website">🌐 Web / Portal</option>
-                        <option value="download">📥 Download / File Link</option>
-                        <option value="telegram">📱 Telegram</option>
-                        <option value="youtube">📺 Video Lesson</option>
-                        <option value="drive">📁 Google Drive</option>
+                        <option value="website">Web / Portal</option>
+                        <option value="download">Download / File Link</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="youtube">Video Lesson</option>
+                        <option value="drive">Google Drive</option>
                       </select>
                     </div>
                   </div>
@@ -429,7 +429,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-blue-950 text-blue-300 border border-blue-800 text-[10px] font-bold hover:bg-blue-900 transition-colors"
                     >
-                      📥 Download File
+                      Download File
                     </button>
                     <button
                       type="button"
@@ -440,7 +440,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-sky-950 text-sky-300 border border-sky-800 text-[10px] font-bold hover:bg-sky-900 transition-colors"
                     >
-                      📱 Telegram
+                      Telegram
                     </button>
                     <button
                       type="button"
@@ -451,7 +451,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-indigo-950 text-indigo-300 border border-indigo-800 text-[10px] font-bold hover:bg-indigo-900 transition-colors"
                     >
-                      🏛 MOE Portal
+                      MOE Portal
                     </button>
                     <button
                       type="button"
@@ -462,7 +462,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-rose-950 text-rose-300 border border-rose-800 text-[10px] font-bold hover:bg-rose-900 transition-colors"
                     >
-                      📺 Video Lesson
+                      Video Lesson
                     </button>
                     <button
                       type="button"
@@ -473,7 +473,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       }}
                       className="px-2 py-0.5 rounded-lg bg-amber-950 text-amber-300 border border-amber-800 text-[10px] font-bold hover:bg-amber-900 transition-colors"
                     >
-                      📁 Google Drive
+                      Google Drive
                     </button>
                   </div>
                 </div>
@@ -514,7 +514,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   <button
                     type="button"
                     onClick={() => {
-                      setTitle('🚨 New Grade 12 ESSLCE Model Exam Papers Released!');
+                      setTitle('New Grade 12 ESSLCE Model Exam Papers Released!');
                       setMessage('Take the timed practice entrance tests across Natural and Social Science streams with step-by-step solutions.');
                       setCategory('Exam Prep');
                       setActionUrl('tab:examprep');
@@ -526,13 +526,13 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }}
                     className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-amber-300 font-bold border border-slate-700 transition-colors"
                   >
-                    🏆 Exam Model Alert
+                    Exam Model Alert
                   </button>
 
                   <button
                     type="button"
                     onClick={() => {
-                      setTitle('📚 New Grade 12 Textbooks Uploaded!');
+                      setTitle('New Grade 12 Textbooks Uploaded!');
                       setMessage('Official Ethiopian Curriculum textbooks are now available for 100% offline reading and study.');
                       setCategory('New Book');
                       setActionUrl('tab:explore');
@@ -544,13 +544,13 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }}
                     className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-emerald-300 font-bold border border-slate-700 transition-colors"
                   >
-                    📖 New Book Upload
+                    New Book Upload
                   </button>
 
                   <button
                     type="button"
                     onClick={() => {
-                      setTitle('⏰ Daily 15-Minute Study Challenge');
+                      setTitle('Daily 15-Minute Study Challenge');
                       setMessage('Complete your daily goal today to stay on track for your semester examinations.');
                       setCategory('Study Challenge');
                       setActionUrl('tab:examprep');
@@ -560,7 +560,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }}
                     className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-blue-300 font-bold border border-slate-700 transition-colors"
                   >
-                    💡 Daily Study Goal
+                    Daily Study Goal
                   </button>
                 </div>
               </div>
@@ -575,7 +575,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. 🚨 New Grade 12 ESSLCE National Exam Papers Uploaded!"
+                  placeholder="e.g. New Grade 12 ESSLCE National Exam Papers Uploaded!"
                   className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
@@ -621,7 +621,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         : 'bg-blue-950/60 text-blue-300 border-blue-800 hover:bg-blue-900'
                     }`}
                   >
-                    📥 Download File
+                    Download File
                   </button>
 
                   <button
@@ -638,7 +638,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         : 'bg-sky-950/60 text-sky-300 border-sky-800 hover:bg-sky-900'
                     }`}
                   >
-                    📱 Telegram Channel
+                    Telegram Channel
                   </button>
 
                   <button
@@ -655,7 +655,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         : 'bg-indigo-950/60 text-indigo-300 border-indigo-800 hover:bg-indigo-900'
                     }`}
                   >
-                    🏛 MOE Portal
+                    MOE Portal
                   </button>
 
                   <button
@@ -672,7 +672,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         : 'bg-rose-950/60 text-rose-300 border-rose-800 hover:bg-rose-900'
                     }`}
                   >
-                    📺 Video Lesson
+                    Video Lesson
                   </button>
 
                   <button
@@ -689,7 +689,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         : 'bg-amber-950/60 text-amber-300 border-amber-800 hover:bg-amber-900'
                     }`}
                   >
-                    📁 Google Drive
+                    Google Drive
                   </button>
 
                   <button
@@ -705,7 +705,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         : 'bg-emerald-950/60 text-emerald-300 border-emerald-800 hover:bg-emerald-900'
                     }`}
                   >
-                    🏆 Exam Prep Hub
+                    Exam Prep Hub
                   </button>
                 </div>
 
@@ -727,11 +727,11 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       onChange={(e) => setLinkType(e.target.value as any)}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none"
                     >
-                      <option value="website">🌐 Web / Portal</option>
-                      <option value="download">📥 Download / File Link</option>
-                      <option value="telegram">📱 Telegram</option>
-                      <option value="youtube">📺 Video Lesson</option>
-                      <option value="drive">📁 Google Drive</option>
+                      <option value="website">Web / Portal</option>
+                      <option value="download">Download / File Link</option>
+                      <option value="telegram">Telegram</option>
+                      <option value="youtube">Video Lesson</option>
+                      <option value="drive">Google Drive</option>
                     </select>
                   </div>
                 </div>
@@ -751,10 +751,10 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     onChange={(e) => setActionUrl(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
                   >
-                    <option value="tab:community">📢 Notice Board (Community)</option>
-                    <option value="tab:examprep">🏆 Exam Practice Hub</option>
-                    <option value="tab:explore">📚 Explore Textbooks</option>
-                    <option value="tab:saved">🔖 Saved Library</option>
+                    <option value="tab:community">Notice Board (Community)</option>
+                    <option value="tab:examprep">Exam Practice Hub</option>
+                    <option value="tab:explore">Explore Textbooks</option>
+                    <option value="tab:saved">Saved Library</option>
                   </select>
                 </div>
 
@@ -807,7 +807,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                           : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
                       }`}>
-                        {linkType === 'download' ? '📥' : linkType === 'telegram' ? '📱' : linkType === 'youtube' ? '📺' : linkType === 'drive' ? '📁' : '🌐'}
+                        <LinkIcon className="w-3 h-3" />
                         <span>{linkTitle || (linkType === 'download' ? 'Download Resource' : 'Open Link')}</span>
                         {linkType === 'download' ? <Download className="w-3 h-3 text-blue-400" /> : <ExternalLink className="w-3 h-3" />}
                       </span>
@@ -832,10 +832,10 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     onChange={(e) => setCategory(e.target.value as any)}
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
                   >
-                    <option value="Exam Prep">🏆 Exam Prep Alert</option>
-                    <option value="New Book">📚 New Textbook Published</option>
-                    <option value="Urgent Alert">🚨 Urgent Announcement</option>
-                    <option value="Study Challenge">💡 Study Goal / Tip</option>
+                    <option value="Exam Prep">Exam Prep Alert</option>
+                    <option value="New Book">New Textbook Published</option>
+                    <option value="Urgent Alert">Urgent Announcement</option>
+                    <option value="Study Challenge">Study Goal / Tip</option>
                   </select>
                 </div>
 
@@ -866,8 +866,9 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   onChange={(e) => setAlsoPostToCommunity(e.target.checked)}
                   className="w-4 h-4 text-amber-500 rounded focus:ring-amber-400 bg-slate-950 border-slate-700"
                 />
-                <label htmlFor="alsoPost" className="text-xs font-bold text-slate-300 cursor-pointer">
-                  📢 Also publish as interactive post on Student Notice Board
+                <label htmlFor="alsoPost" className="text-xs font-bold text-slate-300 cursor-pointer flex items-center gap-1.5">
+                  <Megaphone className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Also publish as interactive post on Student Notice Board</span>
                 </label>
               </div>
 
@@ -880,9 +881,10 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                 <button
                   type="button"
                   onClick={handlePlaySoundSample}
-                  className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-xl text-xs font-bold transition-all"
+                  className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
                 >
-                  Test Sound 🔊
+                  <Volume2 className="w-3.5 h-3.5" />
+                  <span>Test Sound</span>
                 </button>
               </div>
 

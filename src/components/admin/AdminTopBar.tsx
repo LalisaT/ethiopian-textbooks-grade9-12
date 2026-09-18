@@ -52,7 +52,7 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({
             title="Upload all your textbooks simultaneously in seconds"
           >
             <Zap className="w-3.5 h-3.5 text-slate-950 fill-current" />
-            <span>⚡ Bulk Upload All</span>
+            <span>Bulk Upload All</span>
           </button>
 
           {/* Broadcast Alert & Announcement Button */}
@@ -62,7 +62,7 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({
             title="Send push alert with sound to all devices"
           >
             <Megaphone className="w-3.5 h-3.5" />
-            <span>📢 Post Alert</span>
+            <span>Post Alert</span>
           </button>
 
           {/* Single Upload Book Button */}
@@ -71,7 +71,7 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-extrabold shadow-md transition-all active:scale-95"
           >
             <PlusCircle className="w-3.5 h-3.5" />
-            <span>+ Single Book</span>
+            <span>Upload Single Book</span>
           </button>
 
           {/* Manage Catalog Dashboard Button */}

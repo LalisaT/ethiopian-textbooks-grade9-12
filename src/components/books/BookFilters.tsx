@@ -3,7 +3,7 @@ import { GradeLevel, SubjectCategory, AcademicStream, RegionId, LanguageCode } f
 import { ETHIOPIAN_SUBJECTS } from '../../data/subjects';
 import { useTranslation } from '../../i18n/useTranslation';
 import { SearchBar } from '../common/SearchBar';
-import { RefreshCw, Compass, Atom, TrendingUp, BookOpen, Layers } from 'lucide-react';
+import { RefreshCw, Compass, Atom, TrendingUp, BookOpen, Layers, GraduationCap } from 'lucide-react';
 
 interface BookFiltersProps {
   selectedGrade: GradeLevel | 'all';
@@ -43,9 +43,9 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
 
   const streams: { id: AcademicStream; label: string; icon: any }[] = [
     { id: 'all', label: 'All Streams', icon: Compass },
-    { id: 'natural_science', label: '🔬 Natural Science', icon: Atom },
-    { id: 'social_science', label: '📈 Social Science', icon: TrendingUp },
-    { id: 'common', label: '🌐 Common Core', icon: BookOpen },
+    { id: 'natural_science', label: 'Natural Science', icon: Atom },
+    { id: 'social_science', label: 'Social Science', icon: TrendingUp },
+    { id: 'common', label: 'Common Core', icon: BookOpen },
   ];
 
   const hasActiveFilters =
@@ -83,33 +83,36 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
         <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/90 rounded-2xl">
           <button
             onClick={() => onSelectBookType('all')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
               selectedBookType === 'all'
                 ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <span>📚 All Resources</span>
+            <Layers className="w-3.5 h-3.5" />
+            <span>All Curriculum</span>
           </button>
           <button
             onClick={() => onSelectBookType('textbook')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
               selectedBookType === 'textbook'
                 ? 'bg-emerald-600 text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <span>📖 Student Books</span>
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Student Textbooks</span>
           </button>
           <button
             onClick={() => onSelectBookType('teacher_guide')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
               selectedBookType === 'teacher_guide'
                 ? 'bg-amber-500 text-slate-950 shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <span>🧑‍🏫 Teacher Guides</span>
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span>Teacher Guides</span>
           </button>
         </div>
       )}

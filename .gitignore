@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 .pnp
 .pnp.js
@@ -20,7 +20,9 @@ android/app/src/main/assets/public/
 *.keystore
 *.jks
 EthiopianTextbooks-*.apk
+*.pdf
 public/textbooks/**/*.pdf
+public/teacher-guide/**/*.pdf
 
 # Logs & Environment
 npm-debug.log*

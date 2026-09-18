@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone } from 'lucide-react';
+import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone, GraduationCap } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { LanguageSelector } from '../common/LanguageSelector';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'home' as const, label: t('home'), icon: BookOpen },
     { id: 'explore' as const, label: 'Textbooks', icon: Compass },
-    { id: 'teacher_guides' as const, label: 'Teacher Guides 🧑‍🏫', icon: BookOpen },
+    { id: 'teacher_guides' as const, label: 'Teacher Guides', icon: GraduationCap },
     { id: 'examprep' as const, label: 'ESSLCE Hub', icon: Award },
     {
       id: 'saved' as const,

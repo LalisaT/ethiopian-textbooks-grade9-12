@@ -33,6 +33,11 @@ import {
   EyeOff,
   RotateCw,
   Check,
+  BookOpen,
+  Layers,
+  Compass,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 // Configure PDF.js worker
@@ -978,10 +983,10 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               className="px-2.5 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-slate-300 focus:outline-none"
               title="Page Display Tone"
             >
-              <option value="normal">⚪ Clean White</option>
-              <option value="sepia">📜 Sepia Eye-Care</option>
-              <option value="dark">🌙 Dark Inverted</option>
-              <option value="contrast">✨ High Contrast</option>
+              <option value="normal">Clean White</option>
+              <option value="sepia">Sepia Eye-Care</option>
+              <option value="dark">Dark Inverted</option>
+              <option value="contrast">High Contrast</option>
             </select>
 
             {/* Zoom controls */}
@@ -1078,8 +1083,8 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           <div className="w-48 sm:w-56 bg-slate-900/95 border-r border-slate-800 overflow-y-auto p-3 space-y-2 shrink-0 animate-in slide-in-from-left duration-200 z-20">
             <div className="text-xs font-black text-slate-400 uppercase tracking-wider px-1 pb-1 border-b border-slate-800 flex justify-between items-center">
               <span>All Pages ({totalPages})</span>
-              <button onClick={() => setIsSidebarOpen(false)} className="text-slate-500 hover:text-white">
-                ✕
+              <button onClick={() => setIsSidebarOpen(false)} className="text-slate-500 hover:text-white p-1">
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -1286,10 +1291,16 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 const nextIdx = (themes.indexOf(readerTheme as any) + 1) % themes.length;
                 setReaderTheme(themes[nextIdx]);
               }}
-              className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 active:scale-95 text-xs font-bold"
+              className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 active:scale-95 text-xs font-bold flex items-center justify-center"
               title="Cycle Reader Tone: White -> Sepia -> Dark"
             >
-              {readerTheme === 'normal' ? '⚪' : readerTheme === 'sepia' ? '📜' : '🌙'}
+              {readerTheme === 'normal' ? (
+                <Sun className="w-4 h-4 text-amber-300" />
+              ) : readerTheme === 'sepia' ? (
+                <BookOpen className="w-4 h-4 text-amber-500" />
+              ) : (
+                <Moon className="w-4 h-4 text-cyan-300" />
+              )}
             </button>
 
             {/* Practice Quiz */}
@@ -1336,8 +1347,8 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               <div className="space-y-4">
                 {/* Topic / Unit Selector */}
                 <div>
-                  <div className="text-xs font-extrabold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <span>🎯</span>
+                  <div className="text-xs font-extrabold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 justify-center">
+                    <Compass className="w-3.5 h-3.5 text-amber-400" />
                     <span>
                       {lang === 'om'
                         ? 'Mata-duree / Boqonnaa Filadhu:'
@@ -1361,7 +1372,11 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                               : 'bg-slate-800/80 border-slate-700/80 text-slate-300 hover:bg-slate-700 hover:text-white'
                           }`}
                         >
-                          <span className="text-base">{t.icon}</span>
+                          {t.id === 'all' ? (
+                            <Layers className="w-4 h-4 text-amber-400 shrink-0" />
+                          ) : (
+                            <BookOpen className="w-4 h-4 text-emerald-400 shrink-0" />
+                          )}
                           <span className="truncate flex-1">{topicName}</span>
                           {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0" />}
                         </button>
@@ -1410,7 +1425,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                       <div className="text-[11px] text-slate-300">{pickerLabels.q50desc}</div>
                     </div>
                     <span className="px-3 py-1 bg-amber-500 text-slate-950 rounded-xl text-xs font-black">
-                      50 Qs 🔥
+                      50 Qs
                     </span>
                   </button>
                 </div>

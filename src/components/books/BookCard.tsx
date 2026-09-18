@@ -16,6 +16,9 @@ import {
   Zap,
   Loader2,
   Check,
+  GraduationCap,
+  Atom,
+  TrendingUp,
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
@@ -138,14 +141,26 @@ export const BookCard: React.FC<BookCardProps> = ({
               {t('grade')} {book.grade}
             </span>
             {book.stream && book.stream !== 'all' && (
-              <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-lg backdrop-blur-md border ${
+              <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-lg backdrop-blur-md border flex items-center gap-1 ${
                 book.stream === 'natural_science' 
                   ? 'bg-cyan-500/40 text-cyan-100 border-cyan-300/40' 
                   : book.stream === 'social_science' 
                   ? 'bg-rose-500/40 text-rose-100 border-rose-300/40'
                   : 'bg-emerald-500/40 text-emerald-100 border-emerald-300/40'
               }`}>
-                {book.stream === 'natural_science' ? '🔬 Natural' : book.stream === 'social_science' ? '📈 Social' : '🌐 Core'}
+                {book.stream === 'natural_science' ? (
+                  <>
+                    <Atom className="w-2.5 h-2.5" />
+                    <span>Natural</span>
+                  </>
+                ) : book.stream === 'social_science' ? (
+                  <>
+                    <TrendingUp className="w-2.5 h-2.5" />
+                    <span>Social</span>
+                  </>
+                ) : (
+                  <span>Common</span>
+                )}
               </span>
             )}
           </div>
@@ -155,11 +170,13 @@ export const BookCard: React.FC<BookCardProps> = ({
             </span>
             {book.bookType === 'teacher_guide' ? (
               <span className="px-2 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black rounded-lg shadow-sm flex items-center gap-1">
-                🧑‍🏫 Teacher Guide
+                <GraduationCap className="w-3 h-3" />
+                <span>Teacher Guide</span>
               </span>
             ) : (
-              <span className="px-2 py-0.5 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-black rounded-lg shadow-sm">
-                Student Book
+              <span className="px-2 py-0.5 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-black rounded-lg shadow-sm flex items-center gap-1">
+                <BookOpen className="w-3 h-3" />
+                <span>Student Book</span>
               </span>
             )}
             {isOffline && (

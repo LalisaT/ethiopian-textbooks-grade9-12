@@ -206,8 +206,8 @@ export const AdminUploadPastPaperModal: React.FC<AdminUploadPastPaperModalProps>
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="all">Common / All Streams</option>
-                <option value="natural_science">🔬 Natural Science</option>
-                <option value="social_science">📈 Social Science</option>
+                <option value="natural_science">Natural Science</option>
+                <option value="social_science">Social Science</option>
               </select>
             </div>
 

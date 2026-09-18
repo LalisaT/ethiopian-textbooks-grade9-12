@@ -38,6 +38,9 @@ import {
   ZoomIn,
   Maximize2,
   Download,
+  Lightbulb,
+  Landmark,
+  GraduationCap,
 } from 'lucide-react';
 
 interface CommunityPostsPageProps {
@@ -151,7 +154,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
   // Share / Copy Link Handler
   const handleShare = (post: CommunityPost) => {
-    const text = `📢 ${post.title}\n\n${post.content}\n\n— Ethiopian Grade 9-12 Textbooks & ESSLCE Hub`;
+    const text = `${post.title}\n\n${post.content}\n\n— Ethiopian Grade 9-12 Textbooks & ESSLCE Hub`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopiedPostId(post.id);
@@ -168,7 +171,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
   // Preset Template Quick Fill
   const applyPresetTemplate = (type: 'exam' | 'book' | 'tip' | 'moe') => {
     if (type === 'exam') {
-      setTitle('🏆 Grade 12 ESSLCE / Matric Model Exam Simulation Schedule');
+      setTitle('Grade 12 ESSLCE / Matric Model Exam Simulation Schedule');
       setCategory('Exam Announcement');
       setGrade('Grade 12 (ESSLCE / Matric)');
       setSubject('Natural & Social Science Streams');
@@ -182,7 +185,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setImageUrl('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80');
       setImageCaption('Grade 12 ESSLCE National Exam Preparation');
     } else if (type === 'book') {
-      setTitle('📚 New Ethiopian Curriculum Grade 9-12 Textbooks Uploaded');
+      setTitle('New Ethiopian Curriculum Grade 9-12 Textbooks Uploaded');
       setCategory('Curriculum Update');
       setGrade('All Grades (9-12)');
       setSubject('All Subjects');
@@ -196,7 +199,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setImageUrl('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
       setImageCaption('Ethiopian Curriculum Grade 9-12 Digital Textbooks');
     } else if (type === 'tip') {
-      setTitle('💡 Study Tip: How to Score 600+ in Grade 12 ESSLCE');
+      setTitle('Study Tip: How to Score 600+ in Grade 12 ESSLCE');
       setCategory('Study Tip');
       setGrade('All Grades (9-12)');
       setSubject('Study Strategy');
@@ -210,7 +213,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setImageUrl('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80');
       setImageCaption('Active Learning and Group Discussion');
     } else if (type === 'moe') {
-      setTitle('🏛 Ministry of Education (MOE) Official Notice');
+      setTitle('Ministry of Education (MOE) Official Notice');
       setCategory('General Notice');
       setGrade('All Grades (9-12)');
       setSubject('National Curriculum');
@@ -481,19 +484,20 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
       {/* Category Pills & Quick Filter Buttons */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
           <button
             onClick={() => {
               setSelectedCategory('all');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               selectedCategory === 'all' && !showOnlyBookmarked
                 ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                 : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            📢 All Notices ({posts.length})
+            <Megaphone className="w-3.5 h-3.5" />
+            <span>All Notices ({posts.length})</span>
           </button>
 
           <button
@@ -501,13 +505,14 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('Exam Announcement');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               selectedCategory === 'Exam Announcement' && !showOnlyBookmarked
                 ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                 : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            🏆 Exam Alerts
+            <Award className="w-3.5 h-3.5" />
+            <span>Exam Alerts</span>
           </button>
 
           <button
@@ -515,13 +520,14 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('Curriculum Update');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               selectedCategory === 'Curriculum Update' && !showOnlyBookmarked
                 ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                 : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            📚 Curriculum Updates
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Curriculum Updates</span>
           </button>
 
           <button
@@ -529,13 +535,14 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('Study Tip');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               selectedCategory === 'Study Tip' && !showOnlyBookmarked
                 ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                 : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            💡 Study Tips
+            <Lightbulb className="w-3.5 h-3.5" />
+            <span>Study Tips</span>
           </button>
 
           <button
@@ -543,13 +550,14 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('General Notice');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               selectedCategory === 'General Notice' && !showOnlyBookmarked
                 ? 'bg-amber-500 text-slate-950 shadow-md font-black'
                 : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            🏛 Ministry Notices
+            <Landmark className="w-3.5 h-3.5" />
+            <span>Ministry Notices</span>
           </button>
 
           <button
@@ -1030,35 +1038,39 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('exam')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors"
+                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
                 >
-                  🏆 Ministry Exam Alert
+                  <Award className="w-3 h-3 text-amber-500" />
+                  <span>Ministry Exam Alert</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('book')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors"
+                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
                 >
-                  📚 New Textbook Notice
+                  <BookOpen className="w-3 h-3 text-emerald-500" />
+                  <span>New Textbook Notice</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('tip')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors"
+                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
                 >
-                  💡 Weekly Study Tip
+                  <Lightbulb className="w-3 h-3 text-amber-500" />
+                  <span>Weekly Study Tip</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('moe')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors"
+                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
                 >
-                  🏛 MOE Notice
+                  <Landmark className="w-3 h-3 text-cyan-500" />
+                  <span>MOE Notice</span>
                 </button>
               </div>
             </div>
 
-            {/* 🌟 ACTION BUTTONS TOOLBAR FIRST */}
+            {/* ACTION BUTTONS TOOLBAR FIRST */}
             <div className="p-4 bg-amber-500/10 dark:bg-amber-950/20 border-b border-amber-500/20 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
@@ -1079,7 +1091,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   }`}
                 >
                   <ImageIcon className="w-4 h-4" />
-                  <span>📷 Picture</span>
+                  <span>Picture</span>
                   {imageUrl && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
                 </button>
 
@@ -1093,7 +1105,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   }`}
                 >
                   <LinkIcon className="w-4 h-4" />
-                  <span>🔗 Link</span>
+                  <span>Link</span>
                   {linkUrl && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
                 </button>
 
@@ -1107,7 +1119,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   }`}
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span>📚 Book</span>
+                  <span>Book</span>
                   {attachedBookId && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
                 </button>
               </div>
@@ -1120,28 +1132,28 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   onClick={() => applyPresetTemplate('exam')}
                   className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
                 >
-                  🏆 Exam Alert
+                  Exam Alert
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('book')}
                   className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
                 >
-                  📚 Book Notice
+                  Book Notice
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('tip')}
                   className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
                 >
-                  💡 Study Tip
+                  Study Tip
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('moe')}
                   className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
                 >
-                  🏛 MOE Notice
+                  MOE Notice
                 </button>
               </div>
             </div>
@@ -1197,7 +1209,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-amber-600 dark:text-amber-300 border border-slate-200 dark:border-slate-700 font-bold"
                     >
-                      🏆 Exam Session
+                      Exam Session
                     </button>
                     <button
                       type="button"
@@ -1207,7 +1219,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-emerald-600 dark:text-emerald-300 border border-slate-200 dark:border-slate-700 font-bold"
                     >
-                      📚 Textbooks Library
+                      Textbooks Library
                     </button>
                     <button
                       type="button"
@@ -1217,7 +1229,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-sky-600 dark:text-sky-300 border border-slate-200 dark:border-slate-700 font-bold"
                     >
-                      🔬 Science Lab
+                      Science Lab
                     </button>
                     <button
                       type="button"
@@ -1227,7 +1239,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-purple-600 dark:text-purple-300 border border-slate-200 dark:border-slate-700 font-bold"
                     >
-                      🎓 Student Group
+                      Student Group
                     </button>
                   </div>
 
@@ -1292,11 +1304,11 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         onChange={(e) => setLinkType(e.target.value as any)}
                         className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none"
                       >
-                        <option value="website">🌐 Web / Portal</option>
-                        <option value="download">📥 Download / File Link</option>
-                        <option value="telegram">📱 Telegram</option>
-                        <option value="youtube">📺 YouTube</option>
-                        <option value="drive">📁 Google Drive</option>
+                        <option value="website">Web / Portal</option>
+                        <option value="download">Download / File Link</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="drive">Google Drive</option>
                       </select>
                     </div>
                   </div>
@@ -1323,7 +1335,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 text-[10px] font-bold"
                     >
-                      📥 Download File
+                      Download File
                     </button>
                     <button
                       type="button"
@@ -1334,7 +1346,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-800 text-[10px] font-bold"
                     >
-                      📱 Telegram
+                      Telegram
                     </button>
                     <button
                       type="button"
@@ -1345,7 +1357,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 text-[10px] font-bold"
                     >
-                      🏛 MOE Portal
+                      MOE Portal
                     </button>
                     <button
                       type="button"
@@ -1356,7 +1368,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-[10px] font-bold"
                     >
-                      📺 Video Lesson
+                      Video Lesson
                     </button>
                     <button
                       type="button"
@@ -1367,7 +1379,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       }}
                       className="px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[10px] font-bold"
                     >
-                      📁 Google Drive
+                      Google Drive
                     </button>
                   </div>
                 </div>
@@ -1405,9 +1417,9 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
                       >
                         <option value="">Default (Notice Board)</option>
-                        <option value="tab:examprep">🏆 Exam Practice Hub</option>
-                        <option value="tab:explore">📚 Explore Textbooks</option>
-                        <option value="tab:saved">🔖 Saved Books</option>
+                        <option value="tab:examprep">Exam Practice Hub</option>
+                        <option value="tab:explore">Explore Textbooks</option>
+                        <option value="tab:saved">Saved Books</option>
                       </select>
                     </div>
                   </div>
@@ -1452,13 +1464,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
                   >
-                    <option value="Exam Announcement">🏆 Exam Announcement</option>
-                    <option value="Curriculum Update">📚 Curriculum Update</option>
-                    <option value="Study Tip">💡 Study Tip</option>
-                    <option value="Q&A">❓ Q&A</option>
-                    <option value="General Notice">📢 General Notice</option>
+                    <option value="Exam Announcement">Exam Announcement</option>
+                    <option value="Curriculum Update">Curriculum Update</option>
+                    <option value="Study Tip">Study Tip</option>
+                    <option value="Q&A">Q&A</option>
+                    <option value="General Notice">General Notice</option>
                   </select>
                 </div>
 
@@ -1516,8 +1528,9 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   onChange={(e) => setIsPinned(e.target.checked)}
                   className="w-4 h-4 text-amber-500 rounded focus:ring-amber-400"
                 />
-                <label htmlFor="pinCheck" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                  📌 Pin this announcement at top of notice board
+                <label htmlFor="pinCheck" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer flex items-center gap-1.5">
+                  <Pin className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Pin this announcement at top of notice board</span>
                 </label>
               </div>
 
@@ -1535,9 +1548,10 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-xl shadow-lg transition-all active:scale-95"
+                  className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-1.5"
                 >
-                  {editingPost ? 'Save Changes' : '📢 Publish & Broadcast Alert'}
+                  <Megaphone className="w-4 h-4" />
+                  <span>{editingPost ? 'Save Changes' : 'Publish & Broadcast Alert'}</span>
                 </button>
               </div>
             </form>

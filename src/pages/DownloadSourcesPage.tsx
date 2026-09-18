@@ -13,6 +13,8 @@ import {
   FileCheck,
   Flame,
   CheckCircle2,
+  Target,
+  Landmark,
 } from 'lucide-react';
 
 export const DownloadSourcesPage: React.FC = () => {
@@ -132,8 +134,9 @@ export const DownloadSourcesPage: React.FC = () => {
                   {getSourceDesc(src)}
                 </p>
 
-                <div className="p-2.5 bg-white/80 dark:bg-slate-950/60 rounded-xl border border-sky-200/50 dark:border-sky-900/50 text-[11px] text-sky-800 dark:text-sky-300 font-medium">
-                  🎯 <strong>Best for:</strong> {src.recommendedFor}
+                <div className="p-2.5 bg-white/80 dark:bg-slate-950/60 rounded-xl border border-sky-200/50 dark:border-sky-900/50 text-[11px] text-sky-800 dark:text-sky-300 font-medium flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-sky-500 shrink-0" />
+                  <span><strong>Best for:</strong> {src.recommendedFor}</span>
                 </div>
               </div>
 
@@ -246,8 +249,9 @@ export const DownloadSourcesPage: React.FC = () => {
                   {getSourceDesc(src)}
                 </p>
 
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-[11px] text-blue-700 dark:text-blue-300 font-medium">
-                  🏛️ <strong>Official Portal:</strong> {src.recommendedFor}
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-[11px] text-blue-700 dark:text-blue-300 font-medium flex items-center gap-1.5">
+                  <Landmark className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                  <span><strong>Official Portal:</strong> {src.recommendedFor}</span>
                 </div>
               </div>
 

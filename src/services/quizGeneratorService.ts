@@ -399,56 +399,56 @@ export const QuizGeneratorService = {
     switch (subject) {
       case 'physics':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'phys_mechanics', icon: '⚙️', nameOromo: 'Boqonnaa 1: Meekaaniiksii & Humna', nameAmharic: 'ምዕራፍ 1፡ ሜካኒክስና ጉልበት', nameEnglish: 'Unit 1: Mechanics & Newton\'s Laws' },
-          { id: 'phys_vectors', icon: '📐', nameOromo: 'Boqonnaa 2: Veektaroota', nameAmharic: 'ምዕራፍ 2፡ ቬክተሮች', nameEnglish: 'Unit 2: Two-Dimensional Vectors' },
-          { id: 'phys_electromagnetism', icon: '⚡', nameOromo: 'Boqonnaa 3: Elektiroomaagneetizimii', nameAmharic: 'ምዕራፍ 3፡ ኤሌክትሮማግኔቲዝም', nameEnglish: 'Unit 3: Electromagnetism & Induction' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'phys_mechanics', icon: '', nameOromo: 'Boqonnaa 1: Meekaaniiksii & Humna', nameAmharic: 'ምዕራፍ 1፡ ሜካኒክስና ጉልበት', nameEnglish: 'Unit 1: Mechanics & Newton\'s Laws' },
+          { id: 'phys_vectors', icon: '', nameOromo: 'Boqonnaa 2: Veektaroota', nameAmharic: 'ምዕራፍ 2፡ ቬክተሮች', nameEnglish: 'Unit 2: Two-Dimensional Vectors' },
+          { id: 'phys_electromagnetism', icon: '', nameOromo: 'Boqonnaa 3: Elektiroomaagneetizimii', nameAmharic: 'ምዕራፍ 3፡ ኤሌክትሮማግኔቲዝም', nameEnglish: 'Unit 3: Electromagnetism & Induction' },
         ];
 
       case 'chemistry':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'chem_solutions', icon: '🧪', nameOromo: 'Boqonnaa 1: Soluushinoota & Asidoota', nameAmharic: 'ምዕራፍ 1፡ መፍትሄዎችና አሲዶች', nameEnglish: 'Unit 1: Solutions & Acid-Base Equilibrium' },
-          { id: 'chem_bonding', icon: '🔬', nameOromo: 'Boqonnaa 2: Hidhoo Keemikaalaa', nameAmharic: 'ምዕራፍ 2፡ ኬሚካላዊ ትስስር', nameEnglish: 'Unit 2: Chemical Bonding & Structure' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'chem_solutions', icon: '', nameOromo: 'Boqonnaa 1: Soluushinoota & Asidoota', nameAmharic: 'ምዕራፍ 1፡ መፍትሄዎችና አሲዶች', nameEnglish: 'Unit 1: Solutions & Acid-Base Equilibrium' },
+          { id: 'chem_bonding', icon: '', nameOromo: 'Boqonnaa 2: Hidhoo Keemikaalaa', nameAmharic: 'ምዕራፍ 2፡ ኬሚካላዊ ትስስር', nameEnglish: 'Unit 2: Chemical Bonding & Structure' },
         ];
 
       case 'biology':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'bio_genetics', icon: '🧬', nameOromo: 'Boqonnaa 1: Jeneetiiksii & Dhaala', nameAmharic: 'ምዕራፍ 1፡ ጀነቲክስና ውርስ', nameEnglish: 'Unit 1: Genetics & Inheritance' },
-          { id: 'bio_cells', icon: '🔬', nameOromo: 'Boqonnaa 2: Seelii & Respiration', nameAmharic: 'ምዕራፍ 2፡ ሴሉላር አተነፋፈስ', nameEnglish: 'Unit 2: Cellular Respiration & Enzymes' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'bio_genetics', icon: '', nameOromo: 'Boqonnaa 1: Jeneetiiksii & Dhaala', nameAmharic: 'ምዕራፍ 1፡ ጀነቲክስና ውርስ', nameEnglish: 'Unit 1: Genetics & Inheritance' },
+          { id: 'bio_cells', icon: '', nameOromo: 'Boqonnaa 2: Seelii & Respiration', nameAmharic: 'ምዕራፍ 2፡ ሴሉላር አተነፋፈስ', nameEnglish: 'Unit 2: Cellular Respiration & Enzymes' },
         ];
 
       case 'mathematics':
       case 'mathematics_natural':
       case 'mathematics_social':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'math_calculus', icon: '📈', nameOromo: 'Boqonnaa 1: Kaalkulasii (Derivatives)', nameAmharic: 'ምዕራፍ 1፡ ካልኩለስና ዴሪቬቲቭ', nameEnglish: 'Unit 1: Limits & Differential Calculus' },
-          { id: 'math_vectors', icon: '🔢', nameOromo: 'Boqonnaa 2: Tarrisee & Veektaroota', nameAmharic: 'ምዕራፍ 2፡ ቅደምተከተሎችና ቬክተሮች', nameEnglish: 'Unit 2: Sequences, Series & Vectors' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'math_calculus', icon: '', nameOromo: 'Boqonnaa 1: Kaalkulasii (Derivatives)', nameAmharic: 'ምዕራፍ 1፡ ካልኩለስና ዴሪቬቲቭ', nameEnglish: 'Unit 1: Limits & Differential Calculus' },
+          { id: 'math_vectors', icon: '', nameOromo: 'Boqonnaa 2: Tarrisee & Veektaroota', nameAmharic: 'ምዕራፍ 2፡ ቅደምተከተሎችና ቬክተሮች', nameEnglish: 'Unit 2: Sequences, Series & Vectors' },
         ];
 
       case 'economics':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'econ_macro', icon: '📊', nameOromo: 'Boqonnaa 1: Maakroo-Ikoonoomiksii', nameAmharic: 'ምዕራፍ 1፡ ማክሮ-ኢኮኖሚክስ', nameEnglish: 'Unit 1: Macroeconomics, GDP & Inflation' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'econ_macro', icon: '', nameOromo: 'Boqonnaa 1: Maakroo-Ikoonoomiksii', nameAmharic: 'ምዕራፍ 1፡ ማክሮ-ኢኮኖሚክስ', nameEnglish: 'Unit 1: Macroeconomics, GDP & Inflation' },
         ];
 
       case 'geography':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'geo_ethiopia', icon: '🌍', nameOromo: 'Boqonnaa 1: Ji\'oograafii Itoophiyaa', nameAmharic: 'ምዕራፍ 1፡ የኢትዮጵያ ጂኦግራፊ', nameEnglish: 'Unit 1: Physical Geography of Ethiopia' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'geo_ethiopia', icon: '', nameOromo: 'Boqonnaa 1: Ji\'oograafii Itoophiyaa', nameAmharic: 'ምዕራፍ 1፡ የኢትዮጵያ ጂኦግራፊ', nameEnglish: 'Unit 1: Physical Geography of Ethiopia' },
         ];
 
       case 'history':
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
-          { id: 'hist_ethiopia', icon: '🏛️', nameOromo: 'Boqonnaa 1: Seenaa Itoophiyaa & Adwaa', nameAmharic: 'ምዕራፍ 1፡ የኢትዮጵያ ታሪክና አድዋ', nameEnglish: 'Unit 1: Modern Ethiopian History & Adwa' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive ESSLCE)' },
+          { id: 'hist_ethiopia', icon: '', nameOromo: 'Boqonnaa 1: Seenaa Itoophiyaa & Adwaa', nameAmharic: 'ምዕራፍ 1፡ የኢትዮጵያ ታሪክና አድዋ', nameEnglish: 'Unit 1: Modern Ethiopian History & Adwa' },
         ];
 
       default:
         return [
-          { id: 'all', icon: '🌟', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive Exam)' },
+          { id: 'all', icon: '', nameOromo: 'Boqonnaalee Hunda (Waliigala)', nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)', nameEnglish: 'All Units (Comprehensive Exam)' },
         ];
     }
   },

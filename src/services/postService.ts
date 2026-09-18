@@ -10,7 +10,7 @@ const DEFAULT_POSTS: CommunityPost[] = [
     id: 'post-official-1',
     author: 'Educational Assessment and Examinations Service (EAES)',
     authorRole: 'admin',
-    title: '🚨 Official Grade 12 ESSLCE / Matric National Exam Practice Hub',
+    title: 'Official Grade 12 ESSLCE / Matric National Exam Practice Hub',
     content:
       'All Grade 12 Natural and Social Science students nationwide are invited to practice with authentic past papers and 50-question mock exams covering high-yield syllabus concepts across Grades 9, 10, 11, and 12 with detailed explanations!',
     category: 'Exam Announcement',
@@ -47,7 +47,7 @@ const DEFAULT_POSTS: CommunityPost[] = [
     id: 'post-guide-2',
     author: 'Admin @lalion',
     authorRole: 'admin',
-    title: '📚 Grade 9-12 Textbooks & ESSLCE Auto Solver Activated',
+    title: 'Grade 9-12 Textbooks & ESSLCE Auto Solver Activated',
     content:
       'You can now access and download all official New Curriculum Grade 9-12 textbooks for Natural Science and Social Science streams. The system automatically extracts notes and provides interactive mock exams with full explanations.',
     category: 'Curriculum Update',
@@ -69,7 +69,7 @@ const DEFAULT_POSTS: CommunityPost[] = [
     id: 'post-tip-3',
     author: 'Chala Desta',
     authorRole: 'student',
-    title: '💡 Study Tip: High-Yield Kinematics & Calculus for ESSLCE Physics',
+    title: 'Study Tip: High-Yield Kinematics & Calculus for ESSLCE Physics',
     content:
       'For Natural Science candidates: Remember that constant acceleration kinematic formulas from Grade 9 & 10 are frequently paired with Grade 12 rotational dynamics and calculus in university entrance questions!',
     category: 'Study Tip',
@@ -149,7 +149,7 @@ export const PostService = {
 
     // Trigger Notification with Sound for new post!
     NotificationService.addNotification(
-      `📢 New Post: ${post.title}`,
+      `New Post: ${post.title}`,
       `${post.content.slice(0, 100)}... (By ${post.author} • ${post.grade})`,
       'admin_broadcast',
       post.actionUrl || `tab:community`,
