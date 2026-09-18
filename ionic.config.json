@@ -1,5 +1,6 @@
 ﻿{
-  "name": "Ethiopian Textbooks Grade 9-12",
+  "name": "ethiopian-textbooks-grade9-12",
+  "id": "5c1d0db8",
   "integrations": {
     "capacitor": {}
   },
