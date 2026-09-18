@@ -1,0 +1,7 @@
+﻿{
+  "name": "Ethiopian Textbooks Grade 9-12",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

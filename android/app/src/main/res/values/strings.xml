@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ethiopian Textbooks Grade 9-12</string>
+    <string name="title_activity_main">Ethiopian Textbooks Grade 9-12</string>
+    <string name="package_name">com.ethiopian.grade912textbooks</string>
+    <string name="custom_url_scheme">com.ethiopian.grade912textbooks</string>
+</resources>

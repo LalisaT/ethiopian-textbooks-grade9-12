@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans selection:bg-emerald-500 selection:text-white;
+  }
+}
+
+/* Sepia Mode theme variables */
+.theme-sepia {
+  background-color: #fbf0d9 !important;
+  color: #433422 !important;
+}
+
+.theme-sepia .bg-white {
+  background-color: #f4e4c1 !important;
+  border-color: #e5d1a5 !important;
+}
+
+.theme-sepia .bg-slate-50,
+.theme-sepia .bg-slate-100 {
+  background-color: #ede0be !important;
+}
+
+.theme-sepia .text-slate-900,
+.theme-sepia .text-slate-800 {
+  color: #2b1f13 !important;
+}
+
+.theme-sepia .text-slate-600,
+.theme-sepia .text-slate-500 {
+  color: #5c4731 !important;
+}
+
+.theme-sepia .border-slate-200 {
+  border-color: #d6be92 !important;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Reader Typography Modes */
+.reader-text-sm {
+  font-size: 0.925rem;
+  line-height: 1.6;
+}
+
+.reader-text-base {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.reader-text-lg {
+  font-size: 1.25rem;
+  line-height: 1.85;
+}
+
+.reader-text-xl {
+  font-size: 1.45rem;
+  line-height: 2.0;
+}
+
+/* Ethiopian Flag animated subtle gradient */
+.ethio-gradient-bar {
+  background: linear-gradient(90deg, #009A44 0%, #FED100 50%, #EF2B2D 100%);
+}
+
+.ethio-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* GPU Hardware Acceleration for 60-120fps smooth scrolling */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+canvas {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  contain: paint;
+}

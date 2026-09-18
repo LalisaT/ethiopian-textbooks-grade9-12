@@ -1,0 +1,184 @@
+import React, { useState } from 'react';
+import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone } from 'lucide-react';
+import { useTranslation } from '../../i18n/useTranslation';
+import { LanguageSelector } from '../common/LanguageSelector';
+import { ThemeToggle } from '../common/ThemeToggle';
+import { NotificationDropdown } from '../common/NotificationDropdown';
+
+import { NotificationService, AppNotification } from '../../services/notificationService';
+
+interface NavbarProps {
+  activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about';
+  setActiveTab: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about') => void;
+  theme: 'light' | 'dark' | 'sepia';
+  setTheme: (theme: 'light' | 'dark' | 'sepia') => void;
+  offlineCount: number;
+  isAdmin: boolean;
+  onToggleAdmin: () => void;
+  onOpenUploadModal: () => void;
+  onNavigateNotification?: (notification: AppNotification) => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  activeTab,
+  setActiveTab,
+  theme,
+  setTheme,
+  offlineCount,
+  isAdmin,
+  onToggleAdmin,
+  onOpenUploadModal,
+  onNavigateNotification,
+}) => {
+  const { t } = useTranslation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { id: 'home' as const, label: t('home'), icon: BookOpen },
+    { id: 'explore' as const, label: 'Textbooks', icon: Compass },
+    { id: 'examprep' as const, label: 'ESSLCE Hub', icon: Award },
+    {
+      id: 'saved' as const,
+      label: t('savedBooks'),
+      icon: Bookmark,
+      badge: offlineCount > 0 ? offlineCount : undefined,
+    },
+    { id: 'about' as const, label: t('aboutCurriculum'), icon: Info },
+  ];
+
+  return (
+    <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+      {/* Top Ethiopian accent stripe */}
+      <div className="h-1 w-full ethio-gradient-bar" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Brand Logo */}
+          <div
+            className="flex items-center gap-3 cursor-pointer group"
+            onClick={() => setActiveTab('home')}
+          >
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 via-yellow-500 to-red-600 p-0.5 shadow-md group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-yellow-400" />
+              </div>
+            </div>
+            <div>
+              <div className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg tracking-tight flex items-center gap-1.5">
+                <span>Ethiopian Textbooks</span>
+                <span className="text-xs px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-bold rounded-full border border-emerald-300 dark:border-emerald-800">
+                  Grades 9-12
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
+                {t('appSubtitle')}
+              </p>
+            </div>
+          </div>
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                    isActive
+                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-600 dark:text-emerald-400' : ''}`} />
+                  <span>{item.label}</span>
+                  {item.badge !== undefined && (
+                    <span className="ml-1 px-1.5 py-0.2 bg-emerald-600 text-white text-xs rounded-full font-bold">
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right Controls: Admin Toggle, Language, Notifications & Theme */}
+          <div className="flex items-center gap-2 shrink-0">
+            {!isAdmin && (
+              <button
+                onClick={onToggleAdmin}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all active:scale-95"
+                title="Admin Login"
+              >
+                <Shield className="w-3.5 h-3.5 text-amber-500" />
+                <span>Admin</span>
+              </button>
+            )}
+
+            <LanguageSelector />
+            <NotificationDropdown onNavigateNotification={onNavigateNotification} />
+            <ThemeToggle theme={theme} setTheme={setTheme} />
+
+            {/* Mobile menu hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-1 animate-in slide-in-from-top duration-200">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                  isActive
+                    ? 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </div>
+                {item.badge !== undefined && (
+                  <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs rounded-full">
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <button
+              onClick={() => {
+                onToggleAdmin();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30"
+            >
+              <div className="flex items-center gap-3">
+                <Shield className="w-4 h-4" />
+                <span>{isAdmin ? 'Admin Mode (Active)' : 'Enable Admin Upload Mode'}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
