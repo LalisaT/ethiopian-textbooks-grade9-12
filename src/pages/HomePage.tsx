@@ -32,6 +32,7 @@ interface HomePageProps {
   onNavigateToExplore: () => void;
   onNavigateToExamPrep: () => void;
   onNavigateToCommunity: () => void;
+  onNavigateToTeacherGuides?: () => void;
   isAdmin?: boolean;
   onEditBook?: (book: Book) => void;
   onDeleteBook?: (bookId: string) => void;
@@ -50,6 +51,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onSelectGradeFilter,
   onNavigateToExplore,
   onNavigateToExamPrep,
+  onNavigateToTeacherGuides,
   isAdmin = false,
   onEditBook,
   onDeleteBook,
@@ -91,7 +93,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </h1>
 
           <p className="text-slate-300 text-xs sm:text-sm sm:leading-relaxed max-w-2xl">
-            Official Ministry of Education curriculum textbooks for Secondary and Preparatory schools. Master <strong>Natural Sciences</strong> and <strong>Social Sciences</strong> streams and prepare for the <strong>Grade 12 University Entrance Examination (ESSLCE)</strong> in English across all high schools nationwide.
+            Official Ministry of Education curriculum textbooks and <strong>Teacher's Guides (የመምህር መመሪያ)</strong> for Secondary and Preparatory schools. Master <strong>Natural Sciences</strong> and <strong>Social Sciences</strong> streams and prepare for the <strong>Grade 12 University Entrance Examination (ESSLCE)</strong> in English across all high schools nationwide.
           </p>
 
           {/* Quick CTA Buttons - Full Width on Mobile for Better Ergonomics */}
@@ -106,12 +108,21 @@ export const HomePage: React.FC<HomePageProps> = ({
             </button>
 
             <button
-              onClick={onNavigateToExamPrep}
-              className="px-5 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+              onClick={onNavigateToTeacherGuides || onNavigateToExplore}
+              className="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 ring-2 ring-amber-400/40"
             >
-              <Award className="w-4 h-4" />
+              <span>🧑‍🏫 Teacher Guides</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-950/20 font-black">የመምህር መመሪያ</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={onNavigateToExamPrep}
+              className="px-5 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs sm:text-sm border border-slate-700 shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Award className="w-4 h-4 text-amber-400" />
               <span>ESSLCE Entrance Exam Hub</span>
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-4 h-4 text-amber-400" />
             </button>
           </div>
 
@@ -128,6 +139,10 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="flex items-center gap-1.5 text-slate-300">
               <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span>Grade 12 ESSLCE Past Exams</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <BookOpen className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>🧑‍🏫 Teacher Guides (የመምህር መመሪያ)</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
               <BookMarked className="w-3.5 h-3.5 text-emerald-400 shrink-0" />

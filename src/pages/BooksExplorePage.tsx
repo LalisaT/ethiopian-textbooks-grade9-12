@@ -14,6 +14,7 @@ interface BooksExplorePageProps {
   readingProgress: Record<string, { percentComplete: number }>;
   initialGrade?: GradeLevel | 'all';
   initialStream?: AcademicStream;
+  initialBookType?: 'all' | 'textbook' | 'teacher_guide';
   isAdmin?: boolean;
   onEditBook?: (book: Book) => void;
   onDeleteBook?: (bookId: string) => void;
@@ -31,6 +32,7 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
   readingProgress,
   initialGrade = 'all',
   initialStream = 'all',
+  initialBookType = 'all',
   isAdmin = false,
   onEditBook,
   onDeleteBook,
@@ -39,7 +41,7 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel | 'all'>(initialGrade);
   const [selectedStream, setSelectedStream] = useState<AcademicStream>(initialStream);
   const [selectedSubject, setSelectedSubject] = useState<SubjectCategory | 'all'>('all');
-  const [selectedBookType, setSelectedBookType] = useState<'all' | 'textbook' | 'teacher_guide'>('all');
+  const [selectedBookType, setSelectedBookType] = useState<'all' | 'textbook' | 'teacher_guide'>(initialBookType);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Synchronize state when navigation triggers changes in props
@@ -54,6 +56,12 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
       setSelectedStream(initialStream);
     }
   }, [initialStream]);
+
+  useEffect(() => {
+    if (initialBookType !== undefined) {
+      setSelectedBookType(initialBookType);
+    }
+  }, [initialBookType]);
 
   // Robust, multi-keyword search & filter algorithm for Grade 9-12
   const filteredBooks = useMemo(() => {

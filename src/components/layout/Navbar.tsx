@@ -10,6 +10,7 @@ import { NotificationService, AppNotification } from '../../services/notificatio
 interface NavbarProps {
   activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about';
   setActiveTab: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about') => void;
+  onNavigateToTeacherGuides?: () => void;
   theme: 'light' | 'dark' | 'sepia';
   setTheme: (theme: 'light' | 'dark' | 'sepia') => void;
   offlineCount: number;
@@ -22,6 +23,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
+  onNavigateToTeacherGuides,
   theme,
   setTheme,
   offlineCount,
@@ -36,6 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'home' as const, label: t('home'), icon: BookOpen },
     { id: 'explore' as const, label: 'Textbooks', icon: Compass },
+    { id: 'teacher_guides' as const, label: 'Teacher Guides 🧑‍🏫', icon: BookOpen },
     { id: 'examprep' as const, label: 'ESSLCE Hub', icon: Award },
     {
       id: 'saved' as const,
@@ -45,6 +48,18 @@ export const Navbar: React.FC<NavbarProps> = ({
     },
     { id: 'about' as const, label: t('aboutCurriculum'), icon: Info },
   ];
+
+  const handleNavClick = (id: string) => {
+    if (id === 'teacher_guides') {
+      if (onNavigateToTeacherGuides) {
+        onNavigateToTeacherGuides();
+      } else {
+        setActiveTab('explore');
+      }
+    } else {
+      setActiveTab(id as any);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
@@ -84,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleNavClick(item.id)}
                   className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
                     isActive
                       ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 shadow-sm'
@@ -141,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => {
-                  setActiveTab(item.id);
+                  handleNavClick(item.id);
                   setMobileMenuOpen(false);
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${

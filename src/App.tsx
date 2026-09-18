@@ -133,6 +133,7 @@ export const App: React.FC = () => {
   });
 
   const [exploreInitialGrade, setExploreInitialGrade] = useState<GradeLevel | 'all'>('all');
+  const [exploreInitialBookType, setExploreInitialBookType] = useState<'all' | 'textbook' | 'teacher_guide'>('all');
   const [exploreInitialRegion, setExploreInitialRegion] = useState<RegionId | 'all'>('all');
   const [exploreInitialLanguage, setExploreInitialLanguage] = useState<LanguageCode | 'all'>('all');
 
@@ -290,9 +291,30 @@ export const App: React.FC = () => {
     setExploreInitialLanguage(lang);
     setExploreInitialRegion('all');
     setExploreInitialGrade('all');
+    setExploreInitialBookType('all');
     setActiveTab('explore');
     setSelectedBook(null);
     setReaderState(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Direct shortcut to Teacher Guides in Explore
+  const handleNavigateToTeacherGuides = () => {
+    setExploreInitialBookType('teacher_guide');
+    setExploreInitialGrade('all');
+    setActiveTab('explore');
+    setSelectedBook(null);
+    setReaderState(null);
+    setIsAdminDashboardOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigateToExplore = () => {
+    setExploreInitialBookType('all');
+    setActiveTab('explore');
+    setSelectedBook(null);
+    setReaderState(null);
+    setIsAdminDashboardOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -449,12 +471,16 @@ export const App: React.FC = () => {
       <Navbar
         activeTab={activeTab}
         setActiveTab={(tab) => {
+          if (tab === 'explore') {
+            setExploreInitialBookType('all');
+          }
           setActiveTab(tab);
           setSelectedBook(null);
           setReaderState(null);
           setIsAdminDashboardOpen(false);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
+        onNavigateToTeacherGuides={handleNavigateToTeacherGuides}
         theme={theme}
         setTheme={setTheme}
         offlineCount={offlineBookIds.length}
@@ -513,10 +539,8 @@ export const App: React.FC = () => {
                 onSelectGradeFilter={handleSelectGradeFilter}
                 onSelectRegionFilter={handleSelectRegionFilter}
                 onSelectLanguageFilter={handleSelectLanguageFilter}
-                onNavigateToExplore={() => {
-                  setActiveTab('explore');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onNavigateToExplore={handleNavigateToExplore}
+                onNavigateToTeacherGuides={handleNavigateToTeacherGuides}
                 onNavigateToExamPrep={() => {
                   setActiveTab('examprep');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -540,6 +564,7 @@ export const App: React.FC = () => {
                 offlineBookIds={offlineBookIds}
                 readingProgress={readingProgress}
                 initialGrade={exploreInitialGrade}
+                initialBookType={exploreInitialBookType}
                 initialRegion={exploreInitialRegion}
                 initialLanguage={exploreInitialLanguage}
                 isAdmin={isAdmin}
