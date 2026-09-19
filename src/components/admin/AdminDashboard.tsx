@@ -18,6 +18,8 @@ import {
   Sparkles,
   ShieldCheck,
   Upload,
+  LogOut,
+  Radio,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -32,6 +34,7 @@ interface AdminDashboardProps {
   onRestoreDefaultBooks: () => void;
   onPreviewBook: (book: Book) => void;
   onClose: () => void;
+  onLogout?: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -46,6 +49,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onRestoreDefaultBooks,
   onPreviewBook,
   onClose,
+  onLogout,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGradeFilter, setSelectedGradeFilter] = useState<GradeLevel | 'all'>('all');
@@ -119,19 +123,44 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <div className="rounded-3xl bg-slate-950 text-white p-8 border border-amber-500/30 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/40 text-xs font-black">
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>LOGGED IN AS SUPER ADMIN (@lalion)</span>
+            <div className="flex items-center gap-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/40 text-xs font-black">
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                <span>ADMIN STUDIO LIVE</span>
+              </div>
+              <span className="text-xs text-slate-400 font-bold">• Super Admin (@lalion)</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black">
-              Administrator Library Dashboard
+              Curriculum & Textbook Studio
             </h1>
             <p className="text-xs sm:text-sm text-slate-400">
-              Upload, edit, customize, or delete any textbook. All uploaded books are stored permanently in your local IndexedDB storage.
+              Upload, edit, customize, or delete textbooks and past papers. All uploaded books are stored permanently in local device storage.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {/* Exit to Student App Button */}
+            <button
+              onClick={onClose}
+              className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-black text-xs rounded-xl shadow-md transition-transform active:scale-95 flex items-center gap-1.5 border border-slate-700"
+              title="Close Admin Studio and return to student app"
+            >
+              <LogOut className="w-4 h-4 text-amber-400" />
+              <span>Exit Studio</span>
+            </button>
+
+            {/* Lock & Log Out Button */}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="px-3.5 py-2.5 bg-rose-950/80 hover:bg-rose-900/80 text-rose-200 font-bold text-xs rounded-xl shadow-md transition-transform active:scale-95 flex items-center gap-1.5 border border-rose-800/60"
+                title="Lock Admin Studio and Sign Out Completely"
+              >
+                <ShieldCheck className="w-4 h-4 text-rose-400" />
+                <span>Lock &amp; Sign Out</span>
+              </button>
+            )}
+
             {/* FAST BULK UPLOAD BUTTON */}
             <button
               onClick={onOpenBatchModal}

@@ -12,16 +12,40 @@ export const Footer: React.FC = () => {
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5 text-white font-extrabold text-lg">
-              <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-black">
-                🇪🇹
+              <div className="w-8 h-8 rounded-xl overflow-hidden shadow-md shrink-0 bg-slate-800">
+                <img
+                  src="/brand/app-icon.jpg"
+                  alt="Ethiopian Textbooks Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <span>Ethiopian Grade 5–8 Textbooks</span>
+              <span>Ethiopian Grade 9–12 Textbooks &amp; Teacher Guides</span>
             </div>
             <p className="text-slate-400 text-sm max-w-md">
               Comprehensive open educational hub for Ethiopian students, teachers, and parents.
               Covering the official Ministry of Education (MOE) and all regional state curriculum adaptations.
             </p>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div
+              className="flex items-center gap-2 text-xs text-slate-500 cursor-default select-none"
+              onClick={() => {
+                const now = Date.now();
+                const tapCount = parseInt(sessionStorage.getItem('studio_tap_count') || '0', 10);
+                const lastTap = parseInt(sessionStorage.getItem('studio_last_tap') || '0', 10);
+                if (now - lastTap < 1500) {
+                  const newCount = tapCount + 1;
+                  sessionStorage.setItem('studio_tap_count', newCount.toString());
+                  sessionStorage.setItem('studio_last_tap', now.toString());
+                  if (newCount >= 5) {
+                    sessionStorage.removeItem('studio_tap_count');
+                    window.dispatchEvent(new CustomEvent('open-admin-studio'));
+                  }
+                } else {
+                  sessionStorage.setItem('studio_tap_count', '1');
+                  sessionStorage.setItem('studio_last_tap', now.toString());
+                }
+              }}
+              title="MOE Ethiopia Verified PWA"
+            >
               <Shield className="w-3.5 h-3.5 text-emerald-400" />
               <span>Offline-capable Progressive Web Application (PWA)</span>
             </div>

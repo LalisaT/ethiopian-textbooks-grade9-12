@@ -152,18 +152,87 @@ export const App: React.FC = () => {
   // Admin Login / Logout Trigger
   const handleToggleAdmin = () => {
     if (isAdmin) {
-      AuthService.logout();
-      setIsAdmin(false);
-      setIsAdminDashboardOpen(false);
+      handleExitAdmin();
     } else {
       setIsLoginModalOpen(true);
     }
   };
 
+  const handleCloseAdminStudio = () => {
+    setIsAdminDashboardOpen(false);
+    if (window.location.hash === '#admin-studio') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  };
+
+  const handleExitAdmin = () => {
+    AuthService.logout();
+    setIsAdmin(false);
+    setIsAdminDashboardOpen(false);
+    if (window.location.hash === '#admin-studio') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  };
+
   const handleLoginSuccess = () => {
     setIsAdmin(true);
+    setIsAdminDashboardOpen(true);
+    setIsLoginModalOpen(false);
     refreshLibraryState();
   };
+
+  // Discrete Admin Studio Live Entry Listeners (URL hash, query param, shortcut, custom event)
+  useEffect(() => {
+    const checkAdminStudioIntent = () => {
+      const isStudioRequested =
+        window.location.hash === '#admin-studio' ||
+        window.location.search.includes('admin=studio');
+
+      if (isStudioRequested) {
+        if (AuthService.isAuthenticated()) {
+          setIsAdmin(true);
+          setIsAdminDashboardOpen(true);
+        } else {
+          setIsLoginModalOpen(true);
+        }
+      }
+    };
+
+    checkAdminStudioIntent();
+    window.addEventListener('hashchange', checkAdminStudioIntent);
+
+    // Global discrete keyboard shortcut: Ctrl+Shift+A (or Cmd+Shift+A)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        if (AuthService.isAuthenticated()) {
+          setIsAdmin(true);
+          setIsAdminDashboardOpen((prev) => !prev);
+        } else {
+          setIsLoginModalOpen(true);
+        }
+      }
+    };
+
+    // Custom event listener for discrete UI triggers (e.g. 5 taps on footer badge)
+    const handleOpenStudioEvent = () => {
+      if (AuthService.isAuthenticated()) {
+        setIsAdmin(true);
+        setIsAdminDashboardOpen(true);
+      } else {
+        setIsLoginModalOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('open-admin-studio', handleOpenStudioEvent);
+
+    return () => {
+      window.removeEventListener('hashchange', checkAdminStudioIntent);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('open-admin-studio', handleOpenStudioEvent);
+    };
+  }, []);
 
   // Handle Single Book Uploaded
   const handleBookUploaded = (newBook: Book) => {
@@ -458,11 +527,7 @@ export const App: React.FC = () => {
           onOpenBatchModal={() => setIsBatchModalOpen(true)}
           onOpenBroadcastModal={() => setIsBroadcastModalOpen(true)}
           onOpenDashboard={() => setIsAdminDashboardOpen(!isAdminDashboardOpen)}
-          onExitAdmin={() => {
-            AuthService.logout();
-            setIsAdmin(false);
-            setIsAdminDashboardOpen(false);
-          }}
+          onExitAdmin={handleExitAdmin}
           isDashboardOpen={isAdminDashboardOpen}
         />
       )}
@@ -510,7 +575,8 @@ export const App: React.FC = () => {
             onDeleteAllBooks={handleDeleteAllBooks}
             onRestoreDefaultBooks={handleRestoreDefaultBooks}
             onPreviewBook={(book) => handleOpenPdf(book)}
-            onClose={() => setIsAdminDashboardOpen(false)}
+            onClose={handleCloseAdminStudio}
+            onLogout={handleExitAdmin}
           />
         ) : selectedBook ? (
           <BookDetailPage

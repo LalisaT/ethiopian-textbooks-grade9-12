@@ -120,16 +120,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right Controls: Admin Toggle, Language, Notifications & Theme */}
+          {/* Right Controls: Language, Notifications & Theme */}
           <div className="flex items-center gap-2 shrink-0">
-            {!isAdmin && (
+            {isAdmin && (
               <button
                 onClick={onToggleAdmin}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all active:scale-95"
-                title="Admin Login"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30 transition-all active:scale-95"
+                title="Admin Studio Active - Click to Exit"
               >
-                <Shield className="w-3.5 h-3.5 text-amber-500" />
-                <span>Admin</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                <span>Studio Active</span>
               </button>
             )}
 
@@ -180,20 +180,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             );
           })}
 
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-            <button
-              onClick={() => {
-                onToggleAdmin();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30"
-            >
-              <div className="flex items-center gap-3">
-                <Shield className="w-4 h-4" />
-                <span>{isAdmin ? 'Admin Mode (Active)' : 'Enable Admin Upload Mode'}</span>
-              </div>
-            </button>
-          </div>
+          {isAdmin && (
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                onClick={() => {
+                  onToggleAdmin();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30"
+              >
+                <div className="flex items-center gap-3">
+                  <Shield className="w-4 h-4" />
+                  <span>Exit Admin Studio</span>
+                </div>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </header>
