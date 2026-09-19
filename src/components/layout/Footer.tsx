@@ -1,9 +1,7 @@
 import React from 'react';
-import { BookOpen, Heart, Shield, Sparkles } from 'lucide-react';
-import { useTranslation } from '../../i18n/useTranslation';
+import { Shield } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { t } = useTranslation();
 
   return (
     <footer className="bg-slate-900 text-slate-400 text-sm border-t border-slate-800 transition-colors mt-16">
@@ -83,10 +81,14 @@ export const Footer: React.FC = () => {
 
         <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <p>© {new Date().getFullYear()} Ethiopian Textbooks Digital Portal. Developed for students across all regions.</p>
-          <div className="flex items-center gap-1 text-slate-400">
+          <div className="flex items-center gap-1.5 text-slate-400">
             <span>Built with</span>
-            <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 inline mx-0.5" />
-            <span>for Ethiopian Education</span>
+            <img
+              src="/brand/lalion-logo.png"
+              alt="Lalion Logo"
+              className="w-4 h-4 rounded-full inline-block object-contain ring-1 ring-slate-700/80"
+            />
+            <span className="font-semibold text-slate-200">Lalion</span>
           </div>
         </div>
       </div>
