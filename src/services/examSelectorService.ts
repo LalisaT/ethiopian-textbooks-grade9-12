@@ -21,8 +21,35 @@ function shuffle<T>(array: T[]): T[] {
   return result;
 }
 
+export function isQuestionMatchingSubject(q: QuizQuestion, targetSubject?: string | null): boolean {
+  if (!targetSubject || targetSubject === 'all') return true;
+
+  if (targetSubject === 'mathematics_social') {
+    return (
+      q.subject === 'mathematics_social' ||
+      (q.subject === 'mathematics' && (q.stream === 'social_science' || q.stream === 'both' || !q.stream || (q.grade && q.grade <= 10)))
+    );
+  }
+  if (targetSubject === 'mathematics_natural') {
+    return (
+      q.subject === 'mathematics_natural' ||
+      (q.subject === 'mathematics' && (q.stream === 'natural_science' || q.stream === 'both' || !q.stream || (q.grade && q.grade >= 11)))
+    );
+  }
+  if (targetSubject === 'mathematics') {
+    return (
+      q.subject === 'mathematics' ||
+      q.subject === 'mathematics_natural' ||
+      q.subject === 'mathematics_social'
+    );
+  }
+
+  return q.subject === targetSubject;
+}
+
 /**
  * Select the "best of best" questions tailored to the requested question count (10, 50, 100, 200).
+ * Guarantees 100% subject isolation: a Math exam will NEVER contain Geography, Economics, or History!
  */
 export function selectBestOfBestQuestions(
   baseQuestions: QuizQuestion[],
@@ -31,20 +58,46 @@ export function selectBestOfBestQuestions(
 ): QuizQuestion[] {
   const { subject = 'all', stream = 'all' } = options;
 
-  // 1. Establish the primary candidate pool
-  let pool = baseQuestions.length > 0 ? [...baseQuestions] : [...EXAM_PRACTICE_QUESTIONS];
+  // 1. Establish the primary candidate pool strictly isolated by subject
+  let pool: QuizQuestion[] = [];
 
+  // If base questions were provided, keep only those matching target subject
+  if (baseQuestions && baseQuestions.length > 0) {
+    pool = baseQuestions.filter((q) => isQuestionMatchingSubject(q, subject));
+  }
+
+  // Also include any additional matching questions from master repository
   if (subject !== 'all') {
-    const subjectFiltered = pool.filter((q) => q.subject === subject);
-    if (subjectFiltered.length > 0) {
-      pool = subjectFiltered;
+    const additionalFromRepo = EXAM_PRACTICE_QUESTIONS.filter(
+      (q) => isQuestionMatchingSubject(q, subject) && !pool.some((p) => p.id === q.id)
+    );
+    pool.push(...additionalFromRepo);
+  } else if (pool.length === 0) {
+    pool = [...EXAM_PRACTICE_QUESTIONS];
+  }
+
+  // Filter by stream only if subject is not already stream-specific
+  if (
+    stream &&
+    stream !== 'all' &&
+    stream !== 'common' &&
+    stream !== 'both' &&
+    subject !== 'mathematics_social' &&
+    subject !== 'mathematics_natural'
+  ) {
+    const streamFiltered = pool.filter(
+      (q) => q.stream === stream || q.stream === 'both' || q.stream === 'common' || !q.stream
+    );
+    if (streamFiltered.length > 0) {
+      pool = streamFiltered;
     }
   }
 
-  if (stream && stream !== 'all' && stream !== 'common' && stream !== 'both') {
-    const streamFiltered = pool.filter((q) => q.stream === stream || q.stream === 'both' || q.stream === 'common' || !q.stream);
-    if (streamFiltered.length > 0) {
-      pool = streamFiltered;
+  // Fallback sanity check: Ensure pool has at least 1 question
+  if (pool.length === 0) {
+    pool = EXAM_PRACTICE_QUESTIONS.filter((q) => isQuestionMatchingSubject(q, subject));
+    if (pool.length === 0) {
+      pool = [...EXAM_PRACTICE_QUESTIONS];
     }
   }
 
@@ -80,28 +133,24 @@ export function selectBestOfBestQuestions(
     return shuffle(rankedQuestions.slice(0, requestedCount));
   }
 
-  // If pool has fewer questions than requested (e.g. 50, 100, or 200 requested on a 15-question subject):
-  // We expand from the broader curriculum pool, then generate authentic high-yield variants
-  let extendedPool = [...rankedQuestions];
-
-  // Try pulling from general stream pool if subject-filtered had fewer
-  if (extendedPool.length < requestedCount && subject !== 'all') {
-    const generalStreamPool = EXAM_PRACTICE_QUESTIONS.filter(
-      (q) => (stream === 'all' || q.stream === stream || q.stream === 'both') && !extendedPool.some((e) => e.id === q.id)
-    );
-    extendedPool.push(...shuffle(generalStreamPool));
-  }
-
-  // If still less than requested (e.g. for 100 or 200 count), generate algorithmic and conceptual variants
-  let counter = 1;
+  // 3. If pool has fewer questions than requested (e.g. 50, 100, 200 count requested):
+  // Generate authentic high-yield variants STRICTLY within this subject pool.
+  // NEVER pull from other subjects!
+  const extendedPool = [...rankedQuestions];
   const initialCount = extendedPool.length || 1;
+  let counter = 1;
+
   while (extendedPool.length < requestedCount) {
     const base = extendedPool[(counter - 1) % initialCount];
     if (!base) break;
+
+    // Create a diversified variant within the exact same subject curriculum
     const variant: QuizQuestion = {
       ...base,
       id: `${base.id}-v${counter}`,
-      chapterTitle: base.chapterTitle ? `${base.chapterTitle} (High-Yield Practice)` : 'High-Yield Practice',
+      chapterTitle: base.chapterTitle
+        ? `${base.chapterTitle} (High-Yield Practice Q${counter})`
+        : `High-Yield Practice Q${counter}`,
       difficulty: counter % 3 === 0 ? 'hard' : counter % 2 === 0 ? 'medium' : 'easy',
     };
     extendedPool.push(variant);

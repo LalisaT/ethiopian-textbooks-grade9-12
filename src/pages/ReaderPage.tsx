@@ -19,7 +19,7 @@ export const ReaderPage: React.FC<ReaderPageProps> = ({
   onOpenDownloadModal,
 }) => {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="fixed inset-0 h-screen h-[100dvh] w-screen overflow-hidden bg-slate-950 flex flex-col z-50">
       <PdfDocumentViewer
         book={book}
         onBack={onBack}

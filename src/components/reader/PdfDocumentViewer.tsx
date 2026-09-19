@@ -141,7 +141,7 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
 
   if (isLoadingPdf) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center space-y-4 text-white px-4">
+      <div className="h-full w-full bg-slate-950 flex flex-col items-center justify-center space-y-4 text-white px-4">
         <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin text-emerald-400" />
         </div>
@@ -180,7 +180,7 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
 
   // Fallback for system books without attached PDF
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="h-full w-full overflow-hidden bg-slate-950 text-slate-100 flex flex-col">
       {/* Top Single Header */}
       <div className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shadow-xl">
         <div className="flex items-center gap-3">

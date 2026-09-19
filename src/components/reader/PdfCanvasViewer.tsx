@@ -666,8 +666,8 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       onTouchStart={triggerOverlayActivity}
       onTouchMove={triggerOverlayActivity}
       onScroll={triggerOverlayActivity}
-      className={`flex-1 w-full flex flex-col items-center select-none bg-slate-950 text-slate-100 ${
-        isFullscreen ? 'fixed inset-0 z-50 bg-slate-950 p-1 sm:p-2' : 'min-h-screen'
+      className={`fixed inset-0 h-screen h-[100dvh] w-screen w-[100dvw] overflow-hidden flex flex-col items-stretch select-none bg-slate-950 text-slate-100 z-50 overscroll-none ${
+        isFullscreen ? 'p-1 sm:p-2' : ''
       }`}
     >
       {/* 🔍 Realtime Touch Pinch Zoom Feedback Badge */}
@@ -1107,10 +1107,10 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       )}
 
       {/* Main Canvas Viewport with Optional Thumbnail Sidebar */}
-      <div className="flex-1 w-full flex overflow-hidden relative">
+      <div className="flex-1 min-h-0 w-full flex overflow-hidden relative">
         {/* Page Thumbnails / Jump Drawer */}
         {isSidebarOpen && (
-          <div className="w-48 sm:w-56 bg-slate-900/95 border-r border-slate-800 overflow-y-auto p-3 space-y-2 shrink-0 animate-in slide-in-from-left duration-200 z-20">
+          <div className="w-48 sm:w-56 h-full bg-slate-900/95 border-r border-slate-800 overflow-y-auto overscroll-contain p-3 space-y-2 shrink-0 animate-in slide-in-from-left duration-200 z-20">
             <div className="text-xs font-black text-slate-400 uppercase tracking-wider px-1 pb-1 border-b border-slate-800 flex justify-between items-center">
               <span>All Pages ({totalPages})</span>
               <button onClick={() => setIsSidebarOpen(false)} className="text-slate-500 hover:text-white p-1">
@@ -1150,9 +1150,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             if (['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
             setIsZenMode((z) => !z);
           }}
-          className={`flex-1 w-full flex justify-center items-start overflow-y-auto overflow-x-hidden p-1 sm:p-4 md:p-6 relative cursor-default ${
-            isFullscreen ? 'h-screen' : 'min-h-[85vh]'
-          } ${isZenMode ? 'pb-16' : 'pb-20 md:pb-6'}`}
+          className={`flex-1 min-h-0 h-full w-full flex justify-center items-start overflow-y-auto overflow-x-hidden p-1 sm:p-4 md:p-6 relative cursor-default overscroll-contain ${
+            isZenMode ? 'pb-16' : 'pb-20 md:pb-6'
+          }`}
           title="Double-click page to toggle Clean View / Full Screen"
         >
           {/* Left Side Page Turn Button (Desktop only - hidden on mobile to prevent covering text) */}
