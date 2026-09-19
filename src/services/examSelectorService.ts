@@ -1,6 +1,7 @@
 import { QuizQuestion, ExamStream } from '../types/quiz';
 import { SubjectCategory, GradeLevel } from '../types/book';
 import { EXAM_PRACTICE_QUESTIONS } from '../data/examQuestions';
+import { generateProceduralQuestion } from './proceduralQuizGenerator';
 
 export interface QuestionSelectionOptions {
   subject?: SubjectCategory | 'all';
@@ -134,27 +135,32 @@ export function selectBestOfBestQuestions(
   }
 
   // 3. If pool has fewer questions than requested (e.g. 50, 100, 200 count requested):
-  // Generate authentic high-yield variants STRICTLY within this subject pool.
-  // NEVER pull from other subjects!
+  // Generate authentic high-yield procedural questions STRICTLY within this subject.
+  // NEVER pull from other subjects and NEVER duplicate prompts!
   const extendedPool = [...rankedQuestions];
-  const initialCount = extendedPool.length || 1;
-  let counter = 1;
+  const seen = new Set<string>(extendedPool.map((q) => (q.question || '').trim().toLowerCase()));
+  let counter = 0;
+  let safety = 0;
 
-  while (extendedPool.length < requestedCount) {
-    const base = extendedPool[(counter - 1) % initialCount];
-    if (!base) break;
+  const targetSubjectCategory: SubjectCategory =
+    subject !== 'all' ? (subject as SubjectCategory) : 'physics';
 
-    // Create a diversified variant within the exact same subject curriculum
-    const variant: QuizQuestion = {
-      ...base,
-      id: `${base.id}-v${counter}`,
-      chapterTitle: base.chapterTitle
-        ? `${base.chapterTitle} (High-Yield Practice Q${counter})`
-        : `High-Yield Practice Q${counter}`,
-      difficulty: counter % 3 === 0 ? 'hard' : counter % 2 === 0 ? 'medium' : 'easy',
-    };
-    extendedPool.push(variant);
+  while (extendedPool.length < requestedCount && safety < requestedCount * 10) {
+    safety++;
+    const proc = generateProceduralQuestion(
+      targetSubjectCategory,
+      'all',
+      counter,
+      12,
+      'en'
+    );
     counter++;
+
+    const key = (proc.question || '').trim().toLowerCase();
+    if (!key || seen.has(key)) continue;
+
+    seen.add(key);
+    extendedPool.push(proc);
   }
 
   return shuffle(extendedPool.slice(0, requestedCount));
