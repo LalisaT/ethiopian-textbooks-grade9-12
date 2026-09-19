@@ -122,7 +122,7 @@ export const RegionSelector: React.FC<RegionSelectorProps> = ({
             >
               <div className="font-bold text-xs truncate">{getRegionName(reg)}</div>
               <div className={`text-[10px] truncate mt-0.5 ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
-                {reg.capital}
+                {reg.id === 'addis_ababa' || reg.id === 'dire_dawa' ? 'Chartered City' : (reg.capital || 'Regional State')}
               </div>
               {isSelected && (
                 <CheckCircle className="w-3.5 h-3.5 absolute top-2 right-2 text-white" />

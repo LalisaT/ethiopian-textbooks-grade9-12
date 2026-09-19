@@ -130,9 +130,19 @@ export const AboutCurriculumPage: React.FC = () => {
                   {reg.name}
                 </h4>
               </div>
-              <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                Capital: {reg.capital}
-              </div>
+              {reg.id === 'addis_ababa' || reg.id === 'dire_dawa' ? (
+                <div className="text-[11px] font-semibold text-sky-600 dark:text-sky-400">
+                  Chartered City Administration
+                </div>
+              ) : reg.id === 'national' ? (
+                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                  Seat of Federal Government: {reg.capital}
+                </div>
+              ) : reg.capital ? (
+                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                  Capital: {reg.capital}
+                </div>
+              ) : null}
               <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
                 {reg.description}
               </p>

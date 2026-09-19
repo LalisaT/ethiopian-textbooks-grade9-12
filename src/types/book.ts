@@ -132,7 +132,7 @@ export interface RegionInfo {
   nameOromo: string;
   nameTigrinya: string;
   nameSomali: string;
-  capital: string;
+  capital?: string;
   description: string;
   primaryLanguages: LanguageCode[];
   badgeColor: string;
