@@ -218,7 +218,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
       <div className="bg-slate-900 rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-800 overflow-hidden flex flex-col my-auto max-h-[95vh] text-slate-100">
         {/* Header */}
         <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/90">

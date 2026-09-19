@@ -183,7 +183,7 @@ export const AdminExamEditorModal: React.FC<AdminExamEditorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
       <div className="bg-slate-900 rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-800 flex flex-col my-auto max-h-[92vh] text-slate-100 overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-slate-800 bg-slate-950/90 flex items-center justify-between">
