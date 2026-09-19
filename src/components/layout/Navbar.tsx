@@ -68,28 +68,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
+          {/* Brand Logo & Name */}
           <div
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0 min-w-0"
             onClick={() => setActiveTab('home')}
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 via-yellow-500 to-red-600 p-0.5 shadow-md group-hover:scale-105 transition-transform overflow-hidden shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-500 via-amber-500 to-rose-500 p-0.5 shadow-sm group-hover:scale-105 transition-transform overflow-hidden shrink-0">
               <img
                 src="/brand/app-icon.jpg"
                 alt="Ethiopian Textbooks Logo"
                 className="w-full h-full object-cover rounded-[14px]"
               />
             </div>
-            <div>
-              <div className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg tracking-tight flex items-center gap-1.5">
-                <span>Ethiopian Textbooks</span>
-                <span className="text-xs px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-bold rounded-full border border-emerald-300 dark:border-emerald-800">
-                  Grades 9-12
-                </span>
+            <div className="min-w-0">
+              <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base lg:text-lg tracking-tight leading-tight block truncate">
+                Ethiopian Textbooks
+              </span>
+              <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
+                <span className="text-emerald-600 dark:text-emerald-400 font-black">Grades 9–12</span>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
+                <span className="truncate">EUEE &amp; Guides</span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-                {t('appSubtitle')}
-              </p>
             </div>
           </div>
 
@@ -145,17 +144,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Telegram</span>
             </a>
 
-            <LanguageSelector />
-            <NotificationDropdown onNavigateNotification={onNavigateNotification} />
-            <ThemeToggle theme={theme} setTheme={setTheme} />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <LanguageSelector />
+              <NotificationDropdown onNavigateNotification={onNavigateNotification} />
+              <ThemeToggle theme={theme} setTheme={setTheme} />
 
-            {/* Mobile menu hamburger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+              {/* Mobile menu hamburger */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center active:scale-95 shadow-xs focus:outline-none"
+                title="Menu"
+              >
+                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
         </div>
       </div>

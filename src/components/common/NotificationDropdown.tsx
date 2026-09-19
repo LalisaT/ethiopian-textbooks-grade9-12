@@ -84,18 +84,18 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           setIsOpen(!isOpen);
           refreshNotifs();
         }}
-        className={`relative p-2 rounded-xl border transition-all ${
+        className={`relative w-9 h-9 rounded-xl border transition-all flex items-center justify-center active:scale-95 shadow-xs ${
           isOpen
             ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'
-            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/60 border-slate-200 dark:border-slate-800'
+            : 'text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 bg-slate-100 dark:bg-slate-800 border-slate-200/80 dark:border-slate-700/80'
         }`}
         title="App & Study Notifications"
       >
-        <Bell className="w-5 h-5" />
+        <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-600 text-white text-[10px] font-black items-center justify-center">
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-600 text-white text-[9px] font-black items-center justify-center ring-2 ring-white dark:ring-slate-900">
               {unreadCount}
             </span>
           </span>
