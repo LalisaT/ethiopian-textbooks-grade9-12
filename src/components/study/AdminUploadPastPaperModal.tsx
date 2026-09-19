@@ -97,7 +97,7 @@ export const AdminUploadPastPaperModal: React.FC<AdminUploadPastPaperModalProps>
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg text-white">
-                Upload Past ESSLCE / Grade 12 National Exam Paper
+                Upload Past EUEE / Grade 12 National Exam Paper
               </h3>
               <p className="text-xs text-blue-400 font-bold">
                 Grade 12 University Entrance & Preparatory Resource Center
@@ -129,7 +129,7 @@ export const AdminUploadPastPaperModal: React.FC<AdminUploadPastPaperModalProps>
                   <span>Click to select PDF or drag & drop past exam paper</span>
                 )}
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">Supports Grade 12 ESSLCE & Preparatory PDF test papers</p>
+              <p className="text-[11px] text-slate-500 mt-1">Supports Grade 12 EUEE & Preparatory PDF test papers</p>
               <input
                 type="file"
                 accept=".pdf"
@@ -149,7 +149,7 @@ export const AdminUploadPastPaperModal: React.FC<AdminUploadPastPaperModalProps>
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. 2016 E.C. Grade 12 Physics ESSLCE National Entrance Exam"
+                placeholder="e.g. 2016 E.C. Grade 12 Physics EUEE National Entrance Exam"
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
@@ -189,7 +189,7 @@ export const AdminUploadPastPaperModal: React.FC<AdminUploadPastPaperModalProps>
                 onChange={(e) => setGrade(Number(e.target.value) as GradeLevel)}
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
-                <option value={12}>Grade 12 (ESSLCE / Matric)</option>
+                <option value={12}>Grade 12 (EUEE / Matric)</option>
                 <option value={11}>Grade 11 (Preparatory Model Exam)</option>
                 <option value={10}>Grade 10 (Secondary Model)</option>
                 <option value={9}>Grade 9 (Secondary Model)</option>

@@ -271,7 +271,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                 onChange={(e) => setGrade(Number(e.target.value) as GradeLevel)}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
               >
-                <option value={12}>Grade 12 (ESSLCE / Matric)</option>
+                <option value={12}>Grade 12 (EUEE / Matric)</option>
                 <option value={11}>Grade 11 (Preparatory)</option>
                 <option value={10}>Grade 10 (Secondary)</option>
                 <option value={9}>Grade 9 (Secondary)</option>

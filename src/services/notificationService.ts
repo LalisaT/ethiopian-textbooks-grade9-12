@@ -26,14 +26,14 @@ const DEFAULT_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-welcome',
     title: 'Welcome to Ethiopian Digital Textbooks!',
-    body: 'Your offline digital library for Grades 9-12 & ESSLCE is ready. Download books and study anytime without internet connection.',
+    body: 'Your offline digital library for Grades 9-12 & EUEE is ready. Download books and study anytime without internet connection.',
     date: new Date().toISOString(),
     read: false,
     type: 'welcome',
   },
   {
     id: 'notif-exam-prep',
-    title: 'Grade 12 ESSLCE / Matric Exam Simulation',
+    title: 'Grade 12 EUEE / Matric Exam Simulation',
     body: 'Practice with authentic national entrance exam questions covering Grades 9-12 across Natural & Social Science streams with instant feedback.',
     date: new Date(Date.now() - 3600000 * 2).toISOString(),
     read: false,

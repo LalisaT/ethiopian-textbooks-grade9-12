@@ -2,22 +2,22 @@ import { ExamPack, PastExamPaper, QuizQuestion } from '../types/quiz';
 import { GradeLevel, SubjectCategory } from '../types/book';
 import { EXAM_PRACTICE_QUESTIONS } from '../data/examQuestions';
 
-const STORAGE_KEY_CUSTOM_EXAM_PACKS = 'ethio_custom_exam_packs_v2';
-const STORAGE_KEY_PAST_PAPERS = 'ethio_past_exam_papers_v2';
+const STORAGE_KEY_CUSTOM_EXAM_PACKS = 'ethio_custom_exam_packs_v4';
+const STORAGE_KEY_PAST_PAPERS = 'ethio_past_exam_papers_v4';
 
 /**
- * 🇪🇹 Authentic Ethiopian Secondary School Leaving Certificate Examination (ESSLCE / Matric)
+ * 🇪🇹 Authentic Ethiopian Secondary School Leaving Certificate Examination (EUEE / Matric)
  * Past Examination Papers Repository
  */
 const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
   // =========================================================================
-  // 🔬 NATURAL SCIENCE STREAM - OFFICIAL ESSLCE NATIONAL EXAMS
+  // 🔬 NATURAL SCIENCE STREAM - OFFICIAL EUEE NATIONAL EXAMS
   // =========================================================================
   {
-    id: 'esslce-nat-phys-2024',
-    title: '2024 ESSLCE Physics National Examination (Natural Science)',
+    id: 'euee-nat-phys-2024',
+    title: '2024 EUEE Physics National Examination (Natural Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ፊዚክስ ብሔራዊ ፈተና (ተፈጥሮ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Fiiziksii ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Fiiziksii EUEE 2024',
     grade: 12,
     stream: 'natural_science',
     isEsslce: true,
@@ -33,10 +33,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'physics'),
   },
   {
-    id: 'esslce-nat-chem-2024',
-    title: '2024 ESSLCE Chemistry National Examination (Natural Science)',
+    id: 'euee-nat-chem-2024',
+    title: '2024 EUEE Chemistry National Examination (Natural Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ኬሚስትሪ ብሔራዊ ፈተና (ተፈጥሮ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Keemistirii ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Keemistirii EUEE 2024',
     grade: 12,
     stream: 'natural_science',
     isEsslce: true,
@@ -52,10 +52,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'chemistry'),
   },
   {
-    id: 'esslce-nat-math-2024',
-    title: '2024 ESSLCE Mathematics National Examination (Natural Science)',
+    id: 'euee-nat-math-2024',
+    title: '2024 EUEE Mathematics National Examination (Natural Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ሒሳብ ብሔራዊ ፈተና (ተፈጥሮ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Herregaa ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Herregaa EUEE 2024',
     grade: 12,
     stream: 'natural_science',
     isEsslce: true,
@@ -71,10 +71,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'mathematics_natural' || q.subject === 'mathematics'),
   },
   {
-    id: 'esslce-nat-bio-2024',
-    title: '2024 ESSLCE Biology National Examination (Natural Science)',
+    id: 'euee-nat-bio-2024',
+    title: '2024 EUEE Biology National Examination (Natural Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ባዮሎጂ ብሔራዊ ፈተና (ተፈጥሮ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Baayoloojii ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Baayoloojii EUEE 2024',
     grade: 12,
     stream: 'natural_science',
     isEsslce: true,
@@ -90,10 +90,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'biology'),
   },
   {
-    id: 'esslce-nat-phys-2023',
-    title: '2023 ESSLCE Physics National Examination (Natural Science)',
+    id: 'euee-nat-phys-2023',
+    title: '2023 EUEE Physics National Examination (Natural Science)',
     titleAmharic: 'የ 2023 የ 12ኛ ክፍል ፊዚክስ ብሔራዊ ፈተና',
-    titleOromo: 'Qormaata Biyyooleessaa Fiiziksii ESSLCE 2023',
+    titleOromo: 'Qormaata Biyyooleessaa Fiiziksii EUEE 2023',
     grade: 12,
     stream: 'natural_science',
     isEsslce: true,
@@ -109,10 +109,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'physics'),
   },
   {
-    id: 'esslce-nat-chem-2023',
-    title: '2023 ESSLCE Chemistry National Examination (Natural Science)',
+    id: 'euee-nat-chem-2023',
+    title: '2023 EUEE Chemistry National Examination (Natural Science)',
     titleAmharic: 'የ 2023 የ 12ኛ ክፍል ኬሚስትሪ ብሔራዊ ፈተና',
-    titleOromo: 'Qormaata Biyyooleessaa Keemistirii ESSLCE 2023',
+    titleOromo: 'Qormaata Biyyooleessaa Keemistirii EUEE 2023',
     grade: 12,
     stream: 'natural_science',
     isEsslce: true,
@@ -129,13 +129,13 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
   },
 
   // =========================================================================
-  // 📈 SOCIAL SCIENCE STREAM - OFFICIAL ESSLCE NATIONAL EXAMS
+  // 📈 SOCIAL SCIENCE STREAM - OFFICIAL EUEE NATIONAL EXAMS
   // =========================================================================
   {
-    id: 'esslce-soc-econ-2024',
-    title: '2024 ESSLCE Economics National Examination (Social Science)',
+    id: 'euee-soc-econ-2024',
+    title: '2024 EUEE Economics National Examination (Social Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ኢኮኖሚክስ ብሔራዊ ፈተና (ማህበራዊ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Ikonomiksii ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Ikonomiksii EUEE 2024',
     grade: 12,
     stream: 'social_science',
     isEsslce: true,
@@ -151,10 +151,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'economics'),
   },
   {
-    id: 'esslce-soc-hist-2024',
-    title: '2024 ESSLCE History National Examination (Social Science)',
+    id: 'euee-soc-hist-2024',
+    title: '2024 EUEE History National Examination (Social Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ታሪክ ብሔራዊ ፈተና (ማህበራዊ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Seenaa ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Seenaa EUEE 2024',
     grade: 12,
     stream: 'social_science',
     isEsslce: true,
@@ -170,10 +170,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'history'),
   },
   {
-    id: 'esslce-soc-geo-2024',
-    title: '2024 ESSLCE Geography National Examination (Social Science)',
+    id: 'euee-soc-geo-2024',
+    title: '2024 EUEE Geography National Examination (Social Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ጂኦግራፊ ብሔራዊ ፈተና (ማህበራዊ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Ji\'oogiraafii ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Ji\'oogiraafii EUEE 2024',
     grade: 12,
     stream: 'social_science',
     isEsslce: true,
@@ -189,10 +189,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'geography'),
   },
   {
-    id: 'esslce-soc-math-2024',
-    title: '2024 ESSLCE Mathematics National Examination (Social Science)',
+    id: 'euee-soc-math-2024',
+    title: '2024 EUEE Mathematics National Examination (Social Science)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ሒሳብ ብሔራዊ ፈተና (ማህበራዊ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa Herregaa ESSLCE 2024 (Hawaasaa)',
+    titleOromo: 'Qormaata Biyyooleessaa Herregaa EUEE 2024 (Hawaasaa)',
     grade: 12,
     stream: 'social_science',
     isEsslce: true,
@@ -208,10 +208,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'mathematics_social' || q.subject === 'mathematics'),
   },
   {
-    id: 'esslce-soc-econ-2023',
-    title: '2023 ESSLCE Economics National Examination (Social Science)',
+    id: 'euee-soc-econ-2023',
+    title: '2023 EUEE Economics National Examination (Social Science)',
     titleAmharic: 'የ 2023 የ 12ኛ ክፍል ኢኮኖሚክስ ብሔራዊ ፈተና',
-    titleOromo: 'Qormaata Biyyooleessaa Ikonomiksii ESSLCE 2023',
+    titleOromo: 'Qormaata Biyyooleessaa Ikonomiksii EUEE 2023',
     grade: 12,
     stream: 'social_science',
     isEsslce: true,
@@ -231,10 +231,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
   // 📚 COMMON CORE - ENGLISH & SCHOLASTIC APTITUDE
   // =========================================================================
   {
-    id: 'esslce-com-eng-2024',
-    title: '2024 ESSLCE English Language National Examination',
+    id: 'euee-com-eng-2024',
+    title: '2024 EUEE English Language National Examination',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል የእንግሊዝኛ ቋንቋ ብሔራዊ ፈተና',
-    titleOromo: 'Qormaata Biyyooleessaa Afaan Ingilizii ESSLCE 2024',
+    titleOromo: 'Qormaata Biyyooleessaa Afaan Ingilizii EUEE 2024',
     grade: 12,
     stream: 'both',
     isEsslce: true,
@@ -250,10 +250,10 @@ const DEFAULT_PAST_PAPERS: PastExamPaper[] = [
     questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'english'),
   },
   {
-    id: 'esslce-com-eng-2023',
-    title: '2023 ESSLCE English Language National Examination',
+    id: 'euee-com-eng-2023',
+    title: '2023 EUEE English Language National Examination',
     titleAmharic: 'የ 2023 የ 12ኛ ክፍል የእንግሊዝኛ ቋንቋ ብሔራዊ ፈተና',
-    titleOromo: 'Qormaata Biyyooleessaa Afaan Ingilizii ESSLCE 2023',
+    titleOromo: 'Qormaata Biyyooleessaa Afaan Ingilizii EUEE 2023',
     grade: 12,
     stream: 'both',
     isEsslce: true,
@@ -296,7 +296,7 @@ export const ExamService = {
   },
 
   /**
-   * Retrieve dynamic ESSLCE exam packs
+   * Retrieve dynamic EUEE exam packs (Separated by subject)
    */
   getExamPacks(
     grade: GradeLevel = 12,
@@ -306,44 +306,12 @@ export const ExamService = {
   ): ExamPack[] {
     const customPacks = this.getCustomExamPacks();
 
-    const naturalScienceFullPack: ExamPack = {
-      id: 'esslce-full-natural-pack',
-      title: 'ESSLCE Natural Science Complete University Entrance Mock Exam',
-      titleAmharic: 'የ 12ኛ ክፍል የተፈጥሮ ሳይንስ ሙሉ የዩኒቨርሲቲ መግቢያ ሞዴል ፈተና',
-      titleOromo: 'Qormaata Shaakalaa Guutuu Saayinsii Uumamaa ESSLCE',
-      description: 'Comprehensive entrance exam simulating actual exam conditions: Physics, Chemistry, Biology, Mathematics (Natural), and English questions compiled from Grades 9–12.',
-      grade: 12,
-      stream: 'natural_science',
-      subject: 'all',
-      language: 'en',
-      examYear: 2024,
-      timeLimitMinutes: 120,
-      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.stream === 'natural_science' || q.stream === 'both'),
-      isCustom: false,
-    };
-
-    const socialScienceFullPack: ExamPack = {
-      id: 'esslce-full-social-pack',
-      title: 'ESSLCE Social Science Complete University Entrance Mock Exam',
-      titleAmharic: 'የ 12ኛ ክፍል የማህበራዊ ሳይንስ ሙሉ የዩኒቨርሲቲ መግቢያ ሞዴል ፈተና',
-      titleOromo: 'Qormaata Shaakalaa Guutuu Saayinsii Hawaasaa ESSLCE',
-      description: 'Comprehensive entrance exam: Economics, History, Geography, Mathematics (Social), and English questions from Grades 9–12.',
-      grade: 12,
-      stream: 'social_science',
-      subject: 'all',
-      language: 'en',
-      examYear: 2024,
-      timeLimitMinutes: 120,
-      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.stream === 'social_science' || q.stream === 'both'),
-      isCustom: false,
-    };
-
     const physicsMockPack: ExamPack = {
-      id: 'esslce-mock-physics',
-      title: 'ESSLCE Physics High-Yield Entrance Exam Pack',
-      titleAmharic: 'የ 12ኛ ክፍል ፊዚክስ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ',
-      titleOromo: 'Qormaata Qophii Fiiziksii ESSLCE',
-      description: 'High-yield questions on Thermodynamics, 2D Motion, Newton laws, Electromagnetism, and Energy from Grades 9 to 12.',
+      id: 'euee-mock-physics',
+      title: 'EUEE Physics High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ፊዚክስ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Fiiziksii EUEE',
+      description: 'High-yield entrance questions on Thermodynamics, 2D Motion, Newton laws, Electromagnetism, and Energy from Grades 9 to 12.',
       grade: 12,
       stream: 'natural_science',
       subject: 'physics',
@@ -354,10 +322,10 @@ export const ExamService = {
     };
 
     const chemMockPack: ExamPack = {
-      id: 'esslce-mock-chemistry',
-      title: 'ESSLCE Chemistry High-Yield Entrance Exam Pack',
-      titleAmharic: 'የ 12ኛ ክፍል ኬሚስትሪ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ',
-      titleOromo: 'Qormaata Qophii Keemistirii ESSLCE',
+      id: 'euee-mock-chemistry',
+      title: 'EUEE Chemistry High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ኬሚስትሪ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Keemistirii EUEE',
       description: 'High-yield questions on Acid-Base equilibria, Buffers, VSEPR bonding, Stoichiometry, and Organic Chemistry.',
       grade: 12,
       stream: 'natural_science',
@@ -368,11 +336,71 @@ export const ExamService = {
       isCustom: false,
     };
 
+    const bioMockPack: ExamPack = {
+      id: 'euee-mock-biology',
+      title: 'EUEE Biology High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ባዮሎጂ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Baayoloojii EUEE',
+      description: 'Essential entrance questions on Cell Biology, Genetics, Molecular Biology, Human Physiology, and Ecology.',
+      grade: 12,
+      stream: 'natural_science',
+      subject: 'biology',
+      language: 'en',
+      timeLimitMinutes: 60,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'biology'),
+      isCustom: false,
+    };
+
+    const mathNaturalPack: ExamPack = {
+      id: 'euee-mock-math-natural',
+      title: 'EUEE Mathematics (Natural) High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ሒሳብ (ተፈጥሮ ሳይንስ) ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Herregaa (Uumamaa) EUEE',
+      description: 'Limits and Continuity, Differential Calculus, Integration, Vectors & 3D Geometry, Complex Numbers, and Matrices.',
+      grade: 12,
+      stream: 'natural_science',
+      subject: 'mathematics',
+      language: 'en',
+      timeLimitMinutes: 60,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'mathematics' || q.subject === 'mathematics_natural'),
+      isCustom: false,
+    };
+
+    const mathSocialPack: ExamPack = {
+      id: 'euee-mock-math-social',
+      title: 'EUEE Mathematics (Social) High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ሒሳብ (ማህበራዊ ሳይንስ) ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Herregaa (Hawaasaa) EUEE',
+      description: 'Matrices, Determinants, Linear Programming, Financial Mathematics, Probability, Statistics, and Introductory Calculus.',
+      grade: 12,
+      stream: 'social_science',
+      subject: 'mathematics_social',
+      language: 'en',
+      timeLimitMinutes: 60,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'mathematics_social' || (q.subject === 'mathematics' && q.grade <= 10)),
+      isCustom: false,
+    };
+
+    const englishMockPack: ExamPack = {
+      id: 'euee-mock-english',
+      title: 'EUEE English Language High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል እንግሊዝኛ ቋንቋ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Afaan Ingilizii EUEE',
+      description: 'Reading Comprehension, Conditionals, Reported Speech, Passive Voice, Grammar Structures, and Vocabulary in Context.',
+      grade: 12,
+      stream: 'both',
+      subject: 'english',
+      language: 'en',
+      timeLimitMinutes: 60,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'english'),
+      isCustom: false,
+    };
+
     const econMockPack: ExamPack = {
-      id: 'esslce-mock-economics',
-      title: 'ESSLCE Economics High-Yield Entrance Exam Pack',
-      titleAmharic: 'የ 12ኛ ክፍል ኢኮኖሚክስ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ',
-      titleOromo: 'Qormaata Qophii Ikonomiksii ESSLCE',
+      id: 'euee-mock-economics',
+      title: 'EUEE Economics High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ኢኮኖሚክስ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Ikonomiksii EUEE',
       description: 'Essential questions on GDP calculations, Elasticity, Inflation, Fiscal policy, and Ethiopian economic growth.',
       grade: 12,
       stream: 'social_science',
@@ -384,10 +412,10 @@ export const ExamService = {
     };
 
     const historyMockPack: ExamPack = {
-      id: 'esslce-mock-history',
-      title: 'ESSLCE History High-Yield Entrance Exam Pack',
-      titleAmharic: 'የ 12ኛ ክፍል ታሪክ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ',
-      titleOromo: 'Qormaata Qophii Seenaa ESSLCE',
+      id: 'euee-mock-history',
+      title: 'EUEE History High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ታሪክ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Seenaa EUEE',
       description: 'Crucial entrance questions on 19th Century State Formation, Treaty of Wuchale, Battle of Adwa, and Ethiopian leaders.',
       grade: 12,
       stream: 'social_science',
@@ -398,20 +426,59 @@ export const ExamService = {
       isCustom: false,
     };
 
+    const geoMockPack: ExamPack = {
+      id: 'euee-mock-geography',
+      title: 'EUEE Geography High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል ጂኦግራፊ ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: "Qormaata Qophii Ji'oogiraafii EUEE",
+      description: 'Topographic Map Reading, Climate & Weather, Geomorphology, Demographics, and Natural Resources of Ethiopia.',
+      grade: 12,
+      stream: 'social_science',
+      subject: 'geography',
+      language: 'en',
+      timeLimitMinutes: 60,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'geography'),
+      isCustom: false,
+    };
+
+    const civicsMockPack: ExamPack = {
+      id: 'euee-mock-citizenship',
+      title: 'EUEE Citizenship Education High-Yield Entrance Exam',
+      titleAmharic: 'የ 12ኛ ክፍል የዜግነት ትምህርት ከፍተኛ ውጤት ማምጫ የፈተና ፓኬጅ (EUEE)',
+      titleOromo: 'Qormaata Qophii Barnoota Lammummaa EUEE',
+      description: 'Ethiopian Constitutional Law, Democratic Governance, Human Rights, Rule of Law, and Civic Responsibilities.',
+      grade: 12,
+      stream: 'both',
+      subject: 'citizenship',
+      language: 'en',
+      timeLimitMinutes: 60,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'citizenship'),
+      isCustom: false,
+    };
+
     const all = [
-      naturalScienceFullPack,
-      socialScienceFullPack,
       physicsMockPack,
       chemMockPack,
+      bioMockPack,
+      mathNaturalPack,
+      mathSocialPack,
+      englishMockPack,
       econMockPack,
       historyMockPack,
+      geoMockPack,
+      civicsMockPack,
       ...customPacks,
     ];
 
     return all.filter((p) => {
-      if (subject && subject !== 'all' && p.subject !== 'all' && p.subject !== subject) return false;
+      if (subject && subject !== 'all') {
+        if (subject === 'mathematics' && (p.subject === 'mathematics' || p.subject === 'mathematics_natural' || p.subject === 'mathematics_social')) {
+          // match
+        } else if (p.subject !== subject) {
+          return false;
+        }
+      }
       if (stream && stream !== 'all' && p.stream && p.stream !== 'both' && p.stream !== stream) return false;
-      if (language && language !== 'all' && p.language && p.language !== language) return false;
       return true;
     });
   },

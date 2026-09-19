@@ -31,7 +31,7 @@ export const ETHIOPIAN_REGIONS: RegionInfo[] = [
     nameOromo: 'Mootummaa Naannoo Oromiyaa',
     nameTigrinya: 'ክልላዊ መንግስቲ ኦሮሚያ',
     nameSomali: 'Dowlad Degaanka Oromada',
-    capital: 'Finfinnee / Adama',
+    capital: 'Finfinnee',
     description: 'Oromia Education Bureau curriculum featuring Afaan Oromoo and English language student textbooks.',
     primaryLanguages: ['om', 'en', 'am'],
     badgeColor: 'bg-red-600 text-white',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ETHIOPIAN_SUBJECTS } from '../../data/subjects';
 import { SubjectCategory, GradeLevel } from '../../types/book';
-import { QuizQuestion, QuizAttempt, ExamPack, PastExamPaper } from '../../types/quiz';
+import { QuizQuestion, QuizAttempt, ExamPack, PastExamPaper, ExamStream } from '../../types/quiz';
 import { useTranslation } from '../../i18n/useTranslation';
 import { ExamService } from '../../services/examService';
 import { AuthService } from '../../services/authService';
@@ -10,6 +10,8 @@ import { QuizModal } from './QuizModal';
 import { FlashcardViewer } from './FlashcardViewer';
 import { FLASHCARDS_LIST } from '../../data/examQuestions';
 import { CategoryService, LanguageCategoryItem, SubjectCategoryItem } from '../../services/categoryService';
+import { ExamConfigModal } from './ExamConfigModal';
+import { selectBestOfBestQuestions } from '../../services/examSelectorService';
 import { AdminExamEditorModal } from './AdminExamEditorModal';
 import { AdminUploadPastPaperModal } from './AdminUploadPastPaperModal';
 import { AdminCategoryManagerModal } from '../admin/AdminCategoryManagerModal';
@@ -56,6 +58,14 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
   const [activeQuizQuestions, setActiveQuizQuestions] = useState<QuizQuestion[] | null>(null);
   const [quizModalTitle, setQuizModalTitle] = useState('');
   const [activeExamLanguage, setActiveExamLanguage] = useState<string>('en');
+  const [activeExamTimeLimitMinutes, setActiveExamTimeLimitMinutes] = useState<number>(60);
+  const [selectedExamForConfig, setSelectedExamForConfig] = useState<{
+    title: string;
+    questions: QuizQuestion[];
+    language?: string;
+    subject?: SubjectCategory | 'all';
+    stream?: ExamStream | 'all';
+  } | null>(null);
   const [activeTab, setActiveTab] = useState<'exams' | 'past_papers' | 'flashcards' | 'history'>('exams');
 
   // Exam packs & past papers
@@ -73,17 +83,23 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
 
   const loadData = () => {
     setIsAdmin(AuthService.isAuthenticated());
-    setExamPacks(ExamService.getExamPacks(selectedGrade, selectedSubject, selectedLanguageFilter, selectedStream));
-    setPastPapers(ExamService.getPastPapers(selectedGrade, selectedSubject, selectedLanguageFilter, selectedStream));
+    setExamPacks(ExamService.getExamPacks(selectedGrade, selectedSubject, 'all', selectedStream));
+    setPastPapers(ExamService.getPastPapers(selectedGrade, selectedSubject, 'all', selectedStream));
     setLanguageCategories(CategoryService.getLanguageCategories());
     setSubjectCategories(CategoryService.getSubjectCategories());
   };
 
   useEffect(() => {
     loadData();
-  }, [selectedGrade, selectedStream, selectedSubject, selectedLanguageFilter]);
+  }, [selectedGrade, selectedStream, selectedSubject]);
 
-  const handleStartExam = (title: string, questions: QuizQuestion[], examLang?: string) => {
+  const handleStartExam = (
+    title: string,
+    questions: QuizQuestion[],
+    examLang?: string,
+    subject?: SubjectCategory | 'all',
+    stream?: ExamStream | 'all'
+  ) => {
     let filteredQuestions = [...questions];
     if (selectedSourceGrade !== 'all') {
       const sourceFiltered = questions.filter(q => q.sourceGrade === selectedSourceGrade);
@@ -91,9 +107,37 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
         filteredQuestions = sourceFiltered;
       }
     }
-    setActiveQuizQuestions(filteredQuestions);
-    setQuizModalTitle(title);
-    setActiveExamLanguage(examLang || language || 'en');
+    setSelectedExamForConfig({
+      title,
+      questions: filteredQuestions,
+      language: examLang || language || 'en',
+      subject: subject || (selectedSubject !== 'all' ? selectedSubject : filteredQuestions[0]?.subject),
+      stream: stream || (selectedStream !== 'all' ? selectedStream : 'all'),
+    });
+  };
+
+  const handleConfirmStartExam = (
+    selectedCount: number,
+    timeLimitMinutes: number,
+    bestOfBest: boolean
+  ) => {
+    if (!selectedExamForConfig) return;
+
+    const curatedQuestions = selectBestOfBestQuestions(
+      selectedExamForConfig.questions,
+      selectedCount,
+      {
+        subject: selectedExamForConfig.subject,
+        stream: selectedExamForConfig.stream,
+        bestOfBestOnly: bestOfBest,
+      }
+    );
+
+    setActiveQuizQuestions(curatedQuestions);
+    setQuizModalTitle(`${selectedExamForConfig.title} • ${selectedCount} Best-of-Best Questions`);
+    setActiveExamLanguage(selectedExamForConfig.language || language || 'en');
+    setActiveExamTimeLimitMinutes(timeLimitMinutes);
+    setSelectedExamForConfig(null);
   };
 
   const handleQuizComplete = (score: number, total: number) => {
@@ -151,7 +195,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30 text-xs font-black backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Grade 12 ESSLCE / Matric • University Entrance Examination Hub</span>
+              <span>Grade 12 EUEE • Ethiopian University Entrance Examination Hub</span>
             </div>
 
             {isAdmin && (
@@ -164,10 +208,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
 
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
             {language === 'om'
-              ? 'Wiirtuu Qormaata Biyyooleessaa ESSLCE Kutaa 12ffaa'
+              ? 'Wiirtuu Qormaata Seensa Yuunivarsiitii Biyyooleessaa (EUEE) Kutaa 12ffaa'
               : language === 'am'
-              ? 'የ 12ኛ ክፍል የዩኒቨርሲቲ መግቢያ ብሔራዊ ፈተና (ESSLCE) መለማመጃ ማዕከል'
-              : 'Grade 12 University Entrance Examination (ESSLCE) Hub'}
+              ? 'የ 12ኛ ክፍል የዩኒቨርሲቲ መግቢያ ብሔራዊ ፈተና (EUEE) መለማመጃ ማዕከል'
+              : 'Grade 12 Ethiopian University Entrance Examination (EUEE) Hub'}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
@@ -234,7 +278,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>ESSLCE Model Examinations</span>
+            <span>EUEE Model Examinations</span>
             {activeTab === 'exams' && (
               <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
             )}
@@ -249,7 +293,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             }`}
           >
             <FileText className="w-4 h-4" />
-            <span>Official ESSLCE Past Papers (2020–2024)</span>
+            <span>Official EUEE Past Papers (2020–2024)</span>
             <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-400 text-[10px] font-extrabold rounded-full">
               {pastPapers.length}
             </span>
@@ -301,7 +345,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                 className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-md active:scale-95 transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Add ESSLCE Model Exam</span>
+                <span>Add EUEE Model Exam</span>
               </button>
             )}
 
@@ -318,7 +362,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
         )}
       </div>
 
-      {/* Tab 1: ESSLCE Model Examination Tests */}
+      {/* Tab 1: EUEE Model Examination Tests */}
       {activeTab === 'exams' && (
         <div className="space-y-4">
           {/* Syllabus Source Grade Filter Bar */}
@@ -384,35 +428,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             </div>
           </div>
 
-          {/* Distinct Language Category Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-slate-900/70 rounded-2xl border border-slate-800">
-            <div className="flex items-center gap-2 overflow-x-auto">
-              <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5 whitespace-nowrap">
-                <Globe className="w-3.5 h-3.5 text-amber-400" />
-                <span>Examination Language:</span>
-              </span>
-              {languageCategories.map((lang) => (
-                <button
-                  key={lang.id}
-                  onClick={() => setSelectedLanguageFilter(lang.id)}
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                    selectedLanguageFilter === lang.id
-                      ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black shadow-md ring-2 ring-amber-400/40'
-                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
-                  }`}
-                >
-                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-                  <span>{lang.name}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="text-xs font-bold text-slate-400 whitespace-nowrap">
-              <span className="text-amber-400 font-extrabold">{examPacks.length}</span> ESSLCE Packs Available
-            </div>
-          </div>
-
-          {/* Exam Packs Grid */}
+          {/* Exam Packs Grid (Separated by Subject) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
             {examPacks.map((pack) => {
               const packTitle = language === 'om' ? (pack.titleOromo || pack.title) : language === 'am' ? (pack.titleAmharic || pack.title) : pack.title;
@@ -438,7 +454,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-amber-500 font-bold font-mono">ESSLCE</span>
+                        <span className="text-xs text-amber-500 font-bold font-mono">EUEE</span>
                         {isAdmin && (
                           <div className="flex items-center gap-1 ml-2">
                             <button
@@ -485,7 +501,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   </div>
 
                   <button
-                    onClick={() => handleStartExam(packTitle, pack.questions, pack.language)}
+                    onClick={() => handleStartExam(packTitle, pack.questions, pack.language, pack.subject, pack.stream)}
                     disabled={pack.questions.length === 0}
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                   >
@@ -499,7 +515,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
         </div>
       )}
 
-      {/* Tab 2: Official ESSLCE Past Papers (2020–2024) */}
+      {/* Tab 2: Official EUEE Past Papers (2020–2024) */}
       {activeTab === 'past_papers' && (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700">
@@ -525,7 +541,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="px-2.5 py-0.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-extrabold text-xs rounded-full">
-                      {paper.year} ESSLCE Exam
+                      {paper.year} EUEE Exam
                     </span>
                     <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-bold rounded-lg">
                       {paper.stream === 'natural_science' ? 'Natural Sci' : paper.stream === 'social_science' ? 'Social Sci' : 'Core'}
@@ -555,10 +571,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   <button
                     onClick={() => {
                       if (paper.questions && paper.questions.length > 0) {
-                        handleStartExam(paper.title, paper.questions, paper.language);
+                        handleStartExam(paper.title, paper.questions, paper.language, paper.subject, paper.stream);
                       } else {
                         const fallbackQ = ExamService.getQuestionsForQuiz(12, paper.subject, 10);
-                        handleStartExam(paper.title, fallbackQ, paper.language);
+                        handleStartExam(paper.title, fallbackQ, paper.language, paper.subject, paper.stream);
                       }
                     }}
                     className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5"
@@ -605,7 +621,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             <div className="py-12 text-center text-slate-400 space-y-2">
               <Award className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-700" />
               <p className="font-bold text-sm">No exam attempts recorded yet.</p>
-              <p className="text-xs">Take an ESSLCE practice exam or past paper to track your progress and score history.</p>
+              <p className="text-xs">Take an EUEE practice exam or past paper to track your progress and score history.</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -647,8 +663,20 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           onClose={() => setActiveQuizQuestions(null)}
           questions={activeQuizQuestions}
           title={quizModalTitle}
+          timeLimitMinutes={activeExamTimeLimitMinutes}
           onComplete={handleQuizComplete}
           examLanguage={activeExamLanguage}
+        />
+      )}
+
+      {/* Question Count Selection & Best of Best Config Modal */}
+      {selectedExamForConfig && (
+        <ExamConfigModal
+          isOpen={true}
+          onClose={() => setSelectedExamForConfig(null)}
+          examTitle={selectedExamForConfig.title}
+          availableQuestionsCount={selectedExamForConfig.questions.length}
+          onConfirmStart={handleConfirmStartExam}
         />
       )}
 

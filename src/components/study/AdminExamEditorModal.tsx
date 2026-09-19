@@ -193,7 +193,7 @@ export const AdminExamEditorModal: React.FC<AdminExamEditorModalProps> = ({
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg text-white">
-                {examPack ? 'Edit ESSLCE / Model Exam Pack' : 'Create New ESSLCE / Model Exam Pack'}
+                {examPack ? 'Edit EUEE / Model Exam Pack' : 'Create New EUEE / Model Exam Pack'}
               </h3>
               <p className="text-xs text-amber-400 font-bold">
                 Grade 12 University Entrance & Preparatory Exam Configuration
@@ -222,7 +222,7 @@ export const AdminExamEditorModal: React.FC<AdminExamEditorModalProps> = ({
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Grade 12 ESSLCE National Physics Model Entrance Exam"
+                placeholder="e.g. Grade 12 EUEE National Physics Model Entrance Exam"
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white focus:ring-2 focus:ring-amber-500 focus:outline-none"
               />
             </div>
@@ -262,7 +262,7 @@ export const AdminExamEditorModal: React.FC<AdminExamEditorModalProps> = ({
                 onChange={(e) => setGrade(Number(e.target.value) as GradeLevel)}
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white focus:ring-2 focus:ring-amber-500 focus:outline-none"
               >
-                <option value={12}>Grade 12 (ESSLCE / Matric)</option>
+                <option value={12}>Grade 12 (EUEE / Matric)</option>
                 <option value={11}>Grade 11 (Preparatory Model)</option>
                 <option value={10}>Grade 10 (Secondary Model)</option>
                 <option value={9}>Grade 9 (Secondary Model)</option>

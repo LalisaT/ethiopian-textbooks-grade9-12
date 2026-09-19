@@ -514,7 +514,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   <button
                     type="button"
                     onClick={() => {
-                      setTitle('New Grade 12 ESSLCE Model Exam Papers Released!');
+                      setTitle('New Grade 12 EUEE Model Exam Papers Released!');
                       setMessage('Take the timed practice entrance tests across Natural and Social Science streams with step-by-step solutions.');
                       setCategory('Exam Prep');
                       setActionUrl('tab:examprep');
@@ -522,7 +522,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       setLinkTitle('Official EAES Exam Portal');
                       setLinkType('portal');
                       setImageUrl('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80');
-                      setImageCaption('Grade 12 ESSLCE Exam Simulation Test');
+                      setImageCaption('Grade 12 EUEE Exam Simulation Test');
                     }}
                     className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-amber-300 font-bold border border-slate-700 transition-colors"
                   >
@@ -575,7 +575,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. New Grade 12 ESSLCE National Exam Papers Uploaded!"
+                  placeholder="e.g. New Grade 12 EUEE National Exam Papers Uploaded!"
                   className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
@@ -849,7 +849,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
                   >
                     <option value="All Grades (9-12)">All Grades (9, 10, 11, 12)</option>
-                    <option value="Grade 12 Only">Grade 12 (ESSLCE / Matric)</option>
+                    <option value="Grade 12 Only">Grade 12 (EUEE / Matric)</option>
                     <option value="Grade 11 Only">Grade 11 (Preparatory)</option>
                     <option value="Grade 10 Only">Grade 10 (Secondary)</option>
                     <option value="Grade 9 Only">Grade 9 (Secondary)</option>

@@ -16,7 +16,7 @@ export interface SubjectCategoryItem {
 }
 
 const STORAGE_KEY_LANG_CATEGORIES = 'ethio_custom_lang_categories_v2';
-const STORAGE_KEY_SUBJECT_CATEGORIES = 'ethio_custom_sub_categories_v2';
+const STORAGE_KEY_SUBJECT_CATEGORIES = 'ethio_custom_sub_categories_v3';
 
 export const DEFAULT_LANGUAGE_CATEGORIES: LanguageCategoryItem[] = [
   { id: 'all', name: 'All Languages', colorDot: 'indigo', region: 'All' },
@@ -29,16 +29,17 @@ export const DEFAULT_LANGUAGE_CATEGORIES: LanguageCategoryItem[] = [
 ];
 
 export const DEFAULT_ACADEMIC_SUBJECTS: SubjectCategoryItem[] = [
-  { id: 'mathematics', name: 'Mathematics', nameAmharic: 'ሒሳብ', nameOromo: 'Herrega' },
-  { id: 'general_science', name: 'General Science', nameAmharic: 'አጠቃላይ ሳይንስ', nameOromo: 'Saayinsii Waliigalaa' },
-  { id: 'social_studies', name: 'Social Studies', nameAmharic: 'ማህበራዊ ሳይንስ', nameOromo: 'Saayinsii Hawaasaa' },
-  { id: 'citizenship', name: 'Citizenship Education', nameAmharic: 'የዜግነት ትምህርት', nameOromo: 'Barnoota Lammummaa' },
+  { id: 'physics', name: 'Physics', nameAmharic: 'ፊዚክስ', nameOromo: 'Fiiziksii' },
+  { id: 'chemistry', name: 'Chemistry', nameAmharic: 'ኬሚስትሪ', nameOromo: 'Keemistirii' },
+  { id: 'biology', name: 'Biology', nameAmharic: 'ባዮሎጂ', nameOromo: 'Baayoloojii' },
+  { id: 'mathematics', name: 'Mathematics (Natural)', nameAmharic: 'ሒሳብ (ተፈጥሮ ሳይንስ)', nameOromo: 'Herrega (Uumamaa)' },
+  { id: 'mathematics_social', name: 'Mathematics (Social)', nameAmharic: 'ሒሳብ (ማህበራዊ ሳይንስ)', nameOromo: 'Herrega (Hawaasaa)' },
   { id: 'english', name: 'English Language', nameAmharic: 'እንግሊዝኛ ቋንቋ', nameOromo: 'Afaan Ingilizii' },
-  { id: 'environmental_science', name: 'Environmental Science', nameAmharic: 'የአካባቢ ሳይንስ', nameOromo: 'Saayinsii Naannoo' },
+  { id: 'economics', name: 'Economics', nameAmharic: 'ኢኮኖሚክስ', nameOromo: 'Ikonomiksii' },
+  { id: 'history', name: 'History', nameAmharic: 'ታሪክ', nameOromo: 'Seenaa' },
+  { id: 'geography', name: 'Geography', nameAmharic: 'ጂኦግራፊ', nameOromo: 'Ji\'oogiraafii' },
+  { id: 'citizenship', name: 'Citizenship Education', nameAmharic: 'የዜግነት ትምህርት', nameOromo: 'Barnoota Lammummaa' },
   { id: 'it', name: 'Information Technology (IT)', nameAmharic: 'ኢንፎርሜሽን ቴክኖሎጂ', nameOromo: 'Teeknooloojii Odeeffannoo' },
-  { id: 'cte', name: 'Career & Technical Education (CTE)', nameAmharic: 'የስራና ቴክኒክ', nameOromo: 'Ogummaa fi Teeknooloojii' },
-  { id: 'pva', name: 'Performing & Visual Arts (PVA)', nameAmharic: 'የስነ-ጥበባት', nameOromo: 'Aartii Mul\'ataa' },
-  { id: 'hpe', name: 'Health & Physical Education (HPE)', nameAmharic: 'የሰውነት ማጎልመሻና ጤና', nameOromo: 'Fayyaa fi Qor-qalbii' },
 ];
 
 export const CategoryService = {

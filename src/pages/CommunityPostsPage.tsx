@@ -154,7 +154,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
   // Share / Copy Link Handler
   const handleShare = (post: CommunityPost) => {
-    const text = `${post.title}\n\n${post.content}\n\n— Ethiopian Grade 9-12 Textbooks & ESSLCE Hub`;
+    const text = `${post.title}\n\n${post.content}\n\n— Ethiopian Grade 9-12 Textbooks & EUEE Hub`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopiedPostId(post.id);
@@ -171,9 +171,9 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
   // Preset Template Quick Fill
   const applyPresetTemplate = (type: 'exam' | 'book' | 'tip' | 'moe') => {
     if (type === 'exam') {
-      setTitle('Grade 12 ESSLCE / Matric Model Exam Simulation Schedule');
+      setTitle('Grade 12 EUEE / Matric Model Exam Simulation Schedule');
       setCategory('Exam Announcement');
-      setGrade('Grade 12 (ESSLCE / Matric)');
+      setGrade('Grade 12 (EUEE / Matric)');
       setSubject('Natural & Social Science Streams');
       setContent(
         'Practice authentic model examination questions categorized by subject with timers, scorecards, and step-by-step solutions in the Exam Prep tab!'
@@ -183,7 +183,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setLinkTitle('Official EAES Exam Portal');
       setLinkType('portal');
       setImageUrl('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80');
-      setImageCaption('Grade 12 ESSLCE National Exam Preparation');
+      setImageCaption('Grade 12 EUEE National Exam Preparation');
     } else if (type === 'book') {
       setTitle('New Ethiopian Curriculum Grade 9-12 Textbooks Uploaded');
       setCategory('Curriculum Update');
@@ -199,7 +199,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setImageUrl('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
       setImageCaption('Ethiopian Curriculum Grade 9-12 Digital Textbooks');
     } else if (type === 'tip') {
-      setTitle('Study Tip: How to Score 600+ in Grade 12 ESSLCE');
+      setTitle('Study Tip: How to Score 600+ in Grade 12 EUEE');
       setCategory('Study Tip');
       setGrade('All Grades (9-12)');
       setSubject('Study Strategy');
@@ -218,7 +218,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setGrade('All Grades (9-12)');
       setSubject('National Curriculum');
       setContent(
-        'Official notification regarding standardized Grade 12 ESSLCE university entrance examination guidelines and high school curriculum materials.'
+        'Official notification regarding standardized Grade 12 EUEE university entrance examination guidelines and high school curriculum materials.'
       );
       setActionUrl('tab:community');
       setLinkUrl('https://eaes.et');
@@ -383,7 +383,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               Official Announcements & Study Notices
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Stay updated with Ministry of Education alerts, Grade 12 ESSLCE schedules, curriculum updates, and discussion tips for Grades 9-12.
+              Stay updated with Ministry of Education alerts, Grade 12 EUEE schedules, curriculum updates, and discussion tips for Grades 9-12.
             </p>
           </div>
 
@@ -594,7 +594,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none font-bold"
             >
               <option value="all">All Grades (9-12)</option>
-              <option value="Grade 12">Grade 12 (ESSLCE / Matric)</option>
+              <option value="Grade 12">Grade 12 (EUEE / Matric)</option>
               <option value="Grade 11">Grade 11</option>
               <option value="Grade 10">Grade 10</option>
               <option value="Grade 9">Grade 9</option>
@@ -1451,7 +1451,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Grade 12 ESSLCE National Exam Revision Center Activated"
+                  placeholder="e.g. Grade 12 EUEE National Exam Revision Center Activated"
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
@@ -1484,7 +1484,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
                   >
                     <option value="All Grades (9-12)">All Grades (9-12)</option>
-                    <option value="Grade 12 (ESSLCE / Matric)">Grade 12 (ESSLCE / Matric)</option>
+                    <option value="Grade 12 (EUEE / Matric)">Grade 12 (EUEE / Matric)</option>
                     <option value="Grade 11">Grade 11</option>
                     <option value="Grade 10">Grade 10</option>
                     <option value="Grade 9">Grade 9</option>

@@ -59,7 +59,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const { t } = useTranslation();
   const [activeStream, setActiveStream] = useState<AcademicStream>('all');
 
-  // ESSLCE Quick Challenge interactive state
+  // EUEE Quick Challenge interactive state
   const quickChallengeQuestion = EXAM_PRACTICE_QUESTIONS[0]; // Physics Carnot engine or Kinematics
   const [selectedChallengeOption, setSelectedChallengeOption] = useState<number | null>(null);
   const [hasSubmittedChallenge, setHasSubmittedChallenge] = useState(false);
@@ -88,12 +88,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
             Ethiopian Grade 9–12 <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-amber-300">
-              Textbooks & ESSLCE Hub
+              Textbooks & EUEE Hub
             </span>
           </h1>
 
           <p className="text-slate-300 text-xs sm:text-sm sm:leading-relaxed max-w-2xl">
-            Official Ministry of Education curriculum textbooks and <strong>Teacher's Guides</strong> for Secondary and Preparatory schools. Master <strong>Natural Sciences</strong> and <strong>Social Sciences</strong> streams and prepare for the <strong>Grade 12 University Entrance Examination (ESSLCE)</strong> across all high schools nationwide.
+            Official Ministry of Education curriculum textbooks and <strong>Teacher's Guides</strong> for Secondary and Preparatory schools. Master <strong>Natural Sciences</strong> and <strong>Social Sciences</strong> streams and prepare for the <strong>Grade 12 Ethiopian University Entrance Examination (EUEE)</strong> across all high schools nationwide.
           </p>
 
           {/* Quick CTA Buttons - Full Width on Mobile for Better Ergonomics */}
@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-5 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs sm:text-sm border border-slate-700 shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <Award className="w-4 h-4 text-amber-400" />
-              <span>ESSLCE Entrance Exam Hub</span>
+              <span>EUEE Entrance Exam Hub</span>
               <Sparkles className="w-4 h-4 text-amber-400" />
             </button>
           </div>
@@ -138,7 +138,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
               <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>Grade 12 ESSLCE Past Exams</span>
+              <span>Grade 12 EUEE Past Exams</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
               <GraduationCap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -171,9 +171,9 @@ export const HomePage: React.FC<HomePageProps> = ({
               grade: 12 as GradeLevel,
               title: 'Grade 12 Senior',
               subtitle: 'Preparatory & Matric',
-              desc: 'Calculus, Physics, Chemistry, Biology, Economics, History & ESSLCE Matric Prep',
+              desc: 'Calculus, Physics, Chemistry, Biology, Economics, History & EUEE Matric Prep',
               color: 'from-amber-600 to-yellow-800',
-              badge: 'ESSLCE Matric',
+              badge: 'EUEE Matric',
             },
             {
               grade: 11 as GradeLevel,
@@ -232,7 +232,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* Active Interactive Widget: Quick ESSLCE Challenge of the Day */}
+      {/* Active Interactive Widget: Quick EUEE Challenge of the Day */}
       {quickChallengeQuestion && (
         <section className="bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 rounded-3xl p-5 sm:p-7 border border-amber-500/30 shadow-xl relative overflow-hidden text-white">
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -245,7 +245,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </span>
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-wider text-amber-400">
-                    Daily ESSLCE Quick Challenge • Grade 12 National Exam
+                    Daily EUEE Quick Challenge • Grade 12 National Exam
                   </div>
                   <h3 className="text-sm sm:text-base font-black text-white">
                     {quickChallengeQuestion.chapterTitle} ({quickChallengeQuestion.subject.toUpperCase()})
@@ -321,7 +321,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     onClick={onNavigateToExamPrep}
                     className="text-xs font-black text-amber-400 hover:text-amber-300 flex items-center gap-1"
                   >
-                    <span>Practice 100+ More ESSLCE Questions</span>
+                    <span>Practice 100+ More EUEE Questions</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -393,18 +393,18 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* ESSLCE Callout Banner */}
+      {/* EUEE Callout Banner */}
       <section className="rounded-3xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-slate-950 p-6 sm:p-10 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2 max-w-xl text-center md:text-left">
           <div className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-black/20 text-white rounded-full text-xs font-black">
             <Award className="w-3.5 h-3.5" />
-            <span>Grade 12 University Entrance Examination (ESSLCE)</span>
+            <span>Grade 12 Ethiopian University Entrance Examination (EUEE)</span>
           </div>
           <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white">
             Master the National Matric Exam
           </h2>
           <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
-            Practice official ESSLCE past papers and high-yield question sets drawn across the entire high school curriculum (Grades 9 to 12) for Natural and Social sciences.
+            Practice official EUEE past papers and high-yield question sets drawn across the entire high school curriculum (Grades 9 to 12) for Natural and Social sciences.
           </p>
         </div>
 

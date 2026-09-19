@@ -3,7 +3,7 @@ import { SAMPLE_CHAPTERS_MAP } from './curriculumData';
 
 export const ETHIOPIAN_BOOKS: Book[] = [
   // =========================================================================
-  // 🎓 GRADE 12 STUDENT TEXTBOOKS (ESSLCE UNIVERSITY ENTRANCE PREPARATION)
+  // 🎓 GRADE 12 STUDENT TEXTBOOKS (EUEE UNIVERSITY ENTRANCE PREPARATION)
   // =========================================================================
 
   // --- Grade 12 Natural Science Stream ---

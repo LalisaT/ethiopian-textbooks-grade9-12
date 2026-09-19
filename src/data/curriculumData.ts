@@ -29,7 +29,7 @@ export const SAMPLE_CHAPTERS_MAP: Record<string, BookChapter[]> = {
             'Thermodynamics studies the transformations of thermal energy into mechanical work and vice versa.',
             'A thermodynamic system is a quantity of matter or a region in space chosen for study, enclosed by a boundary. Surroundings represent everything outside the system.',
             'The First Law of Thermodynamics is an expression of the principle of conservation of energy: ΔU = Q - W, where ΔU is change in internal energy, Q is heat added to the system, and W is work done by the system on surroundings.',
-            'Sign Conventions for ESSLCE Examination:',
+            'Sign Conventions for EUEE Examination:',
             '• Heat added to system: Q > 0 (positive); Heat released by system: Q < 0 (negative).',
             '• Work done BY system on surroundings: W > 0 (expansion, ΔV > 0); Work done ON system: W < 0 (compression, ΔV < 0).'
           ],

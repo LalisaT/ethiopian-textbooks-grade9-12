@@ -171,7 +171,7 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
                 <span>{g === 'all' ? t('allGrades') : `Grade ${g}`}</span>
                 {g === 12 && (
                   <span className={`text-[9px] font-extrabold ${isSelected ? 'text-amber-200' : 'text-amber-500'}`}>
-                    ESSLCE
+                    EUEE
                   </span>
                 )}
                 {g === 11 && (

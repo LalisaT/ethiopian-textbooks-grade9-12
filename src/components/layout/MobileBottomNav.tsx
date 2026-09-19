@@ -15,7 +15,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   const tabs = [
     { id: 'home' as const, label: 'Home', icon: Home },
     { id: 'explore' as const, label: 'Textbooks', icon: BookOpen },
-    { id: 'examprep' as const, label: 'ESSLCE', icon: Award, highlight: true },
+    { id: 'examprep' as const, label: 'EUEE', icon: Award, highlight: true },
     {
       id: 'saved' as const,
       label: 'Saved',
@@ -48,11 +48,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                     ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/40 ring-4 ring-white dark:ring-slate-950 scale-105'
                     : 'bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 hover:scale-105'
                 }`}
-                title="Grade 12 ESSLCE / Matric Hub"
+                title="Grade 12 EUEE Hub"
               >
                 <Icon className="w-5 h-5 font-black" />
                 <span className="text-[10px] font-black tracking-tight mt-0.5">
-                  ESSLCE
+                  EUEE
                 </span>
                 {isActive && (
                   <span className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-slate-950" />

@@ -39,7 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'home' as const, label: t('home'), icon: BookOpen },
     { id: 'explore' as const, label: 'Textbooks', icon: Compass },
     { id: 'teacher_guides' as const, label: 'Teacher Guides', icon: GraduationCap },
-    { id: 'examprep' as const, label: 'ESSLCE Hub', icon: Award },
+    { id: 'examprep' as const, label: 'EUEE Hub', icon: Award },
     {
       id: 'saved' as const,
       label: t('savedBooks'),

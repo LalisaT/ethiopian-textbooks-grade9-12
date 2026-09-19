@@ -739,7 +739,7 @@ export const App: React.FC = () => {
       {/* PWA 1-Click Install Banner & Notification */}
       <PwaInstallPrompt />
 
-      {/* Mobile Bottom Navigation Bar (Grades 9-12 & ESSLCE Hub) */}
+      {/* Mobile Bottom Navigation Bar (Grades 9-12 & EUEE Hub) */}
       <MobileBottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}

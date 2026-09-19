@@ -73,7 +73,7 @@ export const Footer: React.FC = () => {
               <li>Grade 9 General Secondary</li>
               <li>Grade 10 Secondary Foundations</li>
               <li>Grade 11 Preparatory (Natural & Social)</li>
-              <li>Grade 12 ESSLCE / Matric Prep</li>
+              <li>Grade 12 EUEE / Matric Prep</li>
               <li>National University Entrance Hub</li>
             </ul>
           </div>

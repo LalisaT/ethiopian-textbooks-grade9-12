@@ -84,15 +84,15 @@ export const AboutCurriculumPage: React.FC = () => {
               <span className="text-xs font-bold text-slate-400">Preparatory & Matric</span>
             </div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">
-              Stream Specialization & ESSLCE University Entrance
+              Stream Specialization & EUEE University Entrance
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Students branch into <strong>Natural Science</strong> (Physics, Chemistry, Biology, Advanced Math) or <strong>Social Science</strong> (Economics, Geography, History, Social Math). Grade 12 concludes with the ESSLCE National Exam.
+              Students branch into <strong>Natural Science</strong> (Physics, Chemistry, Biology, Advanced Math) or <strong>Social Science</strong> (Economics, Geography, History, Social Math). Grade 12 concludes with the EUEE National Exam.
             </p>
             <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 pt-2">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Grade 12 ESSLCE testing cumulative high school knowledge (Grades 9–12)</span>
+                <span>Grade 12 EUEE testing cumulative high school knowledge (Grades 9–12)</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />

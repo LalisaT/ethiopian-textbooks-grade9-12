@@ -1,13 +1,13 @@
 import { QuizQuestion, Flashcard, ExamPack } from '../types/quiz';
 
 /**
- * 🇪🇹 ETHIOPIAN GRADE 12 UNIVERSITY ENTRANCE EXAMINATION (ESSLCE / MATRIC) QUESTION BANK
+ * 🇪🇹 ETHIOPIAN GRADE 12 UNIVERSITY ENTRANCE EXAMINATION (EUEE / MATRIC) QUESTION BANK
  * Prepared comprehensively from the complete High School Curriculum: Grades 9, 10, 11, and 12
  * for both Natural Sciences Stream and Social Sciences Stream.
  */
 export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   // =========================================================================
-  // 🔬 ESSLCE PHYSICS (QUESTIONS FROM GRADES 9, 10, 11, AND 12)
+  // 🔬 EUEE PHYSICS (QUESTIONS FROM GRADES 9, 10, 11, AND 12)
   // =========================================================================
   {
     id: 'esslce-phys-12-1',
@@ -88,7 +88,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // ⚗️ ESSLCE CHEMISTRY (QUESTIONS FROM GRADES 9, 10, 11, AND 12)
+  // ⚗️ EUEE CHEMISTRY (QUESTIONS FROM GRADES 9, 10, 11, AND 12)
   // =========================================================================
   {
     id: 'esslce-chem-12-1',
@@ -168,7 +168,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // 🧬 ESSLCE BIOLOGY (QUESTIONS FROM GRADES 9, 10, 11, AND 12)
+  // 🧬 EUEE BIOLOGY (QUESTIONS FROM GRADES 9, 10, 11, AND 12)
   // =========================================================================
   {
     id: 'esslce-bio-12-1',
@@ -234,7 +234,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // 📐 ESSLCE MATHEMATICS - NATURAL SCIENCE (GRADES 9 TO 12)
+  // 📐 EUEE MATHEMATICS - NATURAL SCIENCE (GRADES 9 TO 12)
   // =========================================================================
   {
     id: 'esslce-math-12-1',
@@ -300,7 +300,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // 📈 ESSLCE ECONOMICS (SOCIAL SCIENCE STREAM - GRADES 9 TO 12)
+  // 📈 EUEE ECONOMICS (SOCIAL SCIENCE STREAM - GRADES 9 TO 12)
   // =========================================================================
   {
     id: 'esslce-econ-12-1',
@@ -342,7 +342,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // 🏛️ ESSLCE HISTORY (SOCIAL SCIENCE STREAM - GRADES 9 TO 12)
+  // 🏛️ EUEE HISTORY (SOCIAL SCIENCE STREAM - GRADES 9 TO 12)
   // =========================================================================
   {
     id: 'esslce-hist-12-1',
@@ -389,7 +389,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // 🗺️ ESSLCE GEOGRAPHY (SOCIAL SCIENCE STREAM - GRADES 9 TO 12)
+  // 🗺️ EUEE GEOGRAPHY (SOCIAL SCIENCE STREAM - GRADES 9 TO 12)
   // =========================================================================
   {
     id: 'esslce-geo-12-1',
@@ -431,7 +431,7 @@ export const EXAM_PRACTICE_QUESTIONS: QuizQuestion[] = [
   },
 
   // =========================================================================
-  // 📖 ESSLCE ENGLISH (COMMON CORE - GRADES 9 TO 12)
+  // 📖 EUEE ENGLISH (COMMON CORE - GRADES 9 TO 12)
   // =========================================================================
   {
     id: 'esslce-eng-12-1',
@@ -1643,9 +1643,9 @@ export const FLASHCARDS_LIST: Flashcard[] = [
 export const INITIAL_EXAM_PACKS: ExamPack[] = [
   {
     id: 'pack-esslce-2024-nat',
-    title: '2024 ESSLCE National University Entrance Exam (Natural Science Stream)',
+    title: '2024 EUEE National University Entrance Exam (Natural Science Stream)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ዩኒቨርሲቲ መግቢያ ፈተና (ተፈጥሮ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa ESSLCE 2024 (Saayinsii Uumamaa)',
+    titleOromo: 'Qormaata Biyyooleessaa EUEE 2024 (Saayinsii Uumamaa)',
     description: 'Comprehensive entrance examination pack combining Physics, Chemistry, Biology, Mathematics (Natural), and English questions from Grades 9–12.',
     grade: 12,
     stream: 'natural_science',
@@ -1656,9 +1656,9 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-2024-soc',
-    title: '2024 ESSLCE National University Entrance Exam (Social Science Stream)',
+    title: '2024 EUEE National University Entrance Exam (Social Science Stream)',
     titleAmharic: 'የ 2024 የ 12ኛ ክፍል ዩኒቨርሲቲ መግቢያ ፈተና (ማህበራዊ ሳይንስ)',
-    titleOromo: 'Qormaata Biyyooleessaa ESSLCE 2024 (Saayinsii Hawaasaa)',
+    titleOromo: 'Qormaata Biyyooleessaa EUEE 2024 (Saayinsii Hawaasaa)',
     description: 'Comprehensive entrance examination pack combining Economics, History, Geography, Mathematics (Social), and English questions from Grades 9–12.',
     grade: 12,
     stream: 'social_science',
@@ -1669,7 +1669,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-physics-nat',
-    title: 'ESSLCE Physics Comprehensive (Grades 9–12 Multi-Year Questions)',
+    title: 'EUEE Physics Comprehensive (Grades 9–12 Multi-Year Questions)',
     titleAmharic: 'የ 12ኛ ክፍል ፊዚክስ ብሄራዊ ፈተና ማጠቃለያ (ከ 9-12 ክፍል)',
     description: 'Focused Physics test pack featuring thermodynamics, kinematics, Newton laws, electromagnetism, and energy.',
     grade: 12,
@@ -1681,7 +1681,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-chemistry-nat',
-    title: 'ESSLCE Chemistry Comprehensive (Grades 9–12 Multi-Year Questions)',
+    title: 'EUEE Chemistry Comprehensive (Grades 9–12 Multi-Year Questions)',
     titleAmharic: 'የ 12ኛ ክፍል ኬሚስትሪ ብሄራዊ ፈተና ማጠቃለያ (ከ 9-12 ክፍል)',
     description: 'Targeted chemistry test pack covering acid-base equilibria, bonding, solutions, and periodic properties.',
     grade: 12,
@@ -1693,7 +1693,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-biology-nat',
-    title: 'ESSLCE Biology Comprehensive (Grades 9–12 Multi-Year Questions)',
+    title: 'EUEE Biology Comprehensive (Grades 9–12 Multi-Year Questions)',
     titleAmharic: 'የ 12ኛ ክፍል ባዮሎጂ ብሄራዊ ፈተና ማጠቃለያ (ከ 9-12 ክፍል)',
     description: 'Focused Biology examination pack covering genetics, molecular dogma, cellular respiration, ecology, and human systems.',
     grade: 12,
@@ -1705,7 +1705,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-math-nat',
-    title: 'ESSLCE Mathematics - Natural Science Comprehensive',
+    title: 'EUEE Mathematics - Natural Science Comprehensive',
     titleAmharic: 'የ 12ኛ ክፍል ሒሳብ (ተፈጥሮ ሳይንስ) ብሄራዊ ፈተና ማጠቃለያ',
     description: 'Calculus, 3D vectors, sequences and series, trigonometry, limits, and coordinate geometry questions.',
     grade: 12,
@@ -1717,7 +1717,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-economics-soc',
-    title: 'ESSLCE Economics Comprehensive (Social Science Stream)',
+    title: 'EUEE Economics Comprehensive (Social Science Stream)',
     titleAmharic: 'የ 12ኛ ክፍል ኢኮኖሚክስ ብሄራዊ ፈተና ማጠቃለያ',
     description: 'Microeconomics and macroeconomics: elasticity, GDP accounting, market structures, and monetary/fiscal policy.',
     grade: 12,
@@ -1729,7 +1729,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-history-soc',
-    title: 'ESSLCE History Comprehensive (Social Science Stream)',
+    title: 'EUEE History Comprehensive (Social Science Stream)',
     titleAmharic: 'የ 12ኛ ክፍል ታሪክ ብሄራዊ ፈተና ማጠቃለያ',
     description: 'Aksumite Kingdom, medieval dynasties, Battle of Adwa, 19th-20th century modernization, and African independence.',
     grade: 12,
@@ -1741,7 +1741,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-geography-soc',
-    title: 'ESSLCE Geography Comprehensive (Social Science Stream)',
+    title: 'EUEE Geography Comprehensive (Social Science Stream)',
     titleAmharic: 'የ 12ኛ ክፍል ጂኦግራፊ ብሄራዊ ፈተና ማጠቃለያ',
     description: 'Topography of Ethiopia, Rift Valley drainage systems, climate zones (Dega/Kolla), and soil conservation.',
     grade: 12,
@@ -1753,7 +1753,7 @@ export const INITIAL_EXAM_PACKS: ExamPack[] = [
   },
   {
     id: 'pack-esslce-english-core',
-    title: 'ESSLCE English Language Comprehensive (All Streams)',
+    title: 'EUEE English Language Comprehensive (All Streams)',
     titleAmharic: 'የ 12ኛ ክፍል እንግሊዝኛ ቋንቋ ብሄራዊ ፈተና ማጠቃለያ',
     description: 'Sentence structures, conditionals, passive transformations, reported speech, subject-verb agreement, and vocabulary.',
     grade: 12,

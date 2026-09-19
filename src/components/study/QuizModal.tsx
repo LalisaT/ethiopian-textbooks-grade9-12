@@ -23,6 +23,7 @@ interface QuizModalProps {
   questions: QuizQuestion[];
   language?: string;
   examLanguage?: string;
+  timeLimitMinutes?: number;
   onComplete?: (score: number, total: number) => void;
 }
 
@@ -33,6 +34,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
   questions,
   language = 'en',
   examLanguage,
+  timeLimitMinutes,
   onComplete,
 }) => {
   language = examLanguage || language || 'en';
@@ -40,7 +42,9 @@ export const QuizModal: React.FC<QuizModalProps> = ({
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [reviewFilter, setReviewFilter] = useState<'all' | 'wrong' | 'correct'>('all');
-  const [secondsRemaining, setSecondsRemaining] = useState(questions.length * 60); // 1 min per question
+  const [secondsRemaining, setSecondsRemaining] = useState(
+    timeLimitMinutes ? timeLimitMinutes * 60 : questions.length * 60
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -48,9 +52,11 @@ export const QuizModal: React.FC<QuizModalProps> = ({
       setSelectedAnswers({});
       setIsSubmitted(false);
       setReviewFilter('all');
-      setSecondsRemaining(questions.length * 60);
+      setSecondsRemaining(
+        timeLimitMinutes ? timeLimitMinutes * 60 : questions.length * 60
+      );
     }
-  }, [isOpen, questions]);
+  }, [isOpen, questions, timeLimitMinutes]);
 
   // Exam Countdown Timer
   useEffect(() => {
