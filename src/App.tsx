@@ -771,8 +771,8 @@ export const App: React.FC = () => {
         offlineCount={offlineBookIds.length}
       />
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer - Rendered only in Curriculum ('about') tab per user specification */}
+      {activeTab === 'about' && <Footer />}
     </div>
   );
 };

@@ -74,7 +74,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     .slice(0, 6);
 
   return (
-    <div className="space-y-8 sm:space-y-12 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-8">
+    <div className="space-y-8 sm:space-y-12 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-28 sm:pb-12">
       {/* Hero Section */}
       <section className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 sm:p-12 overflow-hidden border border-slate-800 shadow-2xl">
         <div className="absolute top-0 right-0 -mt-12 -mr-12 w-80 sm:w-96 h-80 sm:h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
