@@ -73,10 +73,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-3 cursor-pointer group"
             onClick={() => setActiveTab('home')}
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 via-yellow-500 to-red-600 p-0.5 shadow-md group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-yellow-400" />
-              </div>
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 via-yellow-500 to-red-600 p-0.5 shadow-md group-hover:scale-105 transition-transform overflow-hidden shrink-0">
+              <img
+                src="/brand/app-icon.jpg"
+                alt="Ethiopian Textbooks Logo"
+                className="w-full h-full object-cover rounded-[14px]"
+              />
             </div>
             <div>
               <div className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg tracking-tight flex items-center gap-1.5">
