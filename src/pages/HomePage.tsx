@@ -463,6 +463,46 @@ export const HomePage: React.FC<HomePageProps> = ({
           </button>
         </div>
       </section>
+
+      {/* Official Telegram Channel Showcase Card (Matches Circled Area in User Reference) */}
+      <section className="bg-gradient-to-b from-sky-50 via-white to-sky-100/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 rounded-3xl p-6 sm:p-10 border border-sky-200/80 dark:border-sky-800/80 shadow-xl flex flex-col items-center text-center space-y-4">
+        {/* Centered Circular Telegram Icon */}
+        <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-gradient-to-tr from-sky-500 to-sky-400 p-4 flex items-center justify-center text-white shadow-xl shadow-sky-500/40 ring-8 ring-sky-500/15">
+          <svg className="w-10 h-10 sm:w-11 sm:h-11 fill-current" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+          </svg>
+        </div>
+
+        {/* Title & Verified Badge */}
+        <div className="space-y-1.5 max-w-md">
+          <div className="flex items-center justify-center gap-2">
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+              Official Telegram Channel
+            </h3>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-sky-500 text-white uppercase tracking-wider shadow-sm">
+              VERIFIED
+            </span>
+          </div>
+
+          <p className="text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200">
+            News, Updates, PDF Textbooks &amp; EUEE Matric Solutions
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Join our official student community: <span className="font-bold text-sky-500">@Ethiopianstudentbooks</span>
+          </p>
+        </div>
+
+        {/* Join Telegram Button */}
+        <a
+          href="https://t.me/Ethiopianstudentbooks"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full max-w-sm py-3.5 px-6 rounded-2xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-black text-sm sm:text-base shadow-lg shadow-sky-500/30 transition-all flex items-center justify-center gap-2"
+        >
+          <Send className="w-4 h-4" />
+          <span>Join Telegram</span>
+        </a>
+      </section>
     </div>
   );
 };
