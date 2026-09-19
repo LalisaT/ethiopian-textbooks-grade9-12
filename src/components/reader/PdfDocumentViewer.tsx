@@ -46,26 +46,30 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
   const fetchBlob = async () => {
     try {
       setIsLoadingPdf(true);
-      const record = await DbService.getPdfFile(book.id);
-      if (record && record.blob && (!book.pdfUrl || record.blob.size > 100000)) {
-        setUploadedPdfBlob(record.blob);
-      } else {
-        // Direct fetch from local bundled / public textbook!
-        if (book.pdfUrl) {
-          try {
-            const resp = await fetch(book.pdfUrl);
-            if (resp.ok) {
-              const realBlob = await resp.blob();
-              await DbService.savePdfFile(book.id, realBlob, `${book.title}.pdf`);
-              setUploadedPdfBlob(realBlob);
-              StorageService.markBookOffline(book.id);
-              setIsLoadingPdf(false);
-              return;
-            }
-          } catch (fetchErr) {
-            console.warn(`Direct fetch for ${book.pdfUrl} failed:`, fetchErr);
+      // 1. Direct fetch from local bundled / public teacher guides & textbooks
+      if (book.pdfUrl && (book.pdfUrl.startsWith('/teacher-guide') || book.pdfUrl.startsWith('/textbooks'))) {
+        try {
+          const resp = await fetch(book.pdfUrl);
+          if (resp.ok) {
+            const realBlob = await resp.blob();
+            await DbService.savePdfFile(book.id, realBlob, `${book.title}.pdf`);
+            setUploadedPdfBlob(realBlob);
+            StorageService.markBookOffline(book.id);
+            setIsLoadingPdf(false);
+            return;
           }
+        } catch (fetchErr) {
+          console.warn(`Direct fetch for ${book.pdfUrl} failed:`, fetchErr);
         }
+      }
+
+      // 2. Check IndexedDB cache
+      const record = await DbService.getPdfFile(book.id);
+      if (record && record.blob && record.blob.size > 100000) {
+        setUploadedPdfBlob(record.blob);
+        setIsLoadingPdf(false);
+        return;
+      }
 
         // Automatic 2-in-1: Save to mobile/computer storage (Downloads folder) + cache in IndexedDB
         const result = await CloudStorageService.downloadAndSaveBookToDevice(book, (pct) => {
@@ -76,7 +80,6 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
         } else {
           setUploadedPdfBlob(null);
         }
-      }
     } catch (e) {
       console.error('Error fetching PDF blob:', e);
       setUploadedPdfBlob(null);

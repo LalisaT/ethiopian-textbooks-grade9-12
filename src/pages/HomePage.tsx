@@ -93,7 +93,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </h1>
 
           <p className="text-slate-300 text-xs sm:text-sm sm:leading-relaxed max-w-2xl">
-            Official Ministry of Education curriculum textbooks and <strong>Teacher's Guides (የመምህር መመሪያ)</strong> for Secondary and Preparatory schools. Master <strong>Natural Sciences</strong> and <strong>Social Sciences</strong> streams and prepare for the <strong>Grade 12 University Entrance Examination (ESSLCE)</strong> in English across all high schools nationwide.
+            Official Ministry of Education curriculum textbooks and <strong>Teacher's Guides</strong> for Secondary and Preparatory schools. Master <strong>Natural Sciences</strong> and <strong>Social Sciences</strong> streams and prepare for the <strong>Grade 12 University Entrance Examination (ESSLCE)</strong> across all high schools nationwide.
           </p>
 
           {/* Quick CTA Buttons - Full Width on Mobile for Better Ergonomics */}
@@ -103,7 +103,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-5 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <Compass className="w-4 h-4" />
-              <span>Browse Grade 9–12 Textbooks</span>
+              <span>Grade 9–12 Textbooks</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -113,7 +113,6 @@ export const HomePage: React.FC<HomePageProps> = ({
             >
               <GraduationCap className="w-4 h-4" />
               <span>Teacher Guides</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-950/20 font-black">የመምህር መመሪያ</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -143,11 +142,11 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
               <GraduationCap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>Teacher Guides (የመምህር መመሪያ)</span>
+              <span>Official Teacher Guides</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-300">
               <BookMarked className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>Unified English Medium</span>
+              <span>Offline Study & Fast Reader</span>
             </div>
           </div>
         </div>
@@ -340,7 +339,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               Featured Grade 9–12 Textbooks
             </h2>
             <p className="text-xs text-slate-500">
-              Official Ministry of Education Curriculum in English (Unified Nationwide)
+              Official Ministry of Education National Curriculum (Grades 9–12)
             </p>
           </div>
 

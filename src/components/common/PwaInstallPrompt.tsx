@@ -32,9 +32,9 @@ export const PwaInstallPrompt: React.FC = () => {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      // Fallback for browsers without direct prompt
+      // Fallback for devices without direct prompt
       NotificationService.notifyAppInstalled();
-      alert('To install this app on your device: Tap your browser menu (⋮ or Share) and select "Add to Home Screen" or "Install App".');
+      alert('To install on your device: Tap the menu (⋮ or Share) and select "Add to Home Screen" or "Install App".');
       setShowPrompt(false);
       return;
     }

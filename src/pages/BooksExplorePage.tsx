@@ -141,7 +141,7 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
             <span>Secondary & Preparatory Textbooks</span>
           </h1>
           <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1">
-            Official Ministry of Education National Curriculum (Grades 9–12) • English Medium
+            Official Ministry of Education National Curriculum (Grades 9–12)
           </p>
         </div>
 

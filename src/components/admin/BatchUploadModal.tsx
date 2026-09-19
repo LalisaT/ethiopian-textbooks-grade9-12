@@ -196,7 +196,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
           <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5">
             <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>
-              <strong>100% Persistent Storage:</strong> All uploaded books and PDFs are stored in your browser's dedicated IndexedDB storage and survive page refreshes, browser restarts, and offline usage.
+              <strong>100% Persistent Storage:</strong> All uploaded books and PDFs are saved securely in local device storage and remain available offline.
             </span>
           </div>
 

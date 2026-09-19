@@ -165,9 +165,11 @@ export const BookCard: React.FC<BookCardProps> = ({
             )}
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="px-2 py-0.5 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold rounded-lg tracking-wider">
-              English
-            </span>
+            {book.language && book.language !== 'en' && (
+              <span className="px-2 py-0.5 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold rounded-lg tracking-wider uppercase">
+                {book.language}
+              </span>
+            )}
             {book.bookType === 'teacher_guide' ? (
               <span className="px-2 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black rounded-lg shadow-sm flex items-center gap-1">
                 <GraduationCap className="w-3 h-3" />

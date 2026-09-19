@@ -286,7 +286,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
         {/* Drawer Footer */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 text-center">
           <p className="text-[11px] text-slate-400">
-            Notes are saved automatically in your browser for offline study.
+            Notes are saved automatically on your device for offline study.
           </p>
         </div>
       </div>
