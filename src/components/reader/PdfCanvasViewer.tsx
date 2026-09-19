@@ -44,7 +44,8 @@ import {
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PdfCanvasViewerProps {
-  pdfBlob: Blob;
+  pdfBlob?: Blob | null;
+  pdfUrl?: string | null;
   book: Book;
   onBack: () => void;
   onUpdatePdfFile?: (newFile: File) => void;
@@ -52,6 +53,7 @@ interface PdfCanvasViewerProps {
 
 export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   pdfBlob,
+  pdfUrl,
   book,
   onBack,
 }) => {
@@ -106,7 +108,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
   const lang = isOromoBook ? 'om' : isAmharicBook ? 'am' : (book.language || 'en');
 
-  // Load PDF Document from Blob
+  // Load PDF Document from Blob or Streaming URL
   useEffect(() => {
     let isCancelled = false;
 
@@ -114,8 +116,27 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       try {
         setIsLoading(true);
         setErrorMsg('');
-        const arrayBuffer = await pdfBlob.arrayBuffer();
-        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+
+        let loadingTask: any;
+
+        // Prefer real offline Blob if it has authentic textbook content (> 500 KB)
+        if (pdfBlob && pdfBlob.size > 500000) {
+          const arrayBuffer = await pdfBlob.arrayBuffer();
+          loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        } else if (pdfUrl) {
+          // Direct HTTP range streaming (instant page 1, 0 RAM bloat even for 180MB books)
+          loadingTask = pdfjsLib.getDocument({ url: pdfUrl });
+        } else if (book.pdfUrl) {
+          loadingTask = pdfjsLib.getDocument({ url: book.pdfUrl });
+        } else if (pdfBlob) {
+          const arrayBuffer = await pdfBlob.arrayBuffer();
+          loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        } else {
+          setErrorMsg('No PDF source found for this textbook.');
+          setIsLoading(false);
+          return;
+        }
+
         const doc = await loadingTask.promise;
 
         if (!isCancelled) {
@@ -139,7 +160,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       isCancelled = true;
       TTSService.stop();
     };
-  }, [pdfBlob]);
+  }, [pdfBlob, pdfUrl, book.pdfUrl]);
 
   // Load notes for current page
   useEffect(() => {
@@ -544,14 +565,23 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   };
 
   const handleDownload = () => {
-    const url = URL.createObjectURL(pdfBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${book.title}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (pdfBlob) {
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${book.title}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } else if (book.pdfUrl) {
+      const a = document.createElement('a');
+      a.href = book.pdfUrl;
+      a.download = `${book.title}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   // Canvas visual filter based on theme

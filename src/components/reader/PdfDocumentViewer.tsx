@@ -21,6 +21,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
+import { LargeFileDownloadModal } from '../books/LargeFileDownloadModal';
+
 interface PdfDocumentViewerProps {
   book: Book;
   onBack: () => void;
@@ -34,55 +36,63 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
   onOpenDownloadModal,
 }) => {
   const [uploadedPdfBlob, setUploadedPdfBlob] = useState<Blob | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [isLoadingPdf, setIsLoadingPdf] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
 
   const totalPages = book.totalEstimatedPages || 210;
 
-  // Load uploaded PDF from IndexedDB or automatically save to device storage & open
+  // Load PDF: Check real offline cache or stream directly via URL (0 memory bloat)
   const fetchBlob = async () => {
     try {
       setIsLoadingPdf(true);
-      // 1. Direct fetch from local bundled / public teacher guides & textbooks
-      if (book.pdfUrl && (book.pdfUrl.startsWith('/teacher-guide') || book.pdfUrl.startsWith('/textbooks'))) {
-        try {
-          const resp = await fetch(book.pdfUrl);
-          if (resp.ok) {
-            const realBlob = await resp.blob();
-            await DbService.savePdfFile(book.id, realBlob, `${book.title}.pdf`);
-            setUploadedPdfBlob(realBlob);
-            StorageService.markBookOffline(book.id);
-            setIsLoadingPdf(false);
-            return;
-          }
-        } catch (fetchErr) {
-          console.warn(`Direct fetch for ${book.pdfUrl} failed:`, fetchErr);
-        }
-      }
 
-      // 2. Check IndexedDB cache
+      // 1. Check if an authentic offline PDF (> 500 KB) is in IndexedDB
       const record = await DbService.getPdfFile(book.id);
-      if (record && record.blob && record.blob.size > 100000) {
+      if (record && record.blob && record.blob.size > 500000) {
         setUploadedPdfBlob(record.blob);
+        setPdfUrl(null);
         setIsLoadingPdf(false);
         return;
       }
 
-        // Automatic 2-in-1: Save to mobile/computer storage (Downloads folder) + cache in IndexedDB
-        const result = await CloudStorageService.downloadAndSaveBookToDevice(book, (pct) => {
-          setDownloadProgress(pct);
-        });
-        if (result.success && result.blob) {
-          setUploadedPdfBlob(result.blob);
-        } else {
-          setUploadedPdfBlob(null);
-        }
+      // If IndexedDB has a stale dummy sample (<= 500 KB) and a real book.pdfUrl exists:
+      // Remove the stale dummy record so the real textbook is shown
+      if (record && record.blob && record.blob.size <= 500000 && book.pdfUrl) {
+        await DbService.deletePdfFile(book.id);
+      }
+
+      // 2. Direct streaming via PDF.js HTTP range requests (loads page 1 in 100ms, even for 180MB books)
+      if (book.pdfUrl) {
+        setPdfUrl(book.pdfUrl);
+        setUploadedPdfBlob(null);
+        setIsLoadingPdf(false);
+        return;
+      }
+
+      // 3. Fallback for custom user uploaded books
+      if (record && record.blob) {
+        setUploadedPdfBlob(record.blob);
+        setPdfUrl(null);
+        setIsLoadingPdf(false);
+        return;
+      }
+
+      // 4. Sample generation ONLY for mock/test books without real pdfUrl
+      const result = await CloudStorageService.downloadAndSaveBookToDevice(book, undefined, false);
+      if (result.success && result.blob) {
+        setUploadedPdfBlob(result.blob);
+        setPdfUrl(null);
+      }
     } catch (e) {
-      console.error('Error fetching PDF blob:', e);
-      setUploadedPdfBlob(null);
+      console.error('Error fetching PDF:', e);
+      if (book.pdfUrl) {
+        setPdfUrl(book.pdfUrl);
+      }
     } finally {
       setIsLoadingPdf(false);
     }
@@ -92,7 +102,7 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
     fetchBlob();
   }, [book.id]);
 
-  const handleDownloadToPhone = async () => {
+  const executeDownload = async () => {
     setIsDownloading(true);
     setDownloadProgress(20);
 
@@ -108,6 +118,15 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
     } else {
       setIsDownloading(false);
       alert('Failed to download book. Please check device storage space.');
+    }
+  };
+
+  const handleDownloadToPhone = () => {
+    // If book is larger than 30 MB, ask student for permission first
+    if (book.fileSizeMb > 30) {
+      setIsPermissionModalOpen(true);
+    } else {
+      executeDownload();
     }
   };
 
@@ -128,25 +147,34 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
         </div>
         <div className="text-center space-y-1">
           <div className="text-base font-black text-white">
-            Saving to Device Storage & Opening Textbook...
+            Opening Textbook...
           </div>
           <p className="text-xs text-slate-400 max-w-sm">
-            Saving to your device Downloads folder and local offline cache for 100% offline access.
+            Streaming official textbook content directly for smooth reading.
           </p>
         </div>
       </div>
     );
   }
 
-  // If real PDF exists, render the single clean pro PDF Canvas Viewer directly!
-  if (uploadedPdfBlob) {
+  // If real PDF exists (either blob or streaming URL), render the single clean pro PDF Canvas Viewer!
+  if (uploadedPdfBlob || pdfUrl) {
     return (
-      <PdfCanvasViewer
-        pdfBlob={uploadedPdfBlob}
-        book={book}
-        onBack={onBack}
-        onUpdatePdfFile={handleUpdatePdfFile}
-      />
+      <>
+        <PdfCanvasViewer
+          pdfBlob={uploadedPdfBlob}
+          pdfUrl={pdfUrl}
+          book={book}
+          onBack={onBack}
+          onUpdatePdfFile={handleUpdatePdfFile}
+        />
+        <LargeFileDownloadModal
+          isOpen={isPermissionModalOpen}
+          onClose={() => setIsPermissionModalOpen(false)}
+          onConfirm={executeDownload}
+          book={book}
+        />
+      </>
     );
   }
 

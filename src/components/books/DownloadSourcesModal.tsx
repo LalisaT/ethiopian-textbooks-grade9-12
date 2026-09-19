@@ -19,6 +19,8 @@ import {
   Cloud,
 } from 'lucide-react';
 
+import { LargeFileDownloadModal } from './LargeFileDownloadModal';
+
 interface DownloadSourcesModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,17 +37,18 @@ export const DownloadSourcesModal: React.FC<DownloadSourcesModalProps> = ({
   const { t, language } = useTranslation();
   const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleDownloadSample = async () => {
+  const executeDownload = async () => {
     if (!book) return;
     setDownloadProgress(10);
     setDownloadSuccess(false);
 
     const result = await CloudStorageService.downloadAndSaveBookToDevice(book, (pct) => {
       setDownloadProgress(pct);
-    });
+    }, true);
 
     if (result.success) {
       setDownloadSuccess(true);
@@ -55,6 +58,16 @@ export const DownloadSourcesModal: React.FC<DownloadSourcesModalProps> = ({
     } else {
       setDownloadProgress(null);
       alert('Failed to save book to device. Please check storage space.');
+    }
+  };
+
+  const handleDownloadSample = () => {
+    if (!book) return;
+    // Ask permission if book exceeds 30 MB
+    if (book.fileSizeMb > 30) {
+      setIsPermissionModalOpen(true);
+    } else {
+      executeDownload();
     }
   };
 
@@ -76,7 +89,7 @@ export const DownloadSourcesModal: React.FC<DownloadSourcesModalProps> = ({
   const moeSources = ETHIOPIAN_DOWNLOAD_SOURCES.filter((s) => s.category === 'official_moe');
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
       <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col my-auto max-h-[90vh]">
         {/* Header */}
         <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
@@ -343,6 +356,15 @@ export const DownloadSourcesModal: React.FC<DownloadSourcesModalProps> = ({
           </button>
         </div>
       </div>
+
+      {book && (
+        <LargeFileDownloadModal
+          isOpen={isPermissionModalOpen}
+          onClose={() => setIsPermissionModalOpen(false)}
+          onConfirm={executeDownload}
+          book={book}
+        />
+      )}
     </div>
   );
 };

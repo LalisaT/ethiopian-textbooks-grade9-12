@@ -155,51 +155,56 @@ export const CloudStorageService = {
     try {
       if (onProgress) onProgress(20);
 
-      // Check if already in IndexedDB (and if it's the real PDF rather than tiny sample)
+      // Check if already in IndexedDB (must be authentic offline file > 500 KB)
       let blob: Blob | null = null;
-      let isFirstTime = false;
       const cached = await DbService.getPdfFile(book.id);
-      if (cached && cached.blob && (!book.pdfUrl || cached.blob.size > 100000)) {
+      if (cached && cached.blob && (!book.pdfUrl || cached.blob.size > 500000)) {
         blob = cached.blob;
       } else {
-        isFirstTime = true;
         if (onProgress) onProgress(40);
 
-        // 1. If real local or remote PDF URL is provided, fetch direct PDF
+        // 1. If real local or remote PDF URL is provided, fetch direct authentic PDF
         if (book.pdfUrl) {
           try {
             const resp = await fetch(book.pdfUrl);
             if (resp.ok) {
               blob = await resp.blob();
-              await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+              try {
+                await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+              } catch (dbQuotaErr) {
+                console.warn('IndexedDB offline caching failed (likely exceeded browser storage quota for large file):', dbQuotaErr);
+              }
             }
           } catch (fetchErr) {
             console.warn(`Direct fetch for ${book.pdfUrl} failed:`, fetchErr);
           }
         }
 
-        // 2. Fallback to high quality generated sample if real file could not be fetched
-        if (!blob) {
+        // 2. Fallback to generated sample ONLY if no blob AND no real textbook pdfUrl
+        if (!blob && !book.pdfUrl) {
           const pdfBytes = await this.generateSampleBookPdfBytes(book);
           blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-          await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+          try {
+            await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+          } catch {}
         }
       }
 
-      // Mark book as offline in localStorage so library cards update immediately
-      StorageService.markBookOffline(book.id);
+      // Mark book as offline in localStorage
+      if (blob) {
+        StorageService.markBookOffline(book.id);
+      }
 
       if (onProgress) onProgress(80);
 
-      // Save to user's mobile or computer storage (Downloads folder)
-      // Done automatically on first time reading OR when user clicks Download icon
-      if (isFirstTime || forcePhoneDownload) {
+      // Save to user's mobile or computer Downloads folder ONLY when explicitly requested
+      if (forcePhoneDownload && blob) {
         const safeFilename = `${book.title.replace(/[/\\?%*:|"<>]/g, '_')}.pdf`;
         this.downloadBlobToDevice(blob, safeFilename);
       }
 
       if (onProgress) onProgress(100);
-      return { success: true, blob };
+      return { success: !!blob, blob: blob || undefined };
     } catch (err) {
       console.error('Failed to download and save book to device:', err);
       return { success: false };

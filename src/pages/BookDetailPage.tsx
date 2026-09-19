@@ -5,6 +5,7 @@ import { ETHIOPIAN_SUBJECTS } from '../data/subjects';
 import { useTranslation } from '../i18n/useTranslation';
 import { CloudStorageService } from '../services/cloudStorageService';
 import { DbService } from '../services/dbService';
+import { LargeFileDownloadModal } from '../components/books/LargeFileDownloadModal';
 import {
   BookOpen,
   DownloadCloud,
@@ -80,7 +81,9 @@ export const BookDetailPage: React.FC<BookDetailPageProps> = ({
     onOpenPdf(book);
   };
 
-  const handleDownloadToPhone = async () => {
+  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
+
+  const executeDownloadToPhone = async () => {
     setIsDownloading(true);
     setDownloadProgress(20);
     setDownloadSuccess(false);
@@ -98,6 +101,15 @@ export const BookDetailPage: React.FC<BookDetailPageProps> = ({
     } else {
       setIsDownloading(false);
       alert('Failed to download book. Please check device storage space.');
+    }
+  };
+
+  const handleDownloadToPhone = () => {
+    // If book is larger than 30 MB, ask student for permission first
+    if (book.fileSizeMb > 30) {
+      setIsPermissionModalOpen(true);
+    } else {
+      executeDownloadToPhone();
     }
   };
 
@@ -331,6 +343,13 @@ export const BookDetailPage: React.FC<BookDetailPageProps> = ({
           })}
         </div>
       </div>
+
+      <LargeFileDownloadModal
+        isOpen={isPermissionModalOpen}
+        onClose={() => setIsPermissionModalOpen(false)}
+        onConfirm={executeDownloadToPhone}
+        book={book}
+      />
     </div>
   );
 };

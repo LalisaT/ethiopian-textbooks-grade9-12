@@ -4,6 +4,7 @@ import { ETHIOPIAN_REGIONS } from '../../data/regions';
 import { ETHIOPIAN_SUBJECTS } from '../../data/subjects';
 import { useTranslation } from '../../i18n/useTranslation';
 import { CloudStorageService } from '../../services/cloudStorageService';
+import { LargeFileDownloadModal } from './LargeFileDownloadModal';
 import {
   BookOpen,
   DownloadCloud,
@@ -81,6 +82,17 @@ export const BookCard: React.FC<BookCardProps> = ({
     onOpenPdf(book);
   };
 
+  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
+
+  const executeDownload = async () => {
+    setIsDownloading(true);
+    const res = await CloudStorageService.downloadAndSaveBookToDevice(book, undefined, true);
+    setIsDownloading(false);
+    if (res.success) {
+      onToggleOffline(book.id);
+    }
+  };
+
   const handleDownloadClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isOffline) {
@@ -88,11 +100,11 @@ export const BookCard: React.FC<BookCardProps> = ({
       return;
     }
 
-    setIsDownloading(true);
-    const res = await CloudStorageService.downloadAndSaveBookToDevice(book, undefined, true);
-    setIsDownloading(false);
-    if (res.success) {
-      onToggleOffline(book.id);
+    // Ask permission if book exceeds 30 MB
+    if (book.fileSizeMb > 30) {
+      setIsPermissionModalOpen(true);
+    } else {
+      executeDownload();
     }
   };
 
@@ -280,6 +292,13 @@ export const BookCard: React.FC<BookCardProps> = ({
           </div>
         </div>
       </div>
+
+      <LargeFileDownloadModal
+        isOpen={isPermissionModalOpen}
+        onClose={() => setIsPermissionModalOpen(false)}
+        onConfirm={executeDownload}
+        book={book}
+      />
     </div>
   );
 };
