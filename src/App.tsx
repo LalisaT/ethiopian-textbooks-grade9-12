@@ -24,6 +24,7 @@ import { EditBookModal } from './components/admin/EditBookModal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { BroadcastNotificationModal } from './components/admin/BroadcastNotificationModal';
 import { DownloadSourcesModal } from './components/books/DownloadSourcesModal';
+import { DisclaimerModal } from './components/common/DisclaimerModal';
 import { PwaInstallPrompt } from './components/common/PwaInstallPrompt';
 import { AppNotification } from './services/notificationService';
 
@@ -46,6 +47,29 @@ export const App: React.FC = () => {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [downloadModalBook, setDownloadModalBook] = useState<Book | null>(null);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
+
+  // Legal Disclaimer & Privacy Policy (First-open requirement)
+  const [isDisclaimerOpen, setIsDisclaimerOpen] = useState<boolean>(() => {
+    return localStorage.getItem('ethio_disclaimer_agreed') !== 'true';
+  });
+  const [isFirstOpenDisclaimer, setIsFirstOpenDisclaimer] = useState<boolean>(() => {
+    return localStorage.getItem('ethio_disclaimer_agreed') !== 'true';
+  });
+
+  const handleAgreeDisclaimer = () => {
+    localStorage.setItem('ethio_disclaimer_agreed', 'true');
+    setIsDisclaimerOpen(false);
+    setIsFirstOpenDisclaimer(false);
+  };
+
+  useEffect(() => {
+    const handleOpenDisclaimer = () => {
+      setIsFirstOpenDisclaimer(false);
+      setIsDisclaimerOpen(true);
+    };
+    window.addEventListener('open-disclaimer-modal', handleOpenDisclaimer);
+    return () => window.removeEventListener('open-disclaimer-modal', handleOpenDisclaimer);
+  }, []);
 
   // Custom & Edited Books Data
   const [customBooks, setCustomBooks] = useState<Book[]>([]);
@@ -738,6 +762,14 @@ export const App: React.FC = () => {
 
       {/* PWA 1-Click Install Banner & Notification */}
       <PwaInstallPrompt />
+
+      {/* Legal Disclaimer, Privacy Policy & Terms Modal */}
+      <DisclaimerModal
+        isOpen={isDisclaimerOpen}
+        onAgree={handleAgreeDisclaimer}
+        canCloseWithoutAgree={!isFirstOpenDisclaimer}
+        onClose={() => setIsDisclaimerOpen(false)}
+      />
 
       {/* Mobile Bottom Navigation Bar (Grades 9-12 & EUEE Hub) */}
       <MobileBottomNav

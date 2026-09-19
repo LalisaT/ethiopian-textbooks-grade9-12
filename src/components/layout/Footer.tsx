@@ -51,8 +51,17 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <p>© {new Date().getFullYear()} Ethiopian Textbooks Digital Portal. Developed for students across all regions.</p>
-          <div className="flex items-center gap-1.5 text-slate-400">
+          <div className="flex flex-wrap items-center gap-4 text-slate-400">
+            <p>© {new Date().getFullYear()} Ethiopian Textbooks Digital Portal. Developed for students across all regions.</p>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-disclaimer-modal'))}
+              className="text-rose-400 hover:text-rose-300 font-bold hover:underline transition-colors cursor-pointer"
+            >
+              Disclaimer &amp; Privacy Policy
+            </button>
+          </div>
+          <div className="flex items-center gap-1.5 text-slate-400 shrink-0">
             <span>Built with</span>
             <img
               src="/brand/lalion-logo.png"
