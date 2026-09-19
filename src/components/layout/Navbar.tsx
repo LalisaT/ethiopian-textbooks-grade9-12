@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone, GraduationCap } from 'lucide-react';
+import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone, GraduationCap, Send } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { LanguageSelector } from '../common/LanguageSelector';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -133,6 +133,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
+            {/* Join Telegram Channel Quick Action Button */}
+            <a
+              href="https://t.me/Ethiopianstudentbooks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-sky-500 hover:bg-sky-400 active:scale-95 text-white shadow-sm shadow-sky-500/25 transition-all"
+              title="Join Official Telegram Channel (@Ethiopianstudentbooks)"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Telegram</span>
+            </a>
+
             <LanguageSelector />
             <NotificationDropdown onNavigateNotification={onNavigateNotification} />
             <ThemeToggle theme={theme} setTheme={setTheme} />
@@ -179,6 +191,26 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             );
           })}
+
+          {/* Telegram Channel Button in Mobile Drawer */}
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <a
+              href="https://t.me/Ethiopianstudentbooks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold bg-sky-500/10 dark:bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30 hover:bg-sky-500 hover:text-white transition-all shadow-xs"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Send className="w-3.5 h-3.5" />
+                </div>
+                <span>Join Telegram Community</span>
+              </div>
+              <span className="text-xs bg-sky-500 text-white px-2.5 py-1 rounded-full font-black shadow-xs">
+                Join
+              </span>
+            </a>
+          </div>
 
           {isAdmin && (
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800">

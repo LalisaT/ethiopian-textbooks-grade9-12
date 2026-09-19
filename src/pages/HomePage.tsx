@@ -19,6 +19,7 @@ import {
   XCircle,
   HelpCircle,
   BookMarked,
+  Send,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -229,6 +230,44 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Official Telegram Channel Banner - Compact & Clean */}
+      <section className="bg-gradient-to-r from-sky-500/10 via-sky-500/5 to-slate-900/20 dark:bg-slate-900/90 rounded-2xl p-3.5 sm:p-4 border border-sky-500/30 dark:border-sky-500/20 shadow-sm transition-all hover:shadow-md">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Sleek Circular Telegram Icon */}
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-sky-500 to-sky-400 p-2 flex items-center justify-center text-white shadow-md shadow-sky-500/30 shrink-0">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+              </svg>
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                  Official Telegram Channel
+                </span>
+                <span className="px-1.5 py-0.2 bg-sky-500 text-white rounded text-[9px] font-black uppercase tracking-wider shrink-0">
+                  Verified
+                </span>
+              </div>
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                @Ethiopianstudentbooks • Free Textbooks &amp; EUEE Solutions
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://t.me/Ethiopianstudentbooks"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition-all flex items-center gap-1.5 shrink-0"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>Join</span>
+          </a>
         </div>
       </section>
 

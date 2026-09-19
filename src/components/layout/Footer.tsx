@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield } from 'lucide-react';
+import { Shield, Send } from 'lucide-react';
 
 export const Footer: React.FC = () => {
 
@@ -60,6 +60,15 @@ export const Footer: React.FC = () => {
             >
               Disclaimer &amp; Privacy Policy
             </button>
+            <a
+              href="https://t.me/Ethiopianstudentbooks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sky-400 hover:text-sky-300 font-bold hover:underline transition-colors inline-flex items-center gap-1 cursor-pointer"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Telegram Channel</span>
+            </a>
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-300 bg-slate-800/90 px-3.5 py-1.5 rounded-full border border-slate-700/80 shadow-md shrink-0">
             <span className="text-slate-400">Built with</span>

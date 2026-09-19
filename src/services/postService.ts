@@ -59,8 +59,8 @@ const DEFAULT_POSTS: CommunityPost[] = [
     pinned: true,
     isOfficial: true,
     actionUrl: 'tab:explore',
-    linkUrl: 'https://t.me/ethio_students_grade9_12',
-    linkTitle: 'Join High School Telegram Community',
+    linkUrl: 'https://t.me/Ethiopianstudentbooks',
+    linkTitle: 'Join High School Telegram Community (@Ethiopianstudentbooks)',
     linkType: 'telegram',
     imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80',
     imageCaption: 'Ethiopian High School Digital Curriculum Textbooks Collection',
@@ -97,6 +97,12 @@ export const PostService = {
         title: p.title.replace(/ESSLCE/g, 'EUEE'),
         content: p.content.replace(/ESSLCE/g, 'EUEE'),
         grade: p.grade.replace(/ESSLCE/g, 'EUEE'),
+        linkUrl: p.linkUrl?.includes('ethio_students_grade9_12')
+          ? 'https://t.me/Ethiopianstudentbooks'
+          : p.linkUrl,
+        linkTitle: p.linkUrl?.includes('ethio_students_grade9_12')
+          ? 'Join High School Telegram Community (@Ethiopianstudentbooks)'
+          : p.linkTitle,
         likedByMe: userLikes.includes(p.id),
         isBookmarked: userBookmarks.includes(p.id),
       }));
