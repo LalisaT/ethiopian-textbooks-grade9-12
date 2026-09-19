@@ -5,7 +5,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="bg-slate-900 text-slate-400 text-sm border-t border-slate-800 transition-colors mt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-32 sm:pb-12">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           {/* Brand Info */}
           <div className="space-y-3 max-w-xl">
@@ -51,8 +51,8 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <div className="flex flex-wrap items-center gap-4 text-slate-400">
-            <p>© {new Date().getFullYear()} Ethiopian Textbooks Digital Portal. Developed for students across all regions.</p>
+          <div className="flex flex-wrap items-center gap-4 text-slate-400 text-center sm:text-left justify-center sm:justify-start">
+            <p>© {new Date().getFullYear()} Ethiopian Grade 9–12 Textbooks Portal. Developed for students across all regions.</p>
             <button
               type="button"
               onClick={() => window.dispatchEvent(new CustomEvent('open-disclaimer-modal'))}
@@ -61,14 +61,14 @@ export const Footer: React.FC = () => {
               Disclaimer &amp; Privacy Policy
             </button>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-400 shrink-0">
-            <span>Built with</span>
+          <div className="flex items-center gap-2 text-xs text-slate-300 bg-slate-800/90 px-3.5 py-1.5 rounded-full border border-slate-700/80 shadow-md shrink-0">
+            <span className="text-slate-400">Built with</span>
             <img
               src="/brand/lalion-logo.png"
               alt="Lalion Logo"
-              className="w-4 h-4 rounded-full inline-block object-contain ring-1 ring-slate-700/80"
+              className="w-4 h-4 rounded-full inline-block object-contain ring-1 ring-slate-600 shadow-sm"
             />
-            <span className="font-semibold text-slate-200">Lalion</span>
+            <span className="font-bold text-white tracking-wide">Lalion</span>
           </div>
         </div>
       </div>

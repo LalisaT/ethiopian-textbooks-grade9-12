@@ -52,19 +52,14 @@ export const App: React.FC = () => {
   const [isDisclaimerOpen, setIsDisclaimerOpen] = useState<boolean>(() => {
     return localStorage.getItem('ethio_disclaimer_agreed') !== 'true';
   });
-  const [isFirstOpenDisclaimer, setIsFirstOpenDisclaimer] = useState<boolean>(() => {
-    return localStorage.getItem('ethio_disclaimer_agreed') !== 'true';
-  });
 
   const handleAgreeDisclaimer = () => {
     localStorage.setItem('ethio_disclaimer_agreed', 'true');
     setIsDisclaimerOpen(false);
-    setIsFirstOpenDisclaimer(false);
   };
 
   useEffect(() => {
     const handleOpenDisclaimer = () => {
-      setIsFirstOpenDisclaimer(false);
       setIsDisclaimerOpen(true);
     };
     window.addEventListener('open-disclaimer-modal', handleOpenDisclaimer);
@@ -767,8 +762,6 @@ export const App: React.FC = () => {
       <DisclaimerModal
         isOpen={isDisclaimerOpen}
         onAgree={handleAgreeDisclaimer}
-        canCloseWithoutAgree={!isFirstOpenDisclaimer}
-        onClose={() => setIsDisclaimerOpen(false)}
       />
 
       {/* Mobile Bottom Navigation Bar (Grades 9-12 & EUEE Hub) */}

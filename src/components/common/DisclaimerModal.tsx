@@ -4,15 +4,11 @@ import { Shield, ExternalLink, Mail, Lock, FileText, CheckCircle2 } from 'lucide
 interface DisclaimerModalProps {
   isOpen: boolean;
   onAgree: () => void;
-  canCloseWithoutAgree?: boolean;
-  onClose?: () => void;
 }
 
 export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   isOpen,
   onAgree,
-  canCloseWithoutAgree = false,
-  onClose,
 }) => {
   const [activeTab, setActiveTab] = useState<'disclaimer' | 'privacy' | 'terms'>('disclaimer');
 
@@ -28,7 +24,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             DISCLAIMER
           </h2>
           <p className="text-[11px] text-slate-400 mt-1">
-            Ethiopian Grade 9–12 Textbooks &amp; Digital Library Portal
+            Ethiopian Grade 9–12 Textbooks Portal
           </p>
 
           {/* Sub Tabs: Disclaimer | Privacy Policy | Terms */}
@@ -79,22 +75,22 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           {activeTab === 'disclaimer' && (
             <div className="space-y-3.5 animate-in fade-in duration-150">
               <p>
-                <strong className="text-white">Ethio Digital Library</strong> is a privately developed educational application and is{' '}
+                <strong className="text-white">Ethiopian Grade 9–12 Textbooks</strong> is a privately developed educational application and is{' '}
                 <span className="text-rose-400 font-extrabold">NOT affiliated with, endorsed by, or officially connected</span> to the Ministry of Education of Ethiopia or any government entity. The app is intended solely to provide convenient digital access to publicly available educational learning materials for reference purposes.
               </p>
 
               <p>
-                The educational materials displayed in this app are collected from publicly accessible online sources, including the official public download section of the Ministry of Education of Ethiopia website (
+                The educational materials displayed in this app are collected from publicly accessible online sources, including the official public download section of the Ministry of Education of Ethiopia{' '}
                 <a
                   href="https://www.anrseb.gov.et/downloads/textbooks/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sky-400 hover:underline inline-flex items-center gap-0.5"
+                  className="text-sky-400 hover:underline inline-flex items-center gap-0.5 font-bold"
                 >
-                  https://www.anrseb.gov.et/downloads/textbooks/
+                  website
                   <ExternalLink className="w-3 h-3 inline" />
-                </a>
-                ) and other clearly identified public educational platforms.
+                </a>{' '}
+                and other clearly identified public educational platforms.
               </p>
 
               <p>
@@ -123,11 +119,16 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-400">Developer</span>
                   <a
-                    href="mailto:lalion.tech@gmail.com?subject=Ethiopian%20Digital%20Library%20Inquiry"
-                    className="text-sky-400 hover:underline flex items-center gap-1 font-bold"
+                    href="mailto:qaroo24@gmail.com?subject=Ethiopian%20Textbooks%20Inquiry"
+                    className="text-sky-400 hover:underline flex items-center gap-1.5 font-bold"
                   >
+                    <img
+                      src="/brand/lalion-logo.png"
+                      alt="Lalion Logo"
+                      className="w-3.5 h-3.5 rounded-full inline-block object-contain"
+                    />
+                    <span>Lalion</span>
                     <Mail className="w-3.5 h-3.5" />
-                    <span>Contact</span>
                   </a>
                 </div>
               </div>
@@ -168,6 +169,20 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                   You can clear offline saved books and reset quiz progress at any time through the in-app storage manager or browser settings.
                 </p>
               </div>
+
+              <div>
+                <h4 className="font-bold text-white text-sm">5. Privacy Inquiries &amp; Support</h4>
+                <p className="text-slate-300 text-xs mt-1">
+                  If you have questions regarding privacy, data protection, or educational content, please contact us at{' '}
+                  <a
+                    href="mailto:qaroo24@gmail.com?subject=Privacy%20Inquiry%20-%20Ethiopian%20Textbooks"
+                    className="text-sky-400 hover:underline font-bold inline-flex items-center gap-1"
+                  >
+                    <span>qaroo24@gmail.com</span>
+                    <Mail className="w-3 h-3 inline" />
+                  </a>.
+                </p>
+              </div>
             </div>
           )}
 
@@ -183,7 +198,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               <div>
                 <h4 className="font-bold text-white text-sm">Non-Commercial Usage</h4>
                 <p className="text-slate-300 text-xs mt-1">
-                  This digital library is free to use for individual learning and non-commercial classroom instruction. Users may not resell, package, or commercially exploit any educational content obtained through this service.
+                  This application is free to use for individual learning and non-commercial classroom instruction. Users may not resell, package, or commercially exploit any educational content obtained through this service.
                 </p>
               </div>
 
@@ -206,16 +221,6 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           >
             <span>Agree &amp; Continue</span>
           </button>
-
-          {canCloseWithoutAgree && onClose && (
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-xs text-slate-500 hover:text-slate-300 text-center font-bold py-1 transition-colors"
-            >
-              Close Window
-            </button>
-          )}
         </div>
       </div>
     </div>

@@ -90,10 +90,13 @@ export const PostService = {
       const data = localStorage.getItem(STORAGE_KEY_POSTS);
       const userLikes: string[] = JSON.parse(localStorage.getItem(STORAGE_KEY_LIKES) || '[]');
       const userBookmarks: string[] = JSON.parse(localStorage.getItem(STORAGE_KEY_BOOKMARKS) || '[]');
-      const posts: CommunityPost[] = data ? JSON.parse(data) : DEFAULT_POSTS;
+      let posts: CommunityPost[] = data ? JSON.parse(data) : DEFAULT_POSTS;
 
       return posts.map((p) => ({
         ...p,
+        title: p.title.replace(/ESSLCE/g, 'EUEE'),
+        content: p.content.replace(/ESSLCE/g, 'EUEE'),
+        grade: p.grade.replace(/ESSLCE/g, 'EUEE'),
         likedByMe: userLikes.includes(p.id),
         isBookmarked: userBookmarks.includes(p.id),
       }));

@@ -549,92 +549,97 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
           filteredPosts.map((post) => (
             <div
               key={post.id}
-              className={`bg-white dark:bg-slate-900 rounded-3xl border p-6 sm:p-7 shadow-md transition-all space-y-5 ${
+              className={`bg-white dark:bg-slate-900 rounded-3xl border p-5 sm:p-6 shadow-md transition-all space-y-4 ${
                 post.pinned
-                  ? 'border-amber-400 dark:border-amber-600/60 ring-1 ring-amber-400/30'
+                  ? 'border-amber-400 dark:border-amber-500/60 ring-1 ring-amber-400/20 bg-gradient-to-b from-amber-50/20 via-transparent to-transparent dark:from-amber-950/15'
                   : 'border-slate-200 dark:border-slate-800'
               }`}
             >
-              {/* Post Header */}
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm ${
-                      post.authorRole === 'admin'
-                        ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-slate-950'
-                        : post.authorRole === 'teacher'
-                        ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white'
-                        : 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white'
-                    }`}
-                  >
-                    {post.authorRole === 'admin' ? (
-                      <ShieldCheck className="w-5 h-5" />
-                    ) : (
-                      <User className="w-5 h-5" />
-                    )}
-                  </div>
-
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-sm text-slate-900 dark:text-white">
-                        {post.author}
-                      </span>
-                      {post.isOfficial && (
-                        <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-black border border-amber-300 dark:border-amber-800">
-                          Official
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                      <span>{new Date(post.date).toLocaleDateString()}</span>
-                      <span>•</span>
-                      <span>{post.grade}</span>
-                      {post.subject && (
-                        <>
-                          <span>•</span>
-                          <span className="font-medium text-emerald-600 dark:text-emerald-400">{post.subject}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold">
-                    {post.category}
+              {/* Top Eyebrow Badges & Controls */}
+              <div className="flex items-center justify-between gap-2 pb-0.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold border border-slate-200/80 dark:border-slate-700/80 flex items-center gap-1.5 shadow-xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></span>
+                    <span>{post.category}</span>
                   </span>
 
                   {post.pinned && (
-                    <span className="p-1.5 bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 rounded-xl" title="Pinned Announcement">
-                      <Pin className="w-3.5 h-3.5 fill-current" />
+                    <span className="px-2.5 py-1 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 rounded-full text-[11px] font-black border border-amber-300/90 dark:border-amber-800/90 flex items-center gap-1 shadow-xs" title="Pinned Announcement">
+                      <Pin className="w-3 h-3 fill-current text-amber-600 dark:text-amber-400" />
+                      <span>Pinned</span>
                     </span>
                   )}
+                </div>
 
-                  {isAdmin && (
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => handleTogglePin(post.id)}
-                        className="p-1.5 text-slate-400 hover:text-amber-500 rounded-lg transition-colors"
-                        title={post.pinned ? 'Unpin' : 'Pin to top'}
-                      >
-                        <Pin className={`w-3.5 h-3.5 ${post.pinned ? 'fill-current text-amber-500' : ''}`} />
-                      </button>
-                      <button
-                        onClick={() => handleOpenEditModal(post)}
-                        className="p-1.5 text-slate-400 hover:text-emerald-500 rounded-lg transition-colors"
-                        title="Edit post"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeletePost(post.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
-                        title="Delete post"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                {isAdmin && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleTogglePin(post.id)}
+                      className="p-1.5 text-slate-400 hover:text-amber-500 rounded-lg transition-colors"
+                      title={post.pinned ? 'Unpin' : 'Pin to top'}
+                    >
+                      <Pin className={`w-3.5 h-3.5 ${post.pinned ? 'fill-current text-amber-500' : ''}`} />
+                    </button>
+                    <button
+                      onClick={() => handleOpenEditModal(post)}
+                      className="p-1.5 text-slate-400 hover:text-emerald-500 rounded-lg transition-colors"
+                      title="Edit post"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeletePost(post.id)}
+                      className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
+                      title="Delete post"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Author Profile Row */}
+              <div className="flex items-start gap-3.5 pt-0.5">
+                <div
+                  className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm shrink-0 mt-0.5 ${
+                    post.authorRole === 'admin'
+                      ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-slate-950'
+                      : post.authorRole === 'teacher'
+                      ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white'
+                      : 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white'
+                  }`}
+                >
+                  {post.authorRole === 'admin' ? (
+                    <ShieldCheck className="w-5 h-5" />
+                  ) : (
+                    <User className="w-5 h-5" />
                   )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
+                      {post.author}
+                    </span>
+                    {post.isOfficial && (
+                      <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-black border border-amber-300 dark:border-amber-800 shrink-0 inline-flex items-center gap-1 shadow-xs">
+                        <ShieldCheck className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                        Official
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1 leading-relaxed">
+                    <span>{new Date(post.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">{post.grade}</span>
+                    {post.subject && (
+                      <>
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{post.subject}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 
