@@ -278,8 +278,8 @@ export const HomePage: React.FC<HomePageProps> = ({
         onSeeAll={() => onSelectGradeFilter(12)}
       />
 
-      {/* 5. Native In-Feed Sponsored Educational Card (High Revenue, Zero Annoyance) */}
-      <NativeAdCard sponsor={AdService.getFeaturedSponsor(0)} />
+      {/* 5. Native In-Feed AdMob Unit (High Revenue, Zero Annoyance) */}
+      <NativeAdCard />
 
       {/* 6. Shelf 3: Browse by Secondary & Preparatory Grade Levels */}
       <section className="space-y-3">

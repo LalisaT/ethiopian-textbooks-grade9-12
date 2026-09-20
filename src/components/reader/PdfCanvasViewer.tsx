@@ -10,6 +10,8 @@ import { Book } from '../../types/book';
 import { NotesDrawer } from './NotesDrawer';
 import { QuizModal } from '../study/QuizModal';
 import { InternetRequiredModal } from '../common/InternetRequiredModal';
+import { RewardedVideoAdModal } from '../ads/RewardedVideoAdModal';
+import { ReaderBottomAdBanner } from '../ads/ReaderBottomAdBanner';
 import { NetworkService } from '../../services/networkService';
 import {
   ChevronLeft,
@@ -110,6 +112,11 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const [quizQuestionCount, setQuizQuestionCount] = useState<25 | 50 | 100 | 200>(25);
   const [selectedQuizTopic, setSelectedQuizTopic] = useState<string>('all');
   const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
+  const [isVideoAdModalOpen, setIsVideoAdModalOpen] = useState(false);
+  const [pendingQuizConfig, setPendingQuizConfig] = useState<{
+    count: 25 | 50 | 100 | 200;
+    topicId: string;
+  } | null>(null);
 
   const isOromoBook =
     book.language === 'om' ||
@@ -652,8 +659,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     setIsQuizConfigOpen(true);
   };
 
-  // Launch Dynamic 25-200 Question Quiz directly from PDF with specific topic filtering
+  // Launch Dynamic 25-200 Question Quiz directly from PDF: Requires internet first, then rewarded video view
   const handleStartDynamicQuiz = async (count: 25 | 50 | 100 | 200, topicId: string = selectedQuizTopic) => {
+    // 1. First ask internet connection
     const isOnline = await NetworkService.checkInternetConnection();
     if (!isOnline) {
       setIsQuizConfigOpen(false);
@@ -661,17 +669,27 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       return;
     }
 
+    // 2. Queue rewarded video ad view: student must view video to access questions
+    setPendingQuizConfig({ count, topicId });
+    setIsQuizConfigOpen(false);
+    setIsVideoAdModalOpen(true);
+  };
+
+  const handleRewardEarnedForQuiz = async () => {
+    if (!pendingQuizConfig) return;
+    const { count, topicId } = pendingQuizConfig;
     try {
       setIsExtractingQuiz(true);
       const qs = await QuizGeneratorService.extractBookExercisesFromPdf(pdfDoc, book, count, topicId);
       setGeneratedQuestions(qs);
       setQuizQuestionCount(count);
       setIsExtractingQuiz(false);
-      setIsQuizConfigOpen(false);
       setIsQuizActive(true);
     } catch (err) {
       console.error(err);
       setIsExtractingQuiz(false);
+    } finally {
+      setPendingQuizConfig(null);
     }
   };
 
@@ -1499,6 +1517,13 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           </>
         )}
 
+        {/* AdMob Bottom Reader Banner (Rendered exclusively when mobile data/internet is OPEN) */}
+        {!isZenMode && (
+          <div className="fixed bottom-14 md:bottom-2 inset-x-0 z-30 px-3 flex justify-center pointer-events-none">
+            <ReaderBottomAdBanner />
+          </div>
+        )}
+
         {/* MOBILE PRO BOTTOM BAR (Hidden in Clean View or on Desktop) */}
         {!isZenMode && (
           <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-3 py-2 flex items-center justify-between shadow-2xl safe-area-bottom">
@@ -1749,6 +1774,18 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           timeLimitMinutes={quizQuestionCount}
         />
       )}
+
+      {/* AdMob Rewarded Video Modal: Required to Access Questions */}
+      <RewardedVideoAdModal
+        isOpen={isVideoAdModalOpen}
+        onClose={() => {
+          setIsVideoAdModalOpen(false);
+          setPendingQuizConfig(null);
+        }}
+        onRewardEarned={handleRewardEarnedForQuiz}
+        questionCount={pendingQuizConfig?.count || 25}
+        subjectOrTitle={`${book.title} (Grade ${book.grade})`}
+      />
 
       {/* Internet Connection Required Modal for In-Book Quizzes */}
       <InternetRequiredModal

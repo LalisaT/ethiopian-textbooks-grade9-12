@@ -16,6 +16,7 @@ import { AdminExamEditorModal } from './AdminExamEditorModal';
 import { AdminUploadPastPaperModal } from './AdminUploadPastPaperModal';
 import { AdminCategoryManagerModal } from '../admin/AdminCategoryManagerModal';
 import { InternetRequiredModal } from '../common/InternetRequiredModal';
+import { RewardedVideoAdModal } from '../ads/RewardedVideoAdModal';
 import { NetworkService } from '../../services/networkService';
 import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 import {
@@ -132,6 +133,15 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
     });
   };
 
+  const [isVideoAdModalOpen, setIsVideoAdModalOpen] = useState(false);
+  const [pendingExamStart, setPendingExamStart] = useState<{
+    curatedQuestions: QuizQuestion[];
+    title: string;
+    lang: string;
+    timeLimit: number;
+    count: number;
+  } | null>(null);
+
   const handleConfirmStartExam = async (
     selectedCount: number,
     timeLimitMinutes: number,
@@ -139,6 +149,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
   ) => {
     if (!selectedExamForConfig) return;
 
+    // 1. First ask internet connection
     const online = await NetworkService.checkInternetConnection();
     if (!online) {
       setIsNetworkModalOpen(true);
@@ -155,11 +166,25 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
       }
     );
 
-    setActiveQuizQuestions(curatedQuestions);
-    setQuizModalTitle(`${selectedExamForConfig.title} • ${selectedCount} Best-of-Best Questions`);
-    setActiveExamLanguage(selectedExamForConfig.language || language || 'en');
-    setActiveExamTimeLimitMinutes(timeLimitMinutes);
+    // 2. Queue video ad requirement: student must view video to access questions
+    setPendingExamStart({
+      curatedQuestions,
+      title: `${selectedExamForConfig.title} • ${selectedCount} Best-of-Best Questions`,
+      lang: selectedExamForConfig.language || language || 'en',
+      timeLimit: timeLimitMinutes,
+      count: selectedCount,
+    });
     setSelectedExamForConfig(null);
+    setIsVideoAdModalOpen(true);
+  };
+
+  const handleRewardEarnedForExam = () => {
+    if (!pendingExamStart) return;
+    setActiveQuizQuestions(pendingExamStart.curatedQuestions);
+    setQuizModalTitle(pendingExamStart.title);
+    setActiveExamLanguage(pendingExamStart.lang);
+    setActiveExamTimeLimitMinutes(pendingExamStart.timeLimit);
+    setPendingExamStart(null);
   };
 
   const handleQuizComplete = (score: number, total: number) => {
@@ -776,6 +801,18 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           }}
         />
       )}
+
+      {/* AdMob Rewarded Video Modal: Required to Access Questions */}
+      <RewardedVideoAdModal
+        isOpen={isVideoAdModalOpen}
+        onClose={() => {
+          setIsVideoAdModalOpen(false);
+          setPendingExamStart(null);
+        }}
+        onRewardEarned={handleRewardEarnedForExam}
+        questionCount={pendingExamStart?.count || 50}
+        subjectOrTitle={pendingExamStart?.title || 'National Exam Practice'}
+      />
 
       {/* Internet Connection Required Modal */}
       <InternetRequiredModal

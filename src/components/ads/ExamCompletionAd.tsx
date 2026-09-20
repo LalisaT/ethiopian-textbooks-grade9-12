@@ -1,14 +1,18 @@
 import React from 'react';
-import { Award, Sparkles, ExternalLink, ShieldCheck } from 'lucide-react';
-import { AdService } from '../../services/adService';
+import { Award, Sparkles } from 'lucide-react';
+import { ADMOB_CONFIG } from '../../services/adService';
 
 interface ExamCompletionAdProps {
   score: number;
   total: number;
+  adUnitId?: string;
 }
 
-export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({ score, total }) => {
-  const sponsor = AdService.getFeaturedSponsor(1);
+export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({
+  score,
+  total,
+  adUnitId = ADMOB_CONFIG.units.interstitial,
+}) => {
   const percent = Math.round((score / total) * 100);
 
   return (
@@ -16,10 +20,10 @@ export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({ score, total
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-black uppercase tracking-wider">
           <Sparkles className="w-3 h-3" />
-          <span>Sponsored Student Opportunity</span>
+          <span>Google AdMob • Post-Exam Unit</span>
         </div>
         <span className="text-[10px] font-bold text-slate-400">
-          Post-Exam Resource
+          Ready Space
         </span>
       </div>
 
@@ -30,27 +34,21 @@ export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({ score, total
 
         <div className="space-y-0.5 flex-1 min-w-0">
           <h4 className="text-sm font-black text-white truncate">
-            {sponsor.title}
+            Google AdMob Interstitial / High-Yield Unit
           </h4>
-          <p className="text-xs text-slate-300 line-clamp-2">
-            {sponsor.description}
+          <p className="text-xs text-slate-400 font-mono line-clamp-1">
+            Slot: {adUnitId}
           </p>
         </div>
       </div>
 
       <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
         <div className="text-[11px] text-slate-400">
-          Your score: <strong className="text-emerald-400">{percent}%</strong> • Recommended for high-yield preparation
+          Exam Score: <strong className="text-emerald-400">{percent}%</strong> • AdMob Interstitial Placement
         </div>
-        <a
-          href={sponsor.targetUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs rounded-xl shadow-md transition-transform active:scale-95 flex items-center gap-1 shrink-0"
-        >
-          <span>{sponsor.ctaText}</span>
-          <ExternalLink className="w-3 h-3" />
-        </a>
+        <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs rounded-xl">
+          Monetized
+        </div>
       </div>
     </div>
   );
