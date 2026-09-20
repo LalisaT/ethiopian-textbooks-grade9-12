@@ -15,6 +15,9 @@ import { selectBestOfBestQuestions } from '../../services/examSelectorService';
 import { AdminExamEditorModal } from './AdminExamEditorModal';
 import { AdminUploadPastPaperModal } from './AdminUploadPastPaperModal';
 import { AdminCategoryManagerModal } from '../admin/AdminCategoryManagerModal';
+import { InternetRequiredModal } from '../common/InternetRequiredModal';
+import { NetworkService } from '../../services/networkService';
+import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 import {
   Award,
   BookOpen,
@@ -38,6 +41,8 @@ import {
   Settings,
   Atom,
   GraduationCap,
+  WifiOff,
+  RefreshCw,
 } from 'lucide-react';
 
 interface ExamPracticeHubProps {
@@ -50,6 +55,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
   pastAttempts,
 }) => {
   const { t, language } = useTranslation();
+  const { isOnline, isChecking: isNetworkChecking, recheck: recheckNetwork } = useNetworkStatus();
+  const [isNetworkModalOpen, setIsNetworkModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel>(12);
   const [selectedStream, setSelectedStream] = useState<'all' | 'natural_science' | 'social_science'>('all');
   const [selectedSubject, setSelectedSubject] = useState<SubjectCategory | 'all'>('all');
@@ -93,13 +102,20 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
     loadData();
   }, [selectedGrade, selectedStream, selectedSubject]);
 
-  const handleStartExam = (
+  const handleStartExam = async (
     title: string,
     questions: QuizQuestion[],
     examLang?: string,
     subject?: SubjectCategory | 'all',
     stream?: ExamStream | 'all'
   ) => {
+    const online = await NetworkService.checkInternetConnection();
+    if (!online) {
+      setPendingAction(() => () => handleStartExam(title, questions, examLang, subject, stream));
+      setIsNetworkModalOpen(true);
+      return;
+    }
+
     let filteredQuestions = [...questions];
     if (selectedSourceGrade !== 'all') {
       const sourceFiltered = questions.filter(q => q.sourceGrade === selectedSourceGrade);
@@ -116,12 +132,18 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
     });
   };
 
-  const handleConfirmStartExam = (
+  const handleConfirmStartExam = async (
     selectedCount: number,
     timeLimitMinutes: number,
     bestOfBest: boolean
   ) => {
     if (!selectedExamForConfig) return;
+
+    const online = await NetworkService.checkInternetConnection();
+    if (!online) {
+      setIsNetworkModalOpen(true);
+      return;
+    }
 
     const curatedQuestions = selectBestOfBestQuestions(
       selectedExamForConfig.questions,
@@ -265,6 +287,47 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Offline Alert Banner for Quizzes and Exam Questions */}
+      {!isOnline && (
+        <div className="rounded-3xl bg-rose-500/10 dark:bg-rose-950/40 border border-rose-500/30 p-4 sm:p-5 flex items-center justify-between flex-wrap gap-4 shadow-sm animate-fadeIn">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+              <WifiOff className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-black text-[10px] uppercase tracking-wide">
+                  Connection Required
+                </span>
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                  {language === 'om'
+                    ? 'Intarneetiin Barbaachisaadha'
+                    : language === 'am'
+                    ? 'የኢንተርኔት ግንኙነት ያስፈልጋል'
+                    : 'Internet Connection Required for Exam Practice'}
+                </h3>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+                {language === 'om'
+                  ? 'Qormaata shaakaluu fi gaaffilee dubbisuuf yeroo hunda intarneetiin jiraachuu qaba. Kitaabonni garuu intarneetii malee ni hojjetu.'
+                  : language === 'am'
+                  ? 'የልምምድ ፈተናዎችን እና ጥያቄዎችን ለመስራት ወይም ለማንበብ ሁልጊዜ የኢንተርኔት ግንኙነት ያስፈልጋል። የተቀመጡ መጻሕፍት ያለ ኢንተርኔት ይሰራሉ።'
+                  : 'Practicing quizzes, entrance exam questions, and mock simulations requires an active internet connection. Saved textbooks remain fully readable offline.'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={recheckNetwork}
+            disabled={isNetworkChecking}
+            className="px-4 py-2.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-2 disabled:opacity-60 shrink-0 ml-auto sm:ml-0"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isNetworkChecking ? 'animate-spin' : ''}`} />
+            <span>{isNetworkChecking ? 'Verifying...' : 'Check Connection'}</span>
+          </button>
+        </div>
+      )}
 
       {/* Navigation Tabs */}
       <div className="flex flex-wrap items-center justify-between border-b border-slate-200 dark:border-slate-800 gap-4">
@@ -713,6 +776,21 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           }}
         />
       )}
+
+      {/* Internet Connection Required Modal */}
+      <InternetRequiredModal
+        isOpen={isNetworkModalOpen}
+        onClose={() => {
+          setIsNetworkModalOpen(false);
+          setPendingAction(null);
+        }}
+        onConnected={() => {
+          if (pendingAction) {
+            pendingAction();
+            setPendingAction(null);
+          }
+        }}
+      />
     </div>
   );
 };

@@ -14,7 +14,10 @@ import {
   Filter,
   Flame,
   HelpCircle,
+  WifiOff,
+  RefreshCw,
 } from 'lucide-react';
+import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 
 interface QuizModalProps {
   isOpen: boolean;
@@ -38,6 +41,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
   onComplete,
 }) => {
   language = examLanguage || language || 'en';
+  const { isOnline, isChecking: isNetworkChecking, recheck: recheckNetwork } = useNetworkStatus();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -58,9 +62,9 @@ export const QuizModal: React.FC<QuizModalProps> = ({
     }
   }, [isOpen, questions, timeLimitMinutes]);
 
-  // Exam Countdown Timer
+  // Exam Countdown Timer - Automatically pauses when offline
   useEffect(() => {
-    if (!isOpen || isSubmitted) return;
+    if (!isOpen || isSubmitted || !isOnline) return;
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => {
         if (prev <= 1) {
@@ -73,7 +77,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isOpen, isSubmitted]);
+  }, [isOpen, isSubmitted, isOnline]);
 
   if (!isOpen || questions.length === 0) return null;
 
@@ -219,7 +223,62 @@ export const QuizModal: React.FC<QuizModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-slate-900 rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-800 overflow-hidden flex flex-col my-auto max-h-[95vh] text-slate-100">
+      <div className="bg-slate-900 rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-800 overflow-hidden flex flex-col my-auto max-h-[95vh] text-slate-100 relative">
+        {/* Offline Blocker: Obscures questions and prevents interaction without internet */}
+        {!isOnline && (
+          <div className="absolute inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-6 text-center animate-fadeIn">
+            <div className="max-w-md w-full bg-slate-900 border border-rose-800/60 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-500/30 mx-auto flex items-center justify-center text-rose-400">
+                <WifiOff className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <span className="px-3 py-1 rounded-full bg-rose-950 border border-rose-800 text-[11px] font-black text-rose-300 inline-block">
+                  Internet Connection Required
+                </span>
+                <h3 className="text-xl font-black text-white">
+                  {language === 'om'
+                    ? 'Wal-qunnamtii Intarneetii Barbaachisa'
+                    : language === 'am'
+                    ? 'የኢንተርኔት ግንኙነት ያስፈልጋል'
+                    : 'Internet Connection Required'}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  {language === 'om'
+                    ? 'Gaaffilee qormaataa dubbisuu fi deebii kennuuf yeroo hunda intarneetiin jiraachuu qaba. Qoodiinsa yeroo dhaabbatee jira.'
+                    : language === 'am'
+                    ? 'የፈተና ጥያቄዎችን ለማንበብ እና ለመመለስ ንቁ የኢንተርኔት ግንኙነት ያስፈልጋል። የፈተናው ሰዓት ቆሟል።'
+                    : 'An active internet connection is required to read exam questions and submit answers. The exam timer is paused.'}
+                </p>
+              </div>
+
+              <div className="p-3 bg-amber-950/30 border border-amber-800/40 rounded-2xl text-xs text-amber-300">
+                {language === 'om'
+                  ? 'Erga intarneetiin deebi\'ee qormaata keessan itti fufuu dandeessu.'
+                  : language === 'am'
+                  ? 'የኢንተርኔት ግንኙነቱ ሲመለስ ፈተናዎን ካቆሙበት ይቀጥላሉ።'
+                  : 'Your answers and progress are saved. Reconnect to resume immediately.'}
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <button
+                  onClick={recheckNetwork}
+                  disabled={isNetworkChecking}
+                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isNetworkChecking ? 'animate-spin' : ''}`} />
+                  <span>{isNetworkChecking ? 'Verifying...' : 'Check Connection & Resume'}</span>
+                </button>
+                <button
+                  onClick={onClose}
+                  className="w-full py-2.5 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold"
+                >
+                  Exit Quiz
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/90">
           <div className="flex items-center gap-3">

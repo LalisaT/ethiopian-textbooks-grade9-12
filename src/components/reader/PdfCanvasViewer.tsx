@@ -9,6 +9,8 @@ import { UserNote } from '../../types/user';
 import { Book } from '../../types/book';
 import { NotesDrawer } from './NotesDrawer';
 import { QuizModal } from '../study/QuizModal';
+import { InternetRequiredModal } from '../common/InternetRequiredModal';
+import { NetworkService } from '../../services/networkService';
 import {
   ChevronLeft,
   ChevronRight,
@@ -102,6 +104,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
   // Dynamic 25-50 Question Quiz State
   const [isQuizConfigOpen, setIsQuizConfigOpen] = useState(false);
+  const [isNetworkModalOpen, setIsNetworkModalOpen] = useState(false);
   const [isExtractingQuiz, setIsExtractingQuiz] = useState(false);
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [quizQuestionCount, setQuizQuestionCount] = useState<25 | 35 | 50>(25);
@@ -639,8 +642,25 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     }
   };
 
+  // Check network before opening quiz options or starting quiz
+  const handleOpenQuizConfig = async () => {
+    const isOnline = await NetworkService.checkInternetConnection();
+    if (!isOnline) {
+      setIsNetworkModalOpen(true);
+      return;
+    }
+    setIsQuizConfigOpen(true);
+  };
+
   // Launch Dynamic 25-50 Question Quiz directly from PDF with specific topic filtering
   const handleStartDynamicQuiz = async (count: 25 | 35 | 50, topicId: string = selectedQuizTopic) => {
+    const isOnline = await NetworkService.checkInternetConnection();
+    if (!isOnline) {
+      setIsQuizConfigOpen(false);
+      setIsNetworkModalOpen(true);
+      return;
+    }
+
     try {
       setIsExtractingQuiz(true);
       const qs = await QuizGeneratorService.extractBookExercisesFromPdf(pdfDoc, book, count, topicId);
@@ -1180,7 +1200,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* 25-50 Question Quiz Generator Button */}
             {!isFullscreen && (
               <button
-                onClick={() => setIsQuizConfigOpen(true)}
+                onClick={handleOpenQuizConfig}
                 className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 shadow-md transition-all active:scale-95"
                 title="Generate 25 to 50 Practice Quiz Questions"
               >
@@ -1541,7 +1561,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
             {/* Practice Quiz */}
             <button
-              onClick={() => setIsQuizConfigOpen(true)}
+              onClick={handleOpenQuizConfig}
               className="p-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs active:scale-95 shadow-md flex items-center gap-1"
               title="Generate Practice Quiz"
             >
@@ -1709,6 +1729,13 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           language={lang}
         />
       )}
+
+      {/* Internet Connection Required Modal for In-Book Quizzes */}
+      <InternetRequiredModal
+        isOpen={isNetworkModalOpen}
+        onClose={() => setIsNetworkModalOpen(false)}
+        onConnected={() => setIsQuizConfigOpen(true)}
+      />
     </div>
   );
 };
