@@ -20,7 +20,10 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         
         {/* Top Header */}
         <div className="pt-6 pb-2 px-6 text-center border-b border-slate-800 bg-slate-950/80">
-          <h2 className="text-xl sm:text-2xl font-black text-rose-500 tracking-wider uppercase">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-2 shadow-inner">
+            <Shield className="w-6 h-6" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-200 bg-clip-text text-transparent tracking-wider uppercase">
             DISCLAIMER
           </h2>
           <p className="text-[11px] text-slate-400 mt-1">
@@ -34,7 +37,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               onClick={() => setActiveTab('disclaimer')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
                 activeTab === 'disclaimer'
-                  ? 'bg-rose-500 text-white shadow-md'
+                  ? 'bg-emerald-600 text-white shadow-md ring-1 ring-emerald-400/40'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -47,7 +50,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               onClick={() => setActiveTab('privacy')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
                 activeTab === 'privacy'
-                  ? 'bg-rose-500 text-white shadow-md'
+                  ? 'bg-emerald-600 text-white shadow-md ring-1 ring-emerald-400/40'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -60,7 +63,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               onClick={() => setActiveTab('terms')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
                 activeTab === 'terms'
-                  ? 'bg-rose-500 text-white shadow-md'
+                  ? 'bg-emerald-600 text-white shadow-md ring-1 ring-emerald-400/40'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -76,7 +79,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <div className="space-y-3.5 animate-in fade-in duration-150">
               <p>
                 <strong className="text-white">Ethiopian Grade 9–12 Textbooks</strong> is a privately developed educational application and is{' '}
-                <span className="text-rose-400 font-extrabold">NOT affiliated with, endorsed by, or officially connected</span> to the Ministry of Education of Ethiopia or any government entity. The app is intended solely to provide convenient digital access to publicly available educational learning materials for reference purposes.
+                <span className="text-emerald-400 font-extrabold">NOT affiliated with, endorsed by, or officially connected</span> to the Ministry of Education of Ethiopia or any government entity. The app is intended solely to provide convenient digital access to publicly available educational learning materials for reference purposes.
               </p>
 
               <p>
@@ -217,8 +220,9 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           <button
             type="button"
             onClick={onAgree}
-            className="w-full py-3.5 px-6 rounded-2xl bg-rose-600 hover:bg-rose-500 active:scale-[0.98] text-white font-black text-sm sm:text-base shadow-lg shadow-rose-600/30 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 active:scale-[0.98] text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2"
           >
+            <CheckCircle2 className="w-5 h-5" />
             <span>Agree &amp; Continue</span>
           </button>
         </div>

@@ -145,7 +145,7 @@ export function selectBestOfBestQuestions(
   const targetSubjectCategory: SubjectCategory =
     subject !== 'all' ? (subject as SubjectCategory) : 'physics';
 
-  while (extendedPool.length < requestedCount && safety < requestedCount * 10) {
+  while (extendedPool.length < requestedCount && safety < Math.max(1000, requestedCount * 25)) {
     safety++;
     const proc = generateProceduralQuestion(
       targetSubjectCategory,

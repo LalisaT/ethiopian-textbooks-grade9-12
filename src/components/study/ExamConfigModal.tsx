@@ -21,9 +21,9 @@ interface QuestionCountOption {
 
 const QUESTION_OPTIONS: QuestionCountOption[] = [
   {
-    count: 10,
-    label: '10 Questions',
-    timeLimitMinutes: 15,
+    count: 25,
+    label: '25 Questions',
+    timeLimitMinutes: 25,
     tag: 'Quick Drill',
     description: 'Fast high-yield warmup covering essential exam concepts & formulas.',
     icon: Zap,

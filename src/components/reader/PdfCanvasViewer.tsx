@@ -107,7 +107,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const [isNetworkModalOpen, setIsNetworkModalOpen] = useState(false);
   const [isExtractingQuiz, setIsExtractingQuiz] = useState(false);
   const [isQuizActive, setIsQuizActive] = useState(false);
-  const [quizQuestionCount, setQuizQuestionCount] = useState<25 | 35 | 50>(25);
+  const [quizQuestionCount, setQuizQuestionCount] = useState<25 | 50 | 100 | 200>(25);
   const [selectedQuizTopic, setSelectedQuizTopic] = useState<string>('all');
   const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
 
@@ -652,8 +652,8 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     setIsQuizConfigOpen(true);
   };
 
-  // Launch Dynamic 25-50 Question Quiz directly from PDF with specific topic filtering
-  const handleStartDynamicQuiz = async (count: 25 | 35 | 50, topicId: string = selectedQuizTopic) => {
+  // Launch Dynamic 25-200 Question Quiz directly from PDF with specific topic filtering
+  const handleStartDynamicQuiz = async (count: 25 | 50 | 100 | 200, topicId: string = selectedQuizTopic) => {
     const isOnline = await NetworkService.checkInternetConnection();
     if (!isOnline) {
       setIsQuizConfigOpen(false);
@@ -732,41 +732,47 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   // Localized Quiz Header & Picker strings
   const pickerLabels = {
     om: {
-      quizBtn: 'Qormaata (Gaaffii 25-50)',
+      quizBtn: 'Qormaata (Gaaffii 25-200)',
       modalTitle: 'Qormaata Shaakalaa Kitaaba Irraa',
       modalSubtitle: `Baay'ina gaaffilee ${book.title} keessaa barbaaddu filadhu:`,
       q25: 'Gaaffilee 25 (Shaakala Salphaa)',
-      q25desc: 'Gaaffilee gilgaalaa fi yaad-rimee (~20 daqiiqaa)',
-      q35: 'Gaaffilee 35 (Qormaata Waliigalaa)',
-      q35desc: 'Qormaata boqonnaalee hunda hammatu (~30 daqiiqaa)',
-      q50: 'Gaaffilee 50 (Qormaata Biyyooleessaa Guutuu)',
-      q50desc: 'Waliigala qormaata qajeeltoo Ministeera Barnootaa (~45 daqiiqaa)',
+      q25desc: 'Gaaffilee gilgaalaa fi yaad-rimee (~25 daqiiqaa)',
+      q50: 'Gaaffilee 50 (Qormaata Waliigalaa)',
+      q50desc: 'Qormaata boqonnaalee hunda hammatu (~50 daqiiqaa)',
+      q100: 'Gaaffilee 100 (Qormaata Biyyooleessaa Guutuu)',
+      q100desc: 'Qormaata qajeeltoo Ministeera Barnootaa (~100 daqiiqaa)',
+      q200: 'Gaaffilee 200 (Qormaata Dorgommii Ol-aanaa)',
+      q200desc: 'Qormaata dorgommii yuunivarsitii maraa (~200 daqiiqaa)',
       cancel: 'Dhiisi',
       quizModalTitle: `Kutaa ${book.grade} ${book.title} • Shaakala Qormaataa (${quizQuestionCount} Gaaffilee)`,
     },
     am: {
-      quizBtn: 'ፈተና (25-50 ጥያቄዎች)',
+      quizBtn: 'ፈተና (25-200 ጥያቄዎች)',
       modalTitle: 'ከመጽሐፉ የተዘጋጀ የልምምድ ፈተና',
       modalSubtitle: `ከ ${book.title} መጽሐፍ የሚወጡትን የጥያቄዎች ብዛት ይምረጡ:`,
       q25: '25 ጥያቄዎች (ቀላል ልምምድ)',
-      q25desc: 'የምዕራፍ መልመጃዎች እና ጽንሰ-ሀሳቦች (~20 ደቂቃ)',
-      q35: '35 ጥያቄዎች (አጠቃላይ ፈተና)',
-      q35desc: 'ሁሉንም ምዕራፎች ያካተተ ፈተና (~30 ደቂቃ)',
-      q50: '50 ጥያቄዎች (ሙሉ የፈተና ሞዴል)',
-      q50desc: 'የትምህርት ሚኒስቴር ሙሉ ፈተና ስታንዳርድ (~45 ደቂቃ)',
+      q25desc: 'የምዕራፍ መልመጃዎች እና ጽንሰ-ሀሳቦች (~25 ደቂቃ)',
+      q50: '50 ጥያቄዎች (መደበኛ ፈተና)',
+      q50desc: 'ሁሉንም ምዕራፎች ያካተተ ፈተና (~50 ደቂቃ)',
+      q100: '100 ጥያቄዎች (ሙሉ የፈተና ሞዴል)',
+      q100desc: 'የትምህርት ሚኒስቴር ሙሉ ፈተና ስታንዳርድ (~100 ደቂቃ)',
+      q200: '200 ጥያቄዎች (የጥልቀት ፈተና ማራቶን)',
+      q200desc: 'ለከፍተኛ ውጤት የሚያበቃ አጠቃላይ የጥያቄዎች ማራቶን (~200 ደቂቃ)',
       cancel: 'ይቅር',
       quizModalTitle: `${book.grade}ኛ ክፍል ${book.title} • የልምምድ ፈተና (${quizQuestionCount} ጥያቄዎች)`,
     },
     en: {
-      quizBtn: 'Quiz (25-50 Qs)',
+      quizBtn: 'Quiz (25-200 Qs)',
       modalTitle: 'Generate In-Book Practice Quiz',
       modalSubtitle: `Select the number of questions to extract directly from ${book.title}:`,
       q25: '25 Questions (Quick Review)',
-      q25desc: 'Chapter exercises & core concepts (~20 mins)',
-      q35: '35 Questions (Comprehensive Test)',
-      q35desc: 'Multi-unit standard assessment (~30 mins)',
-      q50: '50 Questions (Full National Exam)',
-      q50desc: 'Complete Ministry of Education mock examination (~45 mins)',
+      q25desc: 'Chapter exercises & core concepts (~25 mins)',
+      q50: '50 Questions (Standard Mock)',
+      q50desc: 'Official standard curriculum exam (~50 mins)',
+      q100: '100 Questions (Full Mock Exam)',
+      q100desc: 'Comprehensive multi-unit marathon (~100 mins)',
+      q200: '200 Questions (Mastery Challenge)',
+      q200desc: 'Exhaustive question bank drill for top scores (~200 mins)',
       cancel: 'Cancel',
       quizModalTitle: `Grade ${book.grade} ${book.title} • In-Book Quiz (${quizQuestionCount} Questions)`,
     },
@@ -1648,40 +1654,53 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
                   <button
                     onClick={() => handleStartDynamicQuiz(25)}
-                    className="w-full p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
+                    className="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
                   >
                     <div>
                       <div className="font-extrabold text-sm text-white">{pickerLabels.q25}</div>
                       <div className="text-[11px] text-slate-400">{pickerLabels.q25desc}</div>
                     </div>
-                    <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-xl text-xs font-bold">
+                    <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
                       25 Qs
                     </span>
                   </button>
 
                   <button
-                    onClick={() => handleStartDynamicQuiz(35)}
-                    className="w-full p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
+                    onClick={() => handleStartDynamicQuiz(50)}
+                    className="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
                   >
                     <div>
-                      <div className="font-extrabold text-sm text-white">{pickerLabels.q35}</div>
-                      <div className="text-[11px] text-slate-400">{pickerLabels.q35desc}</div>
+                      <div className="font-extrabold text-sm text-white">{pickerLabels.q50}</div>
+                      <div className="text-[11px] text-slate-400">{pickerLabels.q50desc}</div>
                     </div>
-                    <span className="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold">
-                      35 Qs
+                    <span className="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
+                      50 Qs
                     </span>
                   </button>
 
                   <button
-                    onClick={() => handleStartDynamicQuiz(50)}
-                    className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-amber-600/30 to-yellow-600/30 hover:from-amber-600/40 hover:to-yellow-600/40 border border-amber-500/50 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
+                    onClick={() => handleStartDynamicQuiz(100)}
+                    className="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
                   >
                     <div>
-                      <div className="font-extrabold text-sm text-amber-300">{pickerLabels.q50}</div>
-                      <div className="text-[11px] text-slate-300">{pickerLabels.q50desc}</div>
+                      <div className="font-extrabold text-sm text-white">{pickerLabels.q100}</div>
+                      <div className="text-[11px] text-slate-400">{pickerLabels.q100desc}</div>
                     </div>
-                    <span className="px-3 py-1 bg-amber-500 text-slate-950 rounded-xl text-xs font-black">
-                      50 Qs
+                    <span className="px-3 py-1 bg-sky-500/20 text-sky-300 border border-sky-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
+                      100 Qs
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => handleStartDynamicQuiz(200)}
+                    className="w-full p-3 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-amber-950/40 hover:from-purple-900/50 hover:to-amber-900/50 border border-purple-500/40 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
+                  >
+                    <div>
+                      <div className="font-extrabold text-sm text-purple-200">{pickerLabels.q200}</div>
+                      <div className="text-[11px] text-slate-300">{pickerLabels.q200desc}</div>
+                    </div>
+                    <span className="px-3 py-1 bg-purple-500 text-slate-950 font-black rounded-xl text-xs shrink-0 ml-2 shadow-sm">
+                      200 Qs
                     </span>
                   </button>
                 </div>
@@ -1719,7 +1738,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         bookTitle={book.title}
       />
 
-      {/* Dynamic 25-50 Question Quiz Modal */}
+      {/* Dynamic 25-200 Question Quiz Modal */}
       {isQuizActive && (
         <QuizModal
           isOpen={isQuizActive}
@@ -1727,6 +1746,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           title={pickerLabels.quizModalTitle}
           questions={generatedQuestions}
           language={lang}
+          timeLimitMinutes={quizQuestionCount}
         />
       )}
 

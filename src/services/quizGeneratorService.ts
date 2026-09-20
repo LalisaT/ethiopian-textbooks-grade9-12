@@ -938,6 +938,161 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "Unit 1: Modern Ethiopian History & Adwa"
     }
   ],
+  "agriculture": [
+    {
+      "id": "all",
+      "icon": "",
+      "nameOromo": "Boqonnaalee Hunda (Waliigala Qonnaa)",
+      "nameAmharic": "ሁሉንም ምዕራፎች (አጠቃላይ ግብርና)",
+      "nameEnglish": "All Units (Comprehensive Agriculture)"
+    },
+    {
+      "id": "agri_crops",
+      "icon": "",
+      "nameOromo": "Boqonnaa 1: Oomisha Midhaanii fi Qonna",
+      "nameAmharic": "ምዕራፍ 1፡ የሰብል ምርትና አግሮኖሚ",
+      "nameEnglish": "Unit 1: Field Crops & Agronomy"
+    },
+    {
+      "id": "agri_soil",
+      "icon": "",
+      "nameOromo": "Boqonnaa 2: Saayinsii Biyyoo fi Gabbina",
+      "nameAmharic": "ምዕራፍ 2፡ የአፈር ሳይንስና ማዳበሪያ",
+      "nameEnglish": "Unit 2: Soil Science & Fertility"
+    },
+    {
+      "id": "agri_livestock",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Saayinsii Horii fi Nyaata",
+      "nameAmharic": "ምዕራፍ 3፡ የእንስሳት እርባታና አመጋገብ",
+      "nameEnglish": "Unit 3: Animal Science & Breeds"
+    },
+    {
+      "id": "agri_protection",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Eegumsa Midhaanii fi Aramaa",
+      "nameAmharic": "ምዕራፍ 4፡ የሰብል ጥበቃና ተባዮች",
+      "nameEnglish": "Unit 4: Plant Protection & IPM"
+    },
+    {
+      "id": "agri_irrigation",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Misooma Bishaan Qonnaa",
+      "nameAmharic": "ምዕራፍ 5፡ የግብርና መስኖ ልማት",
+      "nameEnglish": "Unit 5: Agricultural Water Management"
+    }
+  ],
+  "it": [
+    {
+      "id": "all",
+      "icon": "",
+      "nameOromo": "Boqonnaalee Hunda (Waliigala IT)",
+      "nameAmharic": "ሁሉንም ምዕራፎች (አጠቃላይ አይቲ)",
+      "nameEnglish": "All Units (Comprehensive IT)"
+    },
+    {
+      "id": "it_hardware",
+      "icon": "",
+      "nameOromo": "Boqonnaa 1: Haardiweerii fi Seera Dijitaalaa",
+      "nameAmharic": "ምዕራፍ 1፡ ኮምፒውተር ሃርድዌርና አርክቴክቸር",
+      "nameEnglish": "Unit 1: Hardware & Computer Architecture"
+    },
+    {
+      "id": "it_networks",
+      "icon": "",
+      "nameOromo": "Boqonnaa 2: Neetwoorkii fi Interneetii",
+      "nameAmharic": "ምዕራፍ 2፡ የኮምፒውተር ኔትወርክና ኢንተርኔት",
+      "nameEnglish": "Unit 2: Computer Networks & Protocols"
+    },
+    {
+      "id": "it_programming",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Piroogiraamii fi Algoorizimii",
+      "nameAmharic": "ምዕራፍ 3፡ ፕሮግራሚንግና አልጎሪዝም",
+      "nameEnglish": "Unit 3: Programming & Algorithms"
+    },
+    {
+      "id": "it_database",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Sirna Kuusaa Deetaa (DBMS)",
+      "nameAmharic": "ምዕራፍ 4፡ ዳታቤዝ ማኔጅመንትና SQL",
+      "nameEnglish": "Unit 4: Database Systems & SQL"
+    },
+    {
+      "id": "it_security",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Nageenya Saayibarii fi Naamusaa",
+      "nameAmharic": "ምዕራፍ 5፡ የሳይበር ደህንነትና ስነ-ምግባር",
+      "nameEnglish": "Unit 5: Cybersecurity & Digital Ethics"
+    }
+  ],
+  "general_business": [
+    {
+      "id": "all",
+      "icon": "",
+      "nameOromo": "Boqonnaalee Hunda (Waliigala Daldalaa)",
+      "nameAmharic": "ሁሉንም ምዕራፎች (አጠቃላይ ቢዝነስ)",
+      "nameEnglish": "All Units (Comprehensive General Business)"
+    },
+    {
+      "id": "bus_intro",
+      "icon": "",
+      "nameOromo": "Boqonnaa 1: Seensa Daldalaa fi Dhaabbilee",
+      "nameAmharic": "ምዕራፍ 1፡ የንግድ ድርጅቶችና አደረጃጀት",
+      "nameEnglish": "Unit 1: Business Forms & Enterprise"
+    },
+    {
+      "id": "bus_accounting",
+      "icon": "",
+      "nameOromo": "Boqonnaa 2: Herrega Daldalaa fi Galmee",
+      "nameAmharic": "ምዕራፍ 2፡ የሂሳብ አያያዝ መርሆዎች",
+      "nameEnglish": "Unit 2: Principles of Accounting"
+    },
+    {
+      "id": "bus_marketing",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Gabaa fi Beeksisa (Marketing)",
+      "nameAmharic": "ምዕራፍ 3፡ ገበያ ጥናትና ማርኬቲንግ",
+      "nameEnglish": "Unit 3: Marketing Mix & Strategy"
+    },
+    {
+      "id": "bus_finance",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Faayinaansii fi Baankii",
+      "nameAmharic": "ምዕራፍ 4፡ ፋይናንስና ባንኪንግ",
+      "nameEnglish": "Unit 4: Finance, Banking & ECX"
+    }
+  ],
+  "hpe": [
+    {
+      "id": "all",
+      "icon": "",
+      "nameOromo": "Boqonnaalee Hunda (Waliigala HPE)",
+      "nameAmharic": "ሁሉንም ምዕራፎች (አጠቃላይ ሰውነት ማጎልመሻ)",
+      "nameEnglish": "All Units (Comprehensive HPE)"
+    },
+    {
+      "id": "hpe_fitness",
+      "icon": "",
+      "nameOromo": "Boqonnaa 1: Fayyummaa Qaamaa fi Shaakala",
+      "nameAmharic": "ምዕራፍ 1፡ የአካል ብቃትና ስልጠና",
+      "nameEnglish": "Unit 1: Physical Fitness & Conditioning"
+    },
+    {
+      "id": "hpe_sports",
+      "icon": "",
+      "nameOromo": "Boqonnaa 2: Seera Ispoortii fi Atileetiksii",
+      "nameAmharic": "ምዕራፍ 2፡ የስፖርት ህጎችና አትሌቲክስ",
+      "nameEnglish": "Unit 2: Sports Rules & Athletics History"
+    },
+    {
+      "id": "hpe_health",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Fayyaa, Nyaata fi Gargaarsa Duraa",
+      "nameAmharic": "ምዕራፍ 3፡ ጤና፣ ስነ-ምግብና የመጀመሪያ እርዳታ",
+      "nameEnglish": "Unit 3: Health, Nutrition & First Aid"
+    }
+  ],
   "default": [
     {
       "id": "all",
@@ -970,6 +1125,7 @@ function resolveSubjectCategory(book: Book): SubjectCategory {
   if (/citizenship|lammummaa|ዜግነት/i.test(titleLower)) return 'citizenship';
   if (/english/i.test(titleLower)) return 'english';
   if (/information|computer|it |teknol/i.test(titleLower)) return 'it';
+  if (/business|daldal|ቢዝነስ|ንግድ/i.test(titleLower)) return 'general_business';
   if (/pva|visual art|ጥበብ/i.test(titleLower)) return 'pva';
   if (/hpe|physical education|ሰውነት ማጎልመሻ/i.test(titleLower)) return 'hpe';
 
@@ -993,7 +1149,7 @@ export const QuizGeneratorService = {
   /**
    * World-Class In-Book Quiz Generator for Grades 9-12 & EUEE
    * 100% Subject Isolated & 100% Unique Guaranteed:
-   * Completely eliminates duplicate questions in 25, 35, and 50 question quizzes!
+   * Completely eliminates duplicate questions across all selectable question counts (25, 50, 100, 200)!
    */
   async extractBookExercisesFromPdf(
     pdfDoc: pdfjsLib.PDFDocumentProxy | null,
@@ -1055,11 +1211,11 @@ export const QuizGeneratorService = {
       });
     }
 
-    // 5. If more questions are needed to satisfy `count` (e.g. 25, 35, 50 Qs on a specific topic or subject),
+    // 5. If more questions are needed to satisfy `count` (e.g. 25, 50, 100, 200 Qs on a specific topic or subject),
     // dynamically generate authentic procedural questions until count is reached with ZERO duplicates!
     let procIndex = 0;
     let safetyCounter = 0;
-    while (questions.length < count && safetyCounter < count * 20) {
+    while (questions.length < count && safetyCounter < Math.max(1000, count * 25)) {
       safetyCounter++;
       // If a single narrow subtopic is saturated with unique questions, broaden to 'all' so count is 100% reached
       const activeTopic = (safetyCounter > count * 2 && selectedTopicId !== 'all') ? 'all' : selectedTopicId;
