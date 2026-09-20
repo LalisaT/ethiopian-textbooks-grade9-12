@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Book } from '../../types/book';
 import { HardDrive, DownloadCloud, X, AlertTriangle, BookOpen } from 'lucide-react';
 
@@ -49,7 +49,7 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
         {/* Modal Body */}
         <div className="p-5 space-y-4 text-xs">
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-            This textbook is <strong className="text-slate-900 dark:text-white font-black">{book.fileSizeMb} MB</strong> (larger than 30 MB). Because phone and computer storage is valuable for students, please confirm before downloading.
+            This textbook is <strong className="text-slate-900 dark:text-white font-black">{book.fileSizeMb} MB</strong>. It will be downloaded from the high-speed cloud and saved into the app's private storage for <strong>100% offline reading</strong>.
           </p>
 
           {/* Book Summary Card */}
@@ -62,8 +62,8 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <span className="font-bold text-slate-500 dark:text-slate-400">File Size:</span>
-              <span className="px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 font-black text-[11px] border border-rose-500/20">
+              <span className="font-bold text-slate-500 dark:text-slate-400">Download Size:</span>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-black text-[11px] border border-emerald-500/20">
                 {book.fileSizeMb} MB
               </span>
             </div>
@@ -76,9 +76,9 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <span className="font-bold text-slate-500 dark:text-slate-400">Location:</span>
-              <span className="font-extrabold text-slate-700 dark:text-slate-300">
-                Device Storage & Downloads
+              <span className="font-bold text-slate-500 dark:text-slate-400">Storage Type:</span>
+              <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
+                Private In-App Sandbox (Offline)
               </span>
             </div>
           </div>
@@ -87,7 +87,7 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
           <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 flex items-start gap-2.5 text-emerald-800 dark:text-emerald-300">
             <BookOpen className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
             <p className="text-[11px] leading-tight">
-              <strong>Free Online Reading:</strong> You can read the entire textbook in the app anytime without using your device storage space.
+              <strong>Private & Offline:</strong> The book is stored securely inside the app. It will not clutter your phone's public file storage, and you can open it anytime without internet.
             </p>
           </div>
         </div>

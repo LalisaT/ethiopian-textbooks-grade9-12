@@ -27,7 +27,7 @@ android {
     applicationVariants.all { variant ->
         variant.mergeAssetsProvider.configure {
             doLast {
-                delete fileTree(dir: outputDir, includes: ['public/*.apk'])
+                delete fileTree(dir: outputDir, includes: ['public/textbooks/**', 'public/teacher-guide/**', 'public/*.apk'])
             }
         }
     }

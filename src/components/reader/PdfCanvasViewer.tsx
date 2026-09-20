@@ -3,7 +3,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { TTSService } from '../../services/ttsService';
 import { StorageService } from '../../services/storageService';
 import { DbService } from '../../services/dbService';
-import { CloudStorageService } from '../../services/cloudStorageService';
+import { CloudStorageService, DEFAULT_CLOUD_CONFIG } from '../../services/cloudStorageService';
 import { QuizGeneratorService } from '../../services/quizGeneratorService';
 import { UserNote } from '../../types/user';
 import { Book } from '../../types/book';
@@ -182,6 +182,31 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             doc = await loadingTask.promise;
           } catch (err) {
             console.warn('PDF.js url loading failed:', err);
+            lastError = err;
+          }
+        }
+
+        // 2C: If local file returned 404, fetch authentic textbook from GitHub Releases Cloud Storage
+        if (!doc) {
+          const githubUrl = `${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`;
+          try {
+            const resp = await fetch(githubUrl);
+            if (resp.ok) {
+              const arrayBuffer = await resp.arrayBuffer();
+              const loadingTask = pdfjsLib.getDocument({
+                data: arrayBuffer,
+                isEvalSupported: false,
+              });
+              doc = await loadingTask.promise;
+              // Cache in IndexedDB private storage for instant offline access
+              try {
+                const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+                StorageService.markBookOffline(book.id);
+              } catch {}
+            }
+          } catch (err) {
+            console.warn('GitHub Releases cloud fetch failed:', err);
             lastError = err;
           }
         }
@@ -659,23 +684,20 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     setScale((s) => Math.max(0.5, s - 0.15));
   };
 
-  const handleDownload = () => {
-    if (pdfBlob) {
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${book.title}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } else if (book.pdfUrl) {
-      const a = document.createElement('a');
-      a.href = book.pdfUrl;
-      a.download = `${book.title}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+  const [showSavedToast, setShowSavedToast] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      if (pdfBlob) {
+        await DbService.savePdfFile(book.id, pdfBlob, `${book.title}.pdf`);
+      } else {
+        await CloudStorageService.downloadAndSaveBookToDevice(book);
+      }
+      StorageService.markBookOffline(book.id);
+      setShowSavedToast(true);
+      setTimeout(() => setShowSavedToast(false), 2500);
+    } catch (err) {
+      console.error('Failed to save to private in-app storage:', err);
     }
   };
 
@@ -851,6 +873,14 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-slate-900/95 backdrop-blur-md border border-emerald-500/60 text-white px-5 py-2.5 rounded-2xl shadow-2xl font-mono text-sm font-black flex items-center gap-2 animate-in zoom-in-90 duration-150">
           <ZoomIn className="w-4 h-4 text-emerald-400" />
           <span>Zoom: {Math.round(scale * 100)}%</span>
+        </div>
+      )}
+
+      {/* 💾 In-App Offline Storage Feedback Toast */}
+      {showSavedToast && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none bg-emerald-950/95 backdrop-blur-md border border-emerald-500/80 text-white px-5 py-2.5 rounded-2xl shadow-2xl text-xs font-black flex items-center gap-2 animate-in fade-in duration-150">
+          <Check className="w-4 h-4 text-emerald-400" />
+          <span>Saved to Private In-App Storage (Offline Ready)</span>
         </div>
       )}
 

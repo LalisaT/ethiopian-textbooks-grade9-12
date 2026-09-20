@@ -23,6 +23,7 @@ EthiopianTextbooks-*.apk
 *.pdf
 public/textbooks/**/*.pdf
 public/teacher-guide/**/*.pdf
+release-assets/
 
 # Logs & Environment
 npm-debug.log*

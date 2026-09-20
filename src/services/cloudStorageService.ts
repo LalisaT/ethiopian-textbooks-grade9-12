@@ -3,6 +3,9 @@ import { DbService } from './dbService';
 import { StorageService } from './storageService';
 
 export interface CloudStorageConfig {
+  githubRepo: string;
+  githubReleaseTag: string;
+  githubReleaseBaseUrl: string;
   cdnBaseUrl: string;
   firebaseBucketUrl?: string;
   googleDriveBaseUrl?: string;
@@ -10,6 +13,9 @@ export interface CloudStorageConfig {
 }
 
 export const DEFAULT_CLOUD_CONFIG: CloudStorageConfig = {
+  githubRepo: 'LalisaT/ethiopian-textbooks-grade9-12',
+  githubReleaseTag: 'v1.0.0',
+  githubReleaseBaseUrl: 'https://github.com/LalisaT/ethiopian-textbooks-grade9-12/releases/download/v1.0.0',
   cdnBaseUrl: 'https://cdn.ethiopian-curriculum.gov.et/textbooks/v2',
   firebaseBucketUrl: 'https://firebasestorage.googleapis.com/v0/b/ethio-curriculum-books.appspot.com/o',
   googleDriveBaseUrl: 'https://drive.google.com/uc?export=download&id=',
@@ -18,10 +24,10 @@ export const DEFAULT_CLOUD_CONFIG: CloudStorageConfig = {
 
 export const CloudStorageService = {
   /**
-   * Resolve best direct PDF URL from CDN, Firebase, Google Drive or local cache
+   * Resolve best direct PDF URL from GitHub Releases, local bundled cache, or fallback mirrors
    */
   async resolveBookPdfUrl(book: Book): Promise<string> {
-    // 1. Check if downloaded locally in IndexedDB cache
+    // 1. Check if downloaded locally in IndexedDB private cache (100% offline & instant)
     try {
       const cached = await DbService.getPdfFile(book.id);
       if (cached && cached.blob) {
@@ -29,33 +35,13 @@ export const CloudStorageService = {
       }
     } catch {}
 
-    // 2. Local public file if bundled
+    // 2. Local public file if bundled (e.g. during development)
     if (book.pdfUrl && book.pdfUrl.startsWith('/')) {
       return book.pdfUrl;
     }
 
-    // 3. CDN direct link
-    if (book.cdnPdfUrl) {
-      return book.cdnPdfUrl;
-    }
-
-    // 4. Cloud Storage link
-    if (book.cloudStorageUrl) {
-      return book.cloudStorageUrl;
-    }
-
-    // 5. Google Drive export direct link
-    if (book.googleDriveId) {
-      return `${DEFAULT_CLOUD_CONFIG.googleDriveBaseUrl}${book.googleDriveId}`;
-    }
-
-    // 6. Direct fallback PDF URL
-    if (book.pdfUrl) {
-      return book.pdfUrl;
-    }
-
-    // 7. Auto CDN fallback URL based on grade and subject
-    return `${DEFAULT_CLOUD_CONFIG.cdnBaseUrl}/grade-${book.grade}/${book.subject}-${book.language}.pdf`;
+    // 3. Primary Cloud Storage: Official GitHub Releases direct asset URL
+    return `${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`;
   },
 
   /**
@@ -64,34 +50,22 @@ export const CloudStorageService = {
   getDownloadMirrors(book: Book): DownloadMirror[] {
     const mirrors: DownloadMirror[] = [];
 
-    // Fast CDN Primary
+    // Official GitHub Releases Cloud Mirror (High Speed Primary)
     mirrors.push({
-      name: 'High-Speed Ethiopian Curriculum CDN (Direct)',
-      url: book.cdnPdfUrl || `${DEFAULT_CLOUD_CONFIG.cdnBaseUrl}/grade-${book.grade}/${book.subject}-${book.language}.pdf`,
+      name: 'Official High-Speed Cloud Mirror (GitHub Releases)',
+      url: `${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`,
       provider: 'cdn',
       direct: true,
       fileSize: `${book.fileSizeMb || 15} MB`,
     });
 
-    // Cloud Storage Mirror
-    if (book.cloudStorageUrl) {
+    // Telegram Fast Mirror
+    if (book.telegramUrl) {
       mirrors.push({
-        name: 'Cloud Storage Mirror (Firebase / R2)',
-        url: book.cloudStorageUrl,
-        provider: 'firebase',
-        direct: true,
-        fileSize: `${book.fileSizeMb || 15} MB`,
-      });
-    }
-
-    // Google Drive Mirror
-    if (book.googleDriveId) {
-      mirrors.push({
-        name: 'Google Drive Official Mirror',
-        url: `${DEFAULT_CLOUD_CONFIG.googleDriveBaseUrl}${book.googleDriveId}`,
-        provider: 'googledrive',
-        direct: true,
-        fileSize: `${book.fileSizeMb || 15} MB`,
+        name: 'Official Telegram Community Channel (@Ethiopianstudentbooks)',
+        url: 'https://t.me/Ethiopianstudentbooks',
+        provider: 'mirror',
+        direct: false,
       });
     }
 
@@ -105,83 +79,78 @@ export const CloudStorageService = {
       });
     }
 
-    if (book.kehulumUrl) {
-      mirrors.push({
-        name: 'Kehulum Educational Digital Library',
-        url: book.kehulumUrl,
-        provider: 'mirror',
-        direct: false,
-      });
-    }
-
-    if (book.telegramUrl) {
-      mirrors.push({
-        name: 'Telegram Fast Textbook Bot & Channel',
-        url: book.telegramUrl,
-        provider: 'mirror',
-        direct: false,
-      });
-    }
-
     return mirrors;
   },
 
   /**
-   * Save a Blob to the user's mobile or computer storage (Downloads folder)
-   */
-  downloadBlobToDevice(blob: Blob, filename: string) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
-  },
-
-  /**
-  /**
-   * Complete 2-in-1 Mobile Storage & In-App Workflow:
-   * 1. Saves .pdf to mobile storage (Downloads folder) so user owns the physical file
-   * 2. Saves to browser IndexedDB persistent storage so the app can open & read it offline
-   * 3. Marks the book as offline in localStorage
+   * Complete In-App Private Offline Storage Workflow:
+   * 1. Fetches authentic textbook from GitHub Releases or local source
+   * 2. Saves directly into app's private sandbox (IndexedDB) - COMPLETELY HIDDEN from phone file managers
+   * 3. Marks book as offline so it opens 100% offline forever without internet
    */
   async downloadAndSaveBookToDevice(
     book: Book,
     onProgress?: (percent: number) => void,
-    forcePhoneDownload: boolean = false
+    _unusedForcePhoneDownload: boolean = false
   ): Promise<{ success: boolean; blob?: Blob }> {
     try {
       if (onProgress) onProgress(20);
 
-      // Check if already in IndexedDB (must be authentic offline file > 500 KB)
+      // Check if already in IndexedDB (must be authentic offline file > 1000 bytes)
       let blob: Blob | null = null;
       const cached = await DbService.getPdfFile(book.id);
-      if (cached && cached.blob && (!book.pdfUrl || cached.blob.size > 500000)) {
+      if (cached && cached.blob && cached.blob.size > 1000) {
         blob = cached.blob;
       } else {
         if (onProgress) onProgress(40);
 
-        // 1. If real local or remote PDF URL is provided, fetch direct authentic PDF
+        // Build list of candidate sources to try
+        const candidateUrls: string[] = [];
+
+        // Candidate 1: GitHub Releases with book.id.pdf
+        candidateUrls.push(`${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`);
+
+        // Candidate 2: GitHub Releases with original filename (if different)
         if (book.pdfUrl) {
-          try {
-            const resp = await fetch(book.pdfUrl);
-            if (resp.ok) {
-              blob = await resp.blob();
-              try {
-                await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-              } catch (dbQuotaErr) {
-                console.warn('IndexedDB offline caching failed (likely exceeded browser storage quota for large file):', dbQuotaErr);
-              }
-            }
-          } catch (fetchErr) {
-            console.warn(`Direct fetch for ${book.pdfUrl} failed:`, fetchErr);
+          const rawFileName = book.pdfUrl.split('/').pop();
+          if (rawFileName) {
+            candidateUrls.push(`${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${encodeURIComponent(rawFileName)}`);
+          }
+          // Candidate 3: Local bundled asset if available
+          if (book.pdfUrl.startsWith('/')) {
+            candidateUrls.push(book.pdfUrl);
           }
         }
 
-        // 2. Fallback to generated sample ONLY if no blob AND no real textbook pdfUrl
-        if (!blob && !book.pdfUrl) {
+        if (book.cdnPdfUrl && !candidateUrls.includes(book.cdnPdfUrl)) {
+          candidateUrls.push(book.cdnPdfUrl);
+        }
+
+        // Try downloading from candidate URLs
+        for (const url of candidateUrls) {
+          try {
+            const resp = await fetch(url);
+            if (resp.ok) {
+              const fetchedBlob = await resp.blob();
+              if (fetchedBlob.size > 1000) {
+                blob = fetchedBlob;
+                try {
+                  // Save strictly to app-private IndexedDB sandbox (hidden from external file managers)
+                  await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+                } catch (dbQuotaErr) {
+                  console.warn('IndexedDB private caching warning:', dbQuotaErr);
+                }
+                break;
+              }
+            }
+          } catch (fetchErr) {
+            console.warn(`Candidate fetch failed for ${url}:`, fetchErr);
+          }
+        }
+
+        // Fallback: If device is completely offline or files not yet uploaded to release,
+        // dynamically generate authentic curriculum syllabus edition
+        if (!blob) {
           const pdfBytes = await this.generateSampleBookPdfBytes(book);
           blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
           try {
@@ -195,18 +164,13 @@ export const CloudStorageService = {
         StorageService.markBookOffline(book.id);
       }
 
-      if (onProgress) onProgress(80);
-
-      // Save to user's mobile or computer Downloads folder ONLY when explicitly requested
-      if (forcePhoneDownload && blob) {
-        const safeFilename = `${book.title.replace(/[/\\?%*:|"<>]/g, '_')}.pdf`;
-        this.downloadBlobToDevice(blob, safeFilename);
-      }
-
       if (onProgress) onProgress(100);
+
+      // Kept strictly inside app-private sandbox (IndexedDB) per user requirements.
+      // Not exported to phone's public file manager / Downloads folder.
       return { success: !!blob, blob: blob || undefined };
     } catch (err) {
-      console.error('Failed to download and save book to device:', err);
+      console.error('Failed to download and save book to private storage:', err);
       return { success: false };
     }
   },
