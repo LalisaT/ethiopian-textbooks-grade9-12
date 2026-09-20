@@ -113,3 +113,14 @@ canvas {
   will-change: transform;
   contain: paint;
 }
+
+/* Play Store style smooth horizontal momentum scrolling without scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}

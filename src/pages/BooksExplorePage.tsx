@@ -3,6 +3,7 @@ import { Book, GradeLevel, SubjectCategory, AcademicStream } from '../types/book
 import { useTranslation } from '../i18n/useTranslation';
 import { BookFilters } from '../components/books/BookFilters';
 import { BookList } from '../components/books/BookList';
+import { StickyBannerAd } from '../components/ads/StickyBannerAd';
 import { BookOpen, Sparkles, RefreshCw, Compass } from 'lucide-react';
 
 interface BooksExplorePageProps {
@@ -190,6 +191,9 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
         onEditBook={onEditBook}
         onDeleteBook={onDeleteBook}
       />
+
+      {/* Discrete Non-Reading Bottom Banner Ad */}
+      <StickyBannerAd />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { ThemeToggle } from '../common/ThemeToggle';
 import { NotificationDropdown } from '../common/NotificationDropdown';
 
 import { NotificationService, AppNotification } from '../../services/notificationService';
+import { BrandLogo } from '../common/BrandLogo';
 
 interface NavbarProps {
   activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about';
@@ -73,13 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0 min-w-0"
             onClick={() => setActiveTab('home')}
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-500 via-amber-500 to-rose-500 p-0.5 shadow-sm group-hover:scale-105 transition-transform overflow-hidden shrink-0">
-              <img
-                src="/brand/app-icon.jpg"
-                alt="Ethiopian Textbooks Logo"
-                className="w-full h-full object-cover rounded-[14px]"
-              />
-            </div>
+            <BrandLogo size="md" />
             <div className="min-w-0">
               <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base lg:text-lg tracking-tight leading-tight block truncate">
                 Ethiopian Textbooks

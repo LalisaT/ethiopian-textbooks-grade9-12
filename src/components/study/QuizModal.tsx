@@ -18,6 +18,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useNetworkStatus } from '../../hooks/useNetworkStatus';
+import { ExamCompletionAd } from '../ads/ExamCompletionAd';
 
 interface QuizModalProps {
   isOpen: boolean;
@@ -373,7 +374,12 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                 <p className="text-xs text-slate-300 max-w-md mx-auto">
                   {labels.scoreSummary}
                 </p>
+              </div>
 
+              {/* High-eCPM Sponsored Educational Partner Card (Post-Exam Only) */}
+              <ExamCompletionAd score={score} total={questions.length} />
+
+              <div className="space-y-4">
                 {/* Filter Tabs for Review */}
                 <div className="flex items-center justify-center gap-2 pt-2">
                   <button
