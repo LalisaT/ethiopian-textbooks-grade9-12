@@ -262,7 +262,7 @@ export const CloudStorageService = {
     const coverItems: TextItem[] = [
       { text: 'FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA', x: 50, y: 740, font: '/F2', size: 12 },
       { text: 'MINISTRY OF EDUCATION', x: 50, y: 722, font: '/F2', size: 11 },
-      { text: 'STUDENT TEXTBOOK - NEW CURRICULUM (GRADES 5 - 8)', x: 50, y: 690, font: '/F1', size: 10 },
+      { text: 'STUDENT TEXTBOOK - NEW CURRICULUM (GRADES 9 - 12)', x: 50, y: 690, font: '/F1', size: 10 },
       { text: '==================================================================', x: 50, y: 675, font: '/F1', size: 9 },
       { text: escapePdf(book.title), x: 50, y: 630, font: '/F2', size: 17 },
       { text: `Grade ${book.grade} - ${book.subject.toUpperCase()}`, x: 50, y: 600, font: '/F2', size: 14 },

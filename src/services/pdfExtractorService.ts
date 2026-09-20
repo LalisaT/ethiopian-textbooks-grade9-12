@@ -2,10 +2,11 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { Book, BookChapter, ChapterSection } from '../types/book';
 import { cleanPdfExtractedText, formatIntoWordParagraphs } from '../utils/textCleaner';
 
-// Configure PDF.js worker
+// Configure PDF.js worker locally
 try {
   if (typeof window !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+    const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `${origin}/pdf.worker.min.js`;
   }
 } catch {}
 
