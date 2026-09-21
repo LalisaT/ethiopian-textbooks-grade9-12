@@ -185,6 +185,20 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 2. Spotlight Hero Banner (Featured Luxury Showcase) */}
       {!searchQuery.trim() && (
         <section className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 sm:p-8 md:p-10 overflow-hidden border border-slate-800 shadow-2xl">
+          {/* Luxury Animated Background Carousel */}
+          <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover opacity-35 dark:opacity-30 filter saturate-125"
+              src="/videos/Subtle_Background_Carousel.mp4"
+            />
+            {/* Gradient overlay to guarantee perfect contrast and luxury look */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/50 backdrop-blur-[0.5px]" />
+          </div>
+
           {/* Subtle Ambient Glow Orbs */}
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 sm:w-96 h-72 sm:h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-1/3 -mb-10 w-64 sm:w-80 h-64 sm:h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />

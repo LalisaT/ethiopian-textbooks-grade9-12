@@ -9,7 +9,7 @@ export default defineConfig({
     port: 5173,
     open: false,
     watch: {
-      ignored: ['**/android/**', '**/*.apk'],
+      ignored: ['**/android/**', '**/*.apk', '**/*.mp4', '**/videos/**', '**/*.pdf'],
     },
   },
 });
