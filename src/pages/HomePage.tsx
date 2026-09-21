@@ -133,14 +133,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* Quick Category Chips (Google Play Store Style Horizontal Scroll) */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1">
           {[
-            { id: 'all' as const, label: '✨ For You' },
-            { id: 'g12' as const, label: '🏆 Grade 12 EUEE' },
-            { id: 'g11' as const, label: '📚 Grade 11' },
-            { id: 'g10' as const, label: '📖 Grade 10' },
-            { id: 'g9' as const, label: '🌱 Grade 9' },
-            { id: 'natural' as const, label: '🔬 Natural Science' },
-            { id: 'social' as const, label: '🌍 Social Science' },
-            { id: 'tg' as const, label: "👨‍🏫 Teacher's Guides" },
+            { id: 'all' as const, label: 'For You' },
+            { id: 'g12' as const, label: 'Grade 12 (EUEE)' },
+            { id: 'g11' as const, label: 'Grade 11' },
+            { id: 'g10' as const, label: 'Grade 10' },
+            { id: 'g9' as const, label: 'Grade 9' },
+            { id: 'natural' as const, label: 'Natural Science' },
+            { id: 'social' as const, label: 'Social Science' },
+            { id: 'tg' as const, label: "Teacher's Guides" },
           ].map((chip) => {
             const isSelected = activeChip === chip.id;
             return (
@@ -265,28 +265,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       )}
 
-      {/* 4. Shelf 2: Top Textbooks • Grade 12 EUEE Prep */}
-      <PlayStoreShelf
-        title="Top Textbooks • Grade 12 EUEE Prep"
-        subtitle="Official curriculum for graduating preparatory students"
-        badge="Top Matric Prep"
-        books={grade12Books}
-        onOpenPdf={onOpenPdf}
-        onToggleOffline={onToggleOffline}
-        offlineBookIds={offlineBookIds}
-        readingProgress={readingProgress}
-        onSeeAll={() => onSelectGradeFilter(12)}
-      />
-
-      {/* 5. Native In-Feed AdMob Unit (High Revenue, Zero Annoyance) */}
-      <NativeAdCard />
-
-      {/* 6. Shelf 3: Browse by Secondary & Preparatory Grade Levels */}
+      {/* 4. High School Grade Levels (Grade 12, 11, 10, 9) */}
       <section className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <div>
             <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
-              Browse by Grade Level
+              High School Grade Levels
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Direct access to syllabus textbooks by academic year
@@ -360,6 +344,22 @@ export const HomePage: React.FC<HomePageProps> = ({
           ))}
         </div>
       </section>
+
+      {/* 5. Shelf 2: Top Textbooks • Grade 12 EUEE Prep (Positioned below Grade Levels) */}
+      <PlayStoreShelf
+        title="Top Textbooks • Grade 12 EUEE Prep"
+        subtitle="Official curriculum for graduating preparatory students"
+        badge="Top Matric Prep"
+        books={grade12Books}
+        onOpenPdf={onOpenPdf}
+        onToggleOffline={onToggleOffline}
+        offlineBookIds={offlineBookIds}
+        readingProgress={readingProgress}
+        onSeeAll={() => onSelectGradeFilter(12)}
+      />
+
+      {/* 6. Native In-Feed Sponsored Card */}
+      <NativeAdCard />
 
       {/* 7. Shelf 4: Natural Science Core Textbooks */}
       {naturalScienceBooks.length > 0 && (

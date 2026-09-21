@@ -124,8 +124,8 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
   // Web Speech Audio Synthesizer for Read Aloud
   const handleReadAloud = (post: CommunityPost) => {
-    if (!('speechSynthesis' in window)) {
-      alert('Text-to-speech is not supported on this device/browser.');
+    if (!window.speechSynthesis) {
+      alert('Text-to-speech is not supported on this device.');
       return;
     }
 

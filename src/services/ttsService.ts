@@ -11,7 +11,7 @@ export class TTSService {
     onError?: (e: any) => void
   ) {
     if (!this.synth) {
-      if (onError) onError(new Error('Speech Synthesis not supported in this browser.'));
+      if (onError) onError(new Error('Speech Synthesis not supported on this device.'));
       return;
     }
 

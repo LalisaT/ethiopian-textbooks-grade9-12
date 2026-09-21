@@ -72,14 +72,14 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
       <div className="bg-slate-950 rounded-3xl max-w-lg w-full border border-slate-800 shadow-2xl overflow-hidden flex flex-col relative text-white animate-in zoom-in-95 duration-200">
-        {/* Top AdMob Header */}
+        {/* Top Header */}
         <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-black uppercase tracking-wider">
-              Ad
+              Sponsored
             </span>
             <span className="text-xs font-bold text-slate-300">
-              Google AdMob • Rewarded Video
+              Rewarded Video Partner
             </span>
           </div>
 
@@ -127,7 +127,7 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
                   Sponsored Video in Progress
                 </h4>
                 <p className="text-[11px] text-slate-400">
-                  Unit: {ADMOB_CONFIG.units.rewardedVideo}
+                  Curated study opportunity for secondary students
                 </p>
               </div>
 

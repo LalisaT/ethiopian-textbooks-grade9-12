@@ -28,19 +28,19 @@ export const NativeAdCard: React.FC<NativeAdCardProps> = ({
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-black uppercase tracking-wider">
-                Ad
+                Sponsored
               </span>
               <span className="text-[11px] font-bold text-slate-400">
-                Google AdMob Native Unit
+                Featured Resource
               </span>
             </div>
 
             <h4 className="text-sm sm:text-base font-black text-white group-hover:text-emerald-400 transition-colors truncate">
-              Google AdMob Responsive Placement
+              Ethiopian Student Learning Partner
             </h4>
 
-            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-mono">
-              Ad Unit ID: {adUnitId}
+            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+              Curated study material, university admission prep, and scholarship updates for high school students.
             </p>
           </div>
         </div>
@@ -48,7 +48,7 @@ export const NativeAdCard: React.FC<NativeAdCardProps> = ({
         {/* CTA Button */}
         <div className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-xs transition-all flex items-center justify-center gap-1.5 shrink-0">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>Sponsored Space</span>
+          <span>Learn More</span>
         </div>
       </div>
     </div>

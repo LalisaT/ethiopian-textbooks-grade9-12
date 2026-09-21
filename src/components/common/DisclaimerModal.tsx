@@ -155,7 +155,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               <div>
                 <h4 className="font-bold text-white text-sm">2. Device Storage &amp; Offline Data</h4>
                 <p className="text-slate-300 text-xs mt-1">
-                  Your reading progress, book bookmarks, custom notes, and exam practice scores are stored locally in your browser/device IndexedDB and localStorage. You maintain full ownership and control over your data.
+                  Your reading progress, book bookmarks, custom notes, and exam practice scores are stored locally in your device IndexedDB and localStorage. You maintain full ownership and control over your data.
                 </p>
               </div>
 
@@ -169,7 +169,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               <div>
                 <h4 className="font-bold text-white text-sm">4. Data Deletion</h4>
                 <p className="text-slate-300 text-xs mt-1">
-                  You can clear offline saved books and reset quiz progress at any time through the in-app storage manager or browser settings.
+                  You can clear offline saved books and reset quiz progress at any time through the in-app storage manager or device settings.
                 </p>
               </div>
 

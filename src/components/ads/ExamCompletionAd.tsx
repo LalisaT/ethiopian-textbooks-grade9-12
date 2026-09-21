@@ -20,10 +20,10 @@ export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-black uppercase tracking-wider">
           <Sparkles className="w-3 h-3" />
-          <span>Google AdMob • Post-Exam Unit</span>
+          <span>Sponsored • Educational Opportunity</span>
         </div>
         <span className="text-[10px] font-bold text-slate-400">
-          Ready Space
+          Partner
         </span>
       </div>
 
@@ -34,20 +34,20 @@ export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({
 
         <div className="space-y-0.5 flex-1 min-w-0">
           <h4 className="text-sm font-black text-white truncate">
-            Google AdMob Interstitial / High-Yield Unit
+            University Admission &amp; Matric Scholarships
           </h4>
-          <p className="text-xs text-slate-400 font-mono line-clamp-1">
-            Slot: {adUnitId}
+          <p className="text-xs text-slate-400 line-clamp-1">
+            Top curated opportunities for Ethiopian high school graduates.
           </p>
         </div>
       </div>
 
       <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
         <div className="text-[11px] text-slate-400">
-          Exam Score: <strong className="text-emerald-400">{percent}%</strong> • AdMob Interstitial Placement
+          Exam Score: <strong className="text-emerald-400">{percent}%</strong> • High-Yield Practice Complete
         </div>
         <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs rounded-xl">
-          Monetized
+          Sponsored
         </div>
       </div>
     </div>

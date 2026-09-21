@@ -88,7 +88,7 @@ export const LanguageBrowseSection: React.FC<LanguageBrowseSectionProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-slate-900 dark:text-white text-base">
-              Browse Textbooks by Language (በቋንቋ ፈልግ / Afaaniin Barbaadi)
+              Textbooks by Language (በቋንቋ ፈልግ / Afaaniin Barbaadi)
             </h3>
             <p className="text-xs text-slate-500">
               Select your language to explore textbooks taught in your mother-tongue and regional medium

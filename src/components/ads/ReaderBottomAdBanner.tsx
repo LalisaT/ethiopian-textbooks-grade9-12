@@ -26,10 +26,10 @@ export const ReaderBottomAdBanner: React.FC<ReaderBottomAdBannerProps> = ({ clas
           </span>
           <div className="min-w-0">
             <div className="text-xs font-black text-white truncate">
-              Google AdMob • Adaptive Reader Banner
+              Sponsored Student Resource
             </div>
-            <div className="text-[10px] text-slate-400 font-mono truncate">
-              Slot: {ADMOB_CONFIG.units.banner}
+            <div className="text-[10px] text-slate-400 truncate">
+              National Examination &amp; High School Reference
             </div>
           </div>
         </div>

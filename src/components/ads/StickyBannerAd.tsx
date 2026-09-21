@@ -20,16 +20,16 @@ export const StickyBannerAd: React.FC<StickyBannerAdProps> = ({
         </span>
         <div className="min-w-0">
           <div className="font-extrabold text-xs text-white truncate">
-            Google AdMob • Standard 320x50 Banner
+            Sponsored Learning Partner
           </div>
-          <div className="text-[10px] text-slate-400 font-mono truncate">
-            Unit: {adUnitId}
+          <div className="text-[10px] text-slate-400 truncate">
+            Empowering Ethiopian Secondary &amp; Preparatory Education
           </div>
         </div>
       </div>
 
-      <div className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 font-black text-[11px] rounded-xl shrink-0">
-        Ready
+      <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-[11px] rounded-xl shrink-0">
+        Sponsored
       </div>
     </div>
   );

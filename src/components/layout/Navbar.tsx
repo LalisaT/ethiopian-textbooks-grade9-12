@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone, GraduationCap, Send } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { LanguageSelector } from '../common/LanguageSelector';
@@ -157,56 +158,96 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-1 animate-in slide-in-from-top duration-200">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  handleNavClick(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
-                  isActive
-                    ? 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </div>
-                {item.badge !== undefined && (
-                  <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs rounded-full">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+      {/* Mobile Side Drawer Menu (Portal to document.body with solid background) */}
+      {mobileMenuOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[150] md:hidden">
+          {/* Backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-200"
+            onClick={() => setMobileMenuOpen(false)}
+          />
 
-
-          {isAdmin && (
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-              <button
-                onClick={() => {
-                  onToggleAdmin();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30"
-              >
-                <div className="flex items-center gap-3">
-                  <Shield className="w-4 h-4" />
-                  <span>Exit Admin Studio</span>
+          {/* Right Slide-over Panel with Guaranteed Solid Background */}
+          <aside
+            className="fixed inset-y-0 right-0 z-10 w-4/5 max-w-xs h-full h-[100dvh] text-white border-l border-slate-800 shadow-2xl flex flex-col justify-between p-5 overflow-y-auto"
+            style={{ backgroundColor: '#090d16' }}
+          >
+            <div className="space-y-6">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                <div className="flex items-center gap-2.5">
+                  <BrandLogo size="sm" />
+                  <div>
+                    <h3 className="font-black text-sm text-white">Ethiopian Textbooks</h3>
+                    <p className="text-[10px] text-emerald-400 font-bold">Menu &amp; Navigation</p>
+                  </div>
                 </div>
-              </button>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="space-y-1.5">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        handleNavClick(item.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all ${
+                        isActive
+                          ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20'
+                          : 'text-slate-300 hover:bg-slate-900/90 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </div>
+                      {item.badge !== undefined && (
+                        <span className="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-black rounded-full">
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {isAdmin && (
+                <div className="pt-3 border-t border-slate-800">
+                  <button
+                    onClick={() => {
+                      onToggleAdmin();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-black text-rose-400 bg-rose-950/40 border border-rose-800/40"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Shield className="w-4 h-4" />
+                      <span>Exit Admin Studio</span>
+                    </div>
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+
+            {/* Drawer Footer */}
+            <div className="pt-4 border-t border-slate-800 text-[11px] text-slate-500 space-y-1">
+              <div className="font-bold text-slate-400">National High School Portal</div>
+              <div>Grades 9–12 • EUEE Prep</div>
+            </div>
+          </aside>
+        </div>,
+        document.body
       )}
     </header>
   );
