@@ -111,20 +111,29 @@
   will-change: transform;
 }
 
+@keyframes professionalLuxuryFlow {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .luxury-flow-line {
   background: linear-gradient(
     90deg,
-    #3b82f6 0%,
-    #6366f1 18%,
-    #8b5cf6 36%,
-    #a855f7 52%,
-    #d946ef 70%,
-    #06b6d4 86%,
-    #3b82f6 100%
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(30, 41, 59, 0.9) 25%,
+    rgba(14, 165, 233, 0.9) 47%,
+    rgba(56, 189, 248, 1) 50%,
+    rgba(14, 165, 233, 0.9) 53%,
+    rgba(30, 41, 59, 0.9) 75%,
+    rgba(15, 23, 42, 0.9) 100%
   );
-  background-size: 300% 300%;
-  animation: luxuryFlow 10s ease-in-out infinite;
-  box-shadow: 0 0 16px rgba(168, 85, 247, 0.55);
+  background-size: 200% 100%;
+  animation: professionalLuxuryFlow 18s ease-in-out infinite;
+  box-shadow: 0 1px 8px rgba(14, 165, 233, 0.25);
 }
 
 .ethio-gradient-bar {

@@ -381,11 +381,9 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 5. Shelf 2: Top Textbooks • Grade 12 EUEE Prep (Positioned below Grade Levels) */}
+      {/* 5. Shelf 2: Top Textbooks • Grade 12 EUEE Prep */}
       <PlayStoreShelf
         title="Top Textbooks • Grade 12 EUEE Prep"
-        subtitle="Official curriculum for graduating preparatory students"
-        badge="Top Matric Prep"
         books={grade12Books}
         onOpenPdf={onOpenPdf}
         onToggleOffline={onToggleOffline}
@@ -401,8 +399,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       {naturalScienceBooks.length > 0 && (
         <PlayStoreShelf
           title="Natural Science Stream"
-          subtitle="Physics, Chemistry, Biology & Natural Mathematics"
-          badge="STEM Focus"
           books={naturalScienceBooks}
           onOpenPdf={onOpenPdf}
           onToggleOffline={onToggleOffline}
@@ -511,8 +507,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       {socialScienceBooks.length > 0 && (
         <PlayStoreShelf
           title="Social Science Stream"
-          subtitle="Economics, Geography, History & General Business"
-          badge="Humanities & Social"
           books={socialScienceBooks}
           onOpenPdf={onOpenPdf}
           onToggleOffline={onToggleOffline}

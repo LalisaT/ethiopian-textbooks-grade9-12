@@ -41,20 +41,23 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
 
   return (
     <section className="space-y-3">
-      {/* Shelf Header (Google Play Store Style) */}
-      <div className="flex items-end justify-between px-1">
+      {/* Shelf Header (Luxury App Style) */}
+      <div className="flex items-center justify-between px-1 mb-1">
         <div>
           {badge && (
-            <div className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-400 mb-0.5">
+            <div className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-teal-400 mb-0.5">
               <Sparkles className="w-3 h-3" />
               <span>{badge}</span>
             </div>
           )}
-          <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-            <span>{title}</span>
-          </h3>
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="w-1 h-4 sm:h-5 rounded-full bg-gradient-to-b from-teal-400 to-cyan-500 shadow-xs shrink-0" />
+            <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+              {title}
+            </h3>
+          </div>
           {subtitle && (
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-slate-400 ml-3 sm:ml-3.5 mt-0.5">
               {subtitle}
             </p>
           )}
@@ -63,7 +66,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
         {onSeeAll && (
           <button
             onClick={onSeeAll}
-            className="text-xs font-black text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 flex items-center gap-0.5 transition-colors group shrink-0 pb-0.5"
+            className="text-xs font-black text-teal-500 dark:text-teal-400 hover:text-teal-300 flex items-center gap-0.5 transition-colors group shrink-0"
           >
             <span>See all</span>
             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

@@ -15,7 +15,7 @@ export const AboutCurriculumPage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 space-y-6 sm:space-y-8">
       {/* Header Banner */}
       <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white p-8 sm:p-12 border border-slate-800 shadow-xl space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30 text-xs font-bold">

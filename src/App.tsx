@@ -581,7 +581,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Page Routing */}
-      <main className="flex-1 pb-16 lg:pb-8">
+      <main className={`flex-1 ${activeTab === 'about' ? 'pb-2' : 'pb-16 lg:pb-8'}`}>
         {isAdminDashboardOpen ? (
           <AdminDashboard
             allBooks={allBooks}
