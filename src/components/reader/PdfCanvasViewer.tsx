@@ -56,6 +56,219 @@ if (typeof window !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 }
 
+interface ContinuousPdfPageProps {
+  pageNumber: number;
+  pdfDoc: pdfjsLib.PDFDocumentProxy;
+  scale: number;
+  rotation: number;
+  fitMode: 'custom' | 'width' | 'page';
+  canvasFilterStyle: string;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  isActive: boolean;
+  onBecomeVisible: (pageNumber: number) => void;
+  onTextExtracted?: (pageNumber: number, text: string) => void;
+}
+
+const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
+  pageNumber,
+  pdfDoc,
+  scale,
+  rotation,
+  fitMode,
+  canvasFilterStyle,
+  containerRef,
+  isActive,
+  onBecomeVisible,
+  onTextExtracted,
+}) => {
+  const pageWrapperRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isInViewportRange, setIsInViewportRange] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState(1.414);
+  const [pageWidthPx, setPageWidthPx] = useState<number>(0);
+
+  // 1. IntersectionObserver for lazy rendering (renders within 600px buffer)
+  useEffect(() => {
+    const el = pageWrapperRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsInViewportRange(entry.isIntersecting);
+      },
+      {
+        root: containerRef.current,
+        rootMargin: '600px 0px 600px 0px',
+        threshold: 0,
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [containerRef]);
+
+  // 2. IntersectionObserver for active page tracking (scrolls top to down)
+  useEffect(() => {
+    const el = pageWrapperRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+          onBecomeVisible(pageNumber);
+        }
+      },
+      {
+        root: containerRef.current,
+        threshold: [0.3, 0.6],
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [pageNumber, containerRef, onBecomeVisible]);
+
+  // 3. Render page to canvas when within viewport range
+  useEffect(() => {
+    if (!isInViewportRange || !pdfDoc) return;
+
+    let renderTask: pdfjsLib.RenderTask | null = null;
+    let isCancelled = false;
+
+    const render = async () => {
+      try {
+        const page = await pdfDoc.getPage(pageNumber);
+        if (isCancelled) return;
+
+        const intrinsicRotate = (page as any).rotate || 0;
+        const totalRotation = (intrinsicRotate + rotation) % 360;
+
+        const unscaledViewport = page.getViewport({ scale: 1, rotation: totalRotation });
+        const ratio = unscaledViewport.height / unscaledViewport.width;
+        setAspectRatio(ratio);
+
+        let effectiveScale = scale;
+        if (fitMode === 'page' || fitMode === 'width') {
+          if (containerRef.current) {
+            const isMobileDevice = window.innerWidth < 768;
+            const horizontalPadding = isMobileDevice ? 16 : 48;
+            const verticalPadding = isMobileDevice ? 24 : 48;
+            const containerW = Math.max(260, containerRef.current.clientWidth - horizontalPadding);
+            const containerH = Math.max(300, containerRef.current.clientHeight - verticalPadding);
+
+            if (fitMode === 'page') {
+              const scaleW = containerW / unscaledViewport.width;
+              const scaleH = containerH / unscaledViewport.height;
+              effectiveScale = Math.max(0.35, Math.min(2.5, Math.min(scaleW, scaleH)));
+            } else if (fitMode === 'width') {
+              effectiveScale = Math.max(0.35, Math.min(3.0, containerW / unscaledViewport.width));
+            }
+          }
+        }
+
+        const viewport = page.getViewport({ scale: effectiveScale, rotation: totalRotation });
+        setPageWidthPx(Math.floor(viewport.width));
+
+        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d', { alpha: false });
+        if (!context) return;
+
+        const outputScale = Math.min(window.devicePixelRatio || 1, 1.75);
+        canvas.width = Math.floor(viewport.width * outputScale);
+        canvas.height = Math.floor(viewport.height * outputScale);
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
+        canvas.style.maxWidth = '100%';
+
+        const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
+        renderTask = page.render({
+          canvasContext: context,
+          viewport,
+          transform,
+        });
+
+        await renderTask.promise;
+
+        if (isActive && onTextExtracted) {
+          setTimeout(async () => {
+            if (isCancelled) return;
+            try {
+              const textContent = await page.getTextContent();
+              const textStr = textContent.items
+                // @ts-ignore
+                .map((it) => it.str)
+                .join(' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+              if (!isCancelled && textStr) onTextExtracted(pageNumber, textStr);
+            } catch {}
+          }, 60);
+        }
+      } catch (err: any) {
+        if (err.name !== 'RenderingCancelledException') {
+          console.error(`Error rendering continuous page ${pageNumber}:`, err);
+        }
+      }
+    };
+
+    render();
+
+    return () => {
+      isCancelled = true;
+      if (renderTask) renderTask.cancel();
+    };
+  }, [isInViewportRange, pdfDoc, pageNumber, scale, rotation, fitMode, isActive]);
+
+  const estimatedHeight =
+    pageWidthPx > 0
+      ? Math.floor(pageWidthPx * aspectRatio)
+      : typeof window !== 'undefined'
+      ? Math.floor(Math.min(window.innerWidth - 32, 800) * aspectRatio)
+      : 800;
+
+  return (
+    <div
+      ref={pageWrapperRef}
+      id={`pdf-page-${pageNumber}`}
+      data-page-number={pageNumber}
+      className={`w-full flex flex-col items-center justify-center transition-all ${
+        isActive ? 'ring-2 ring-emerald-500/50 rounded-2xl shadow-xl' : ''
+      }`}
+      style={{ minHeight: `${Math.max(300, estimatedHeight)}px` }}
+    >
+      <div
+        className={`bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden border border-slate-700/60 transition-all relative ${canvasFilterStyle}`}
+        style={{
+          width: pageWidthPx > 0 ? `${pageWidthPx}px` : '100%',
+          maxWidth: '100%',
+          minHeight: `${Math.max(300, estimatedHeight)}px`,
+        }}
+      >
+        {isInViewportRange ? (
+          <canvas ref={canvasRef} className="block mx-auto max-w-full" />
+        ) : (
+          <div
+            className="w-full flex flex-col items-center justify-center text-slate-400 bg-slate-900/60"
+            style={{ height: `${Math.max(300, estimatedHeight)}px` }}
+          >
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-500/60 animate-pulse" />
+              <span>Page {pageNumber}</span>
+            </div>
+          </div>
+        )}
+
+        <div className="absolute bottom-2.5 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 text-white font-mono text-[10px] font-black pointer-events-none backdrop-blur-xs border border-slate-800/80 shadow-xs">
+          p. {pageNumber}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 interface PdfCanvasViewerProps {
   pdfBlob?: Blob | null;
   pdfUrl?: string | null;
@@ -86,6 +299,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const [errorMsg, setErrorMsg] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isZenMode, setIsZenMode] = useState(false);
+  const [isContinuousScroll, setIsContinuousScroll] = useState(true);
   const [showCleanOverlay, setShowCleanOverlay] = useState(true);
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringOverlayRef = useRef(false);
@@ -507,9 +721,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     };
   }, [scale, totalPages]);
 
-  // Render Current Page on Canvas & Extract Page Text for Audio Read Aloud
+  // Render Current Page on Canvas & Extract Page Text for Audio Read Aloud (Single Page Mode)
   useEffect(() => {
-    if (!pdfDoc || !canvasRef.current) return;
+    if (!pdfDoc || !canvasRef.current || isContinuousScroll) return;
 
     let renderTask: pdfjsLib.RenderTask | null = null;
     let isCancelled = false;
@@ -598,7 +812,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         renderTask.cancel();
       }
     };
-  }, [pdfDoc, currentPage, scale, rotation, fitMode]);
+  }, [pdfDoc, currentPage, scale, rotation, fitMode, isContinuousScroll]);
 
   // Audio Read Aloud for Current Page
   const handleToggleAudio = () => {
@@ -702,14 +916,37 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     }
   };
 
+  const scrollToPage = (targetPage: number) => {
+    const validPage = Math.max(1, Math.min(totalPages, targetPage));
+    setCurrentPage(validPage);
+    if (isContinuousScroll) {
+      const pageEl = document.getElementById(`pdf-page-${validPage}`);
+      if (pageEl) {
+        pageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handlePrevPage = () => {
-    setCurrentPage((p) => Math.max(1, p - 1));
-    containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isContinuousScroll) {
+      const prevP = Math.max(1, currentPage - 1);
+      scrollToPage(prevP);
+    } else {
+      setCurrentPage((p) => Math.max(1, p - 1));
+      containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleNextPage = () => {
-    setCurrentPage((p) => Math.min(totalPages, p + 1));
-    containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isContinuousScroll) {
+      const nextP = Math.min(totalPages, currentPage + 1);
+      scrollToPage(nextP);
+    } else {
+      setCurrentPage((p) => Math.min(totalPages, p + 1));
+      containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleZoomIn = () => {
@@ -1022,6 +1259,20 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Top-to-Down Continuous Scroll Toggle */}
+            <button
+              onClick={() => setIsContinuousScroll(!isContinuousScroll)}
+              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-black shadow-sm active:scale-95 transition-all ${
+                isContinuousScroll
+                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                  : 'bg-slate-950 text-slate-400 border-slate-800'
+              }`}
+              title={isContinuousScroll ? 'Continuous Scroll Active (Tap for Page-by-Page)' : 'Page Mode Active (Tap for Top-to-Down Scroll)'}
+            >
+              <MoveVertical className="w-3.5 h-3.5" />
+              <span className="text-[11px]">{isContinuousScroll ? 'Scroll' : 'Page'}</span>
+            </button>
+
             {/* Dedicated prominent Clean View button */}
             <button
               onClick={() => setIsZenMode(true)}
@@ -1256,6 +1507,20 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               <Search className="w-3.5 h-3.5" />
             </button>
 
+            {/* Top-to-Down Continuous Scroll Toggle */}
+            <button
+              onClick={() => setIsContinuousScroll(!isContinuousScroll)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all active:scale-95 ${
+                isContinuousScroll
+                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                  : 'bg-slate-950 text-slate-300 border-slate-800 hover:text-white'
+              }`}
+              title={isContinuousScroll ? 'Continuous Top-to-Down Scroll (Click for Single Page)' : 'Single Page View (Click for Continuous Top-to-Down Scroll)'}
+            >
+              <MoveVertical className="w-3.5 h-3.5" />
+              <span>{isContinuousScroll ? 'Top-Down Scroll' : 'Single Page'}</span>
+            </button>
+
             {/* Theme / Eye-care filters */}
             <select
               value={readerTheme}
@@ -1340,7 +1605,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 {searchResults.slice(0, 8).map((pNum) => (
                   <button
                     key={pNum}
-                    onClick={() => setCurrentPage(pNum)}
+                    onClick={() => scrollToPage(pNum)}
                     className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-white rounded text-[11px] font-mono"
                   >
                     p.{pNum}
@@ -1372,8 +1637,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 <button
                   key={pageNum}
                   onClick={() => {
-                    setCurrentPage(pageNum);
-                    containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                    scrollToPage(pageNum);
                   }}
                   className={`p-2 rounded-xl text-xs font-bold text-center border transition-all ${
                     currentPage === pageNum
@@ -1437,11 +1701,33 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
           </button>
 
-          <div
-            className={`bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-slate-700/60 transition-all max-w-full ${canvasFilterStyle}`}
-          >
-            <canvas ref={canvasRef} className="block mx-auto max-w-full" />
-          </div>
+          {isContinuousScroll && pdfDoc ? (
+            <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-4 sm:gap-6 py-2 sm:py-4">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                <ContinuousPdfPage
+                  key={pageNum}
+                  pageNumber={pageNum}
+                  pdfDoc={pdfDoc}
+                  scale={scale}
+                  rotation={rotation}
+                  fitMode={fitMode}
+                  canvasFilterStyle={canvasFilterStyle}
+                  containerRef={containerRef}
+                  isActive={currentPage === pageNum}
+                  onBecomeVisible={(p) => setCurrentPage(p)}
+                  onTextExtracted={(p, text) => {
+                    if (p === currentPage) setCurrentPageText(text);
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div
+              className={`bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-slate-700/60 transition-all max-w-full ${canvasFilterStyle}`}
+            >
+              <canvas ref={canvasRef} className="block mx-auto max-w-full" />
+            </div>
+          )}
         </div>
 
         {/* Clean View Bottom Floating Pill (Auto-hides after inactivity or stays visible on touch) */}
