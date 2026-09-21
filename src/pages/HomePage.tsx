@@ -3,6 +3,8 @@ import { Book, GradeLevel, AcademicStream } from '../types/book';
 import { useTranslation } from '../i18n/useTranslation';
 import { EXAM_PRACTICE_QUESTIONS } from '../data/examQuestions';
 import { PlayStoreShelf } from '../components/home/PlayStoreShelf';
+import { InteractiveBookshelf } from '../components/bookshelf/InteractiveBookshelf';
+import { CosmicParticleBackground } from '../components/common/CosmicParticleBackground';
 import { NativeAdCard } from '../components/ads/NativeAdCard';
 import { StickyBannerAd } from '../components/ads/StickyBannerAd';
 import { AdService } from '../services/adService';
@@ -11,7 +13,6 @@ import {
   Award,
   Sparkles,
   ArrowRight,
-  Compass,
   CheckCircle,
   GraduationCap,
   Atom,
@@ -55,6 +56,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onSelectGradeFilter,
   onNavigateToExplore,
   onNavigateToExamPrep,
+  onNavigateToCommunity,
   onNavigateToTeacherGuides,
 }) => {
   const { t, language } = useTranslation();
@@ -106,19 +108,24 @@ export const HomePage: React.FC<HomePageProps> = ({
   }, [books, searchQuery]);
 
   return (
-    <div className="space-y-6 sm:space-y-10 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-4 sm:pb-6">
-      {/* 1. Google Play Store Style Top Search & Discovery Pill */}
-      <div className="space-y-3">
-        <div className="relative max-w-2xl mx-auto">
+    <div className="relative min-h-screen space-y-6 sm:space-y-10 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-4 sm:pb-6">
+      {/* 1. Subtle Cosmic Night-Sky Particle Background */}
+      <CosmicParticleBackground particleCount={30} />
+
+      {/* 2. Search Section */}
+      <div className="relative z-10 space-y-3">
+
+        {/* Search Bar */}
+        <div className="relative max-w-3xl mx-auto">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-            <Search className="w-4 h-4 text-emerald-400" />
+            <Search className="w-4 h-4 text-cyan-400" />
           </div>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search Grade 9–12 textbooks, EUEE past papers, subjects..."
-            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-full text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
+            className="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-800 rounded-full text-xs sm:text-sm text-white placeholder-slate-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all"
           />
           {searchQuery && (
             <button
@@ -130,7 +137,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           )}
         </div>
 
-        {/* Quick Category Chips (Google Play Store Style Horizontal Scroll) */}
+        {/* Filter Bar: Interactive Grade & Category Filter Chips */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1">
           {[
             { id: 'all' as const, label: 'For You' },
@@ -156,8 +163,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                 }}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-xs ${
                   isSelected
-                    ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20'
-                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-slate-800 hover:border-slate-700'
+                    ? 'bg-teal-500 text-slate-950 font-black shadow-md shadow-teal-500/25 ring-2 ring-teal-400/40'
+                    : 'bg-slate-900/90 text-slate-300 border border-slate-800 hover:border-slate-700 hover:text-white'
                 }`}
               >
                 {chip.label}
@@ -182,86 +189,95 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       )}
 
-      {/* 2. Spotlight Hero Banner (Featured Luxury Showcase) */}
+      {/* 3. Hero Section (Ultra Premium Cosmic Showcase with 3D Bookshelf Animation) */}
       {!searchQuery.trim() && (
-        <section className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 sm:p-8 md:p-10 overflow-hidden border border-slate-800 shadow-2xl">
-          {/* Luxury Animated Background Carousel */}
+        <section className="relative rounded-3xl bg-gradient-to-br from-[#0a101d] via-slate-900 to-[#070c16] text-white p-5 sm:p-7 md:p-8 overflow-hidden border border-slate-800 shadow-2xl">
+          {/* Clean Subtle Ambient Background Video (100% free of text) */}
           <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
             <video
               autoPlay
               loop
               muted
               playsInline
-              className="w-full h-full object-cover opacity-35 dark:opacity-30 filter saturate-125"
+              className="w-full h-full object-cover opacity-25 filter saturate-125"
               src="/videos/Subtle_Background_Carousel.mp4"
             />
-            {/* Gradient overlay to guarantee perfect contrast and luxury look */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/50 backdrop-blur-[0.5px]" />
+            {/* Smooth gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/60" />
           </div>
 
           {/* Subtle Ambient Glow Orbs */}
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 sm:w-96 h-72 sm:h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 sm:w-96 h-72 sm:h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-1/3 -mb-10 w-64 sm:w-80 h-64 sm:h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 max-w-3xl space-y-3.5 sm:space-y-5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] font-black backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>National High School Curriculum • 2026 Edition</span>
+          {/* Hero Content Grid: Left Text + Right 3D Bookshelf Animation */}
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            {/* Left Column: Crisp Clean Typography & Action Buttons */}
+            <div className="md:col-span-7 lg:col-span-8 space-y-3.5 sm:space-y-4">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30 text-[11px] font-black backdrop-blur-md">
+                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <span>National High School Curriculum • 2026 Edition</span>
+              </div>
+
+              <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
+                Ethiopian Grade 9–12 <br className="hidden sm:inline" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-300 to-amber-300">
+                  Textbooks &amp; EUEE Matric Hub
+                </span>
+              </h2>
+
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-xl">
+                Official Ministry of Education textbooks and <strong>Teacher's Guides</strong>. Master <strong>Natural &amp; Social Sciences</strong> and practice for the <strong>Grade 12 Ethiopian University Entrance Examination</strong> with 100% offline study capability.
+              </p>
+
+
+              {/* Micro Feature Metrics */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                  <span>MOE Syllabus</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Atom className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span>Natural &amp; Social</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>2020–2024 Past Papers</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <BookMarked className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                  <span>100% Offline</span>
+                </div>
+              </div>
             </div>
 
-            <h1 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
-              Ethiopian Grade 9–12 <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">
-                Textbooks &amp; EUEE Matric Hub
-              </span>
-            </h1>
-
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
-              Official Ministry of Education textbooks and <strong>Teacher's Guides</strong>. Master <strong>Natural &amp; Social Sciences</strong> and practice for the <strong>Grade 12 Ethiopian University Entrance Examination</strong> with 100% offline study capability.
-            </p>
-
-            {/* Quick Action CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
-              <button
-                onClick={onNavigateToExplore}
-                className="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2"
-              >
-                <Compass className="w-4 h-4" />
-                <span>Explore 31+ Textbooks</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={onNavigateToExamPrep}
-                className="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 ring-2 ring-amber-400/40"
-              >
-                <Award className="w-4 h-4" />
-                <span>EUEE Matric Hub</span>
-                <Sparkles className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Micro Feature Metrics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>MOE New Syllabus</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Atom className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>Natural &amp; Social Streams</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>2020–2024 Past Papers</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <BookMarked className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>100% Offline Reading</span>
+            {/* Right Column: 3D Bookshelf Animated Showcase (100% zero text) */}
+            <div className="hidden md:flex md:col-span-5 lg:col-span-4 items-center justify-center">
+              <div className="relative w-full max-w-[260px] aspect-[3/4] rounded-3xl overflow-hidden bg-slate-950/80 border-2 border-amber-400/30 shadow-[0_0_35px_rgba(245,158,11,0.2)]">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  src="/videos/bookshelf_3d_animation.mp4"
+                />
+                <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-3xl pointer-events-none" />
               </div>
             </div>
           </div>
         </section>
+      )}
+
+      {/* 4. Interactive Bookshelf Component (Spines, Categories & Preview Modal) */}
+      {!searchQuery.trim() && (
+        <InteractiveBookshelf
+          books={books}
+          onOpenPdf={onOpenPdf}
+          onToggleOffline={onToggleOffline}
+          offlineBookIds={offlineBookIds}
+        />
       )}
 
       {/* 3. Shelf 1: Continue Reading (Google Play Store Style) */}

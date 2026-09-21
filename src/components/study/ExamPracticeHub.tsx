@@ -583,7 +583,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                       </div>
                       <div className="flex items-center gap-1">
                         <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>{pack.questions.length} Questions (Grades 9-12)</span>
+                        <span>100+ Questions (Grades 9-12)</span>
                       </div>
                     </div>
                   </div>

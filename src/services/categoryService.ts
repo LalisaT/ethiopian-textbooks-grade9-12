@@ -39,6 +39,7 @@ export const DEFAULT_ACADEMIC_SUBJECTS: SubjectCategoryItem[] = [
   { id: 'history', name: 'History', nameAmharic: 'ታሪክ', nameOromo: 'Seenaa' },
   { id: 'geography', name: 'Geography', nameAmharic: 'ጂኦግራፊ', nameOromo: 'Ji\'oogiraafii' },
   { id: 'citizenship', name: 'Citizenship Education', nameAmharic: 'የዜግነት ትምህርት', nameOromo: 'Barnoota Lammummaa' },
+  { id: 'sat', name: 'Scholastic Aptitude (SAT)', nameAmharic: 'የክህሎት ፈተና (SAT)', nameOromo: "Ga'umsa Barnootaa (SAT)" },
   { id: 'it', name: 'Information Technology (IT)', nameAmharic: 'ኢንፎርሜሽን ቴክኖሎጂ', nameOromo: 'Teeknooloojii Odeeffannoo' },
 ];
 
@@ -73,7 +74,13 @@ export const CategoryService = {
     try {
       const data = localStorage.getItem(STORAGE_KEY_SUBJECT_CATEGORIES);
       if (data) {
-        return JSON.parse(data);
+        const parsed: SubjectCategoryItem[] = JSON.parse(data);
+        if (Array.isArray(parsed)) {
+          if (!parsed.some((s) => s.id === 'sat')) {
+            parsed.push({ id: 'sat', name: 'Scholastic Aptitude (SAT)', nameAmharic: 'የክህሎት ፈተና (SAT)', nameOromo: "Ga'umsa Barnootaa (SAT)" });
+          }
+          return parsed;
+        }
       }
     } catch {}
     return DEFAULT_ACADEMIC_SUBJECTS;

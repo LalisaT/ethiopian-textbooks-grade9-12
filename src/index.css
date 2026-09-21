@@ -82,9 +82,46 @@
   line-height: 2.0;
 }
 
-/* Ethiopian Flag animated subtle gradient */
+/* Luxury slowly flowing line animation */
+@keyframes luxuryFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.luxury-flow-line {
+  background: linear-gradient(
+    90deg,
+    #3b82f6 0%,
+    #6366f1 18%,
+    #8b5cf6 36%,
+    #a855f7 52%,
+    #d946ef 70%,
+    #06b6d4 86%,
+    #3b82f6 100%
+  );
+  background-size: 300% 300%;
+  animation: luxuryFlow 10s ease-in-out infinite;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.55);
+}
+
 .ethio-gradient-bar {
-  background: linear-gradient(90deg, #009A44 0%, #FED100 50%, #EF2B2D 100%);
+  background: linear-gradient(
+    90deg,
+    #009A44 0%,
+    #06b6d4 25%,
+    #FED100 50%,
+    #f59e0b 75%,
+    #009A44 100%
+  );
+  background-size: 250% 250%;
+  animation: luxuryFlow 9s ease-in-out infinite;
 }
 
 .ethio-badge {

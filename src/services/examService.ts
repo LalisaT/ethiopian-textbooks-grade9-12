@@ -456,6 +456,36 @@ export const ExamService = {
       isCustom: false,
     };
 
+    const satNaturalPack: ExamPack = {
+      id: 'euee-mock-sat-natural',
+      title: 'EUEE Scholastic Aptitude Test (SAT) - Natural Science',
+      titleAmharic: 'የ 12ኛ ክፍል አጠቃላይ የክህሎት ፈተና (SAT) - ተፈጥሮ ሳይንስ',
+      titleOromo: "Qormaata Ga'umsa Barnootaa (SAT) - Saayinsii Uumamaa EUEE",
+      description: 'Quantitative reasoning, number series, spatial logic, rate problems, and data interpretation for Natural Science stream students.',
+      grade: 12,
+      stream: 'natural_science',
+      subject: 'sat',
+      language: 'en',
+      timeLimitMinutes: 90,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'sat' && (q.stream === 'natural_science' || q.stream === 'both')),
+      isCustom: false,
+    };
+
+    const satSocialPack: ExamPack = {
+      id: 'euee-mock-sat-social',
+      title: 'EUEE Scholastic Aptitude Test (SAT) - Social Science',
+      titleAmharic: 'የ 12ኛ ክፍል አጠቃላይ የክህሎት ፈተና (SAT) - ማህበራዊ ሳይንስ',
+      titleOromo: "Qormaata Ga'umsa Barnootaa (SAT) - Saayinsii Hawaasaa EUEE",
+      description: 'Verbal analogies, logical syllogisms, numerical percentages, seating arrangement deductions, and vocabulary in context.',
+      grade: 12,
+      stream: 'social_science',
+      subject: 'sat',
+      language: 'en',
+      timeLimitMinutes: 90,
+      questions: EXAM_PRACTICE_QUESTIONS.filter((q) => q.subject === 'sat' && (q.stream === 'social_science' || q.stream === 'both')),
+      isCustom: false,
+    };
+
     const all = [
       physicsMockPack,
       chemMockPack,
@@ -463,6 +493,8 @@ export const ExamService = {
       mathNaturalPack,
       mathSocialPack,
       englishMockPack,
+      satNaturalPack,
+      satSocialPack,
       econMockPack,
       historyMockPack,
       geoMockPack,

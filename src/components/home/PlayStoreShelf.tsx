@@ -114,18 +114,22 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
                   )}
                 </div>
 
-                {/* Rating & Stream Badges */}
-                <div className="flex items-center justify-between gap-1 mb-1">
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-amber-400">
-                    <Star className="w-3 h-3 fill-current" />
-                    <span>4.9</span>
-                  </div>
-                  {book.stream && book.stream !== 'common' && (
-                    <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 uppercase tracking-tight">
+                {/* Stream or Grade Badge */}
+                {book.stream && book.stream !== 'common' ? (
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 uppercase tracking-tight">
                       {book.stream === 'natural_science' ? 'Natural' : 'Social'}
                     </span>
-                  )}
-                </div>
+                    <span className="text-[10px] text-slate-400 capitalize font-medium">{book.subject}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 uppercase tracking-tight">
+                      Common
+                    </span>
+                    <span className="text-[10px] text-slate-400 capitalize font-medium">{book.subject}</span>
+                  </div>
+                )}
 
                 {/* Book Title */}
                 <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white line-clamp-2 leading-tight group-hover:text-emerald-500 transition-colors">

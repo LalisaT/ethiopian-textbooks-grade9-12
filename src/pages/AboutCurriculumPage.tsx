@@ -1,12 +1,10 @@
 import React from 'react';
 import { useTranslation } from '../i18n/useTranslation';
-import { ETHIOPIAN_REGIONS } from '../data/regions';
 import { ETHIOPIAN_SUBJECTS } from '../data/subjects';
 import {
   BookOpen,
   GraduationCap,
   Award,
-  Globe,
   ShieldCheck,
   CheckCircle2,
   Layers,
@@ -103,53 +101,7 @@ export const AboutCurriculumPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Regional Educational Bureaus Adaptation */}
-      <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-2xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400">
-            <Globe className="w-6 h-6" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              Regional State Education Bureau Adaptations
-            </h2>
-            <p className="text-xs text-slate-500">
-              Mother-tongue instruction & localized curriculum modules across Ethiopia
-            </p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {ETHIOPIAN_REGIONS.map((reg) => (
-            <div
-              key={reg.id}
-              className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs space-y-2"
-            >
-              <div className="flex items-center justify-between">
-                <h4 className="font-extrabold text-slate-900 dark:text-white">
-                  {reg.name}
-                </h4>
-              </div>
-              {reg.id === 'addis_ababa' || reg.id === 'dire_dawa' ? (
-                <div className="text-[11px] font-semibold text-sky-600 dark:text-sky-400">
-                  Chartered City Administration
-                </div>
-              ) : reg.id === 'national' ? (
-                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                  Seat of Federal Government: {reg.capital}
-                </div>
-              ) : reg.capital ? (
-                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                  Capital: {reg.capital}
-                </div>
-              ) : null}
-              <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
-                {reg.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Core Principles */}
       <section className="bg-emerald-50 dark:bg-emerald-950/30 rounded-3xl p-8 border border-emerald-200 dark:border-emerald-900/60 space-y-4">

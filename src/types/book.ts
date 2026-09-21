@@ -39,7 +39,9 @@ export type SubjectCategory =
   | 'general_business'
   | 'technical_drawing'
   | 'hpe'
-  | 'pva';
+  | 'pva'
+  | 'sat'
+  | 'aptitude';
 
 export type LanguageCode = 'en' | 'am' | 'om' | 'ti' | 'so';
 

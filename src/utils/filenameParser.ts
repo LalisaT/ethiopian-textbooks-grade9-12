@@ -22,6 +22,8 @@ const COLOR_PRESETS: Record<SubjectCategory, { cover: string; accent: string }> 
   afaan_oromoo: { cover: 'from-red-600 to-amber-800', accent: 'red' },
   tigrinya: { cover: 'from-yellow-700 to-rose-800', accent: 'yellow' },
   somali_lang: { cover: 'from-teal-600 to-cyan-900', accent: 'teal' },
+  sat: { cover: 'from-teal-600 to-indigo-950', accent: 'teal' },
+  aptitude: { cover: 'from-amber-600 to-indigo-950', accent: 'amber' },
 };
 
 export interface ParsedBookDraft {
