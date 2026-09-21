@@ -2,6 +2,7 @@ import React from 'react';
 import { Book } from '../../types/book';
 import { useTranslation } from '../../i18n/useTranslation';
 import { BookOpen, DownloadCloud, Check, Star, ChevronRight, Sparkles } from 'lucide-react';
+import { BookCoverThumbnail } from '../books/BookCoverThumbnail';
 
 interface PlayStoreShelfProps {
   title: string;
@@ -85,26 +86,10 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
               <div>
                 {/* Book Cover Container */}
                 <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-slate-950 mb-2.5 shadow-md border border-slate-800/60">
-                  {book.coverImageUrl ? (
-                    <img
-                      src={book.coverImageUrl}
-                      alt={book.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full p-3 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex flex-col justify-between text-white">
-                      <div className="text-[10px] font-black uppercase text-amber-400 tracking-wider">
-                        Grade {book.grade}
-                      </div>
-                      <div className="font-extrabold text-xs leading-tight line-clamp-3">
-                        {book.title}
-                      </div>
-                      <div className="text-[9px] text-slate-400">
-                        MOE Ethiopia
-                      </div>
-                    </div>
-                  )}
+                  <BookCoverThumbnail
+                    book={book}
+                    imgClassName="group-hover:scale-105 transition-transform duration-300"
+                  />
 
                   {/* Grade Level Badge */}
                   <div className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-slate-950/80 backdrop-blur-md text-amber-300 text-[10px] font-black border border-amber-500/30">

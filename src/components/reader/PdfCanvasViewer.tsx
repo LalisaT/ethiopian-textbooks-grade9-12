@@ -64,12 +64,15 @@ interface ContinuousPdfPageProps {
   fitMode: 'custom' | 'width' | 'page';
   canvasFilterStyle: string;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  pageWidth: number;
+  pageHeight: number;
+  readerTheme?: 'normal' | 'sepia' | 'dark' | 'contrast';
   isActive: boolean;
   onBecomeVisible: (pageNumber: number) => void;
   onTextExtracted?: (pageNumber: number, text: string) => void;
 }
 
-const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
+const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
   pageNumber,
   pdfDoc,
   scale,
@@ -77,6 +80,9 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
   fitMode,
   canvasFilterStyle,
   containerRef,
+  pageWidth,
+  pageHeight,
+  readerTheme = 'normal',
   isActive,
   onBecomeVisible,
   onTextExtracted,
@@ -84,10 +90,22 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
   const pageWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isInViewportRange, setIsInViewportRange] = useState(false);
-  const [aspectRatio, setAspectRatio] = useState(1.414);
-  const [pageWidthPx, setPageWidthPx] = useState<number>(0);
+  const [hasRendered, setHasRendered] = useState(false);
+  const renderedKeyRef = useRef<string>('');
 
-  // 1. IntersectionObserver for lazy rendering (renders within 600px buffer)
+  // Use pre-calculated exact dimensions so height never shifts during scrolling
+  const effectiveWidth =
+    pageWidth > 0
+      ? pageWidth
+      : typeof window !== 'undefined'
+      ? Math.min(window.innerWidth - 32, 750)
+      : 750;
+  const effectiveHeight =
+    pageHeight > 0
+      ? pageHeight
+      : Math.floor(effectiveWidth * 1.414);
+
+  // 1. IntersectionObserver for pre-loading pages (generous 1500px prefetch buffer)
   useEffect(() => {
     const el = pageWrapperRef.current;
     if (!el) return;
@@ -95,11 +113,13 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        setIsInViewportRange(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setIsInViewportRange(true);
+        }
       },
       {
         root: containerRef.current,
-        rootMargin: '600px 0px 600px 0px',
+        rootMargin: '1500px 0px 1500px 0px',
         threshold: 0,
       }
     );
@@ -108,7 +128,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
     return () => observer.disconnect();
   }, [containerRef]);
 
-  // 2. IntersectionObserver for active page tracking (scrolls top to down)
+  // 2. IntersectionObserver for active page tracking
   useEffect(() => {
     const el = pageWrapperRef.current;
     if (!el) return;
@@ -116,13 +136,13 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
           onBecomeVisible(pageNumber);
         }
       },
       {
         root: containerRef.current,
-        threshold: [0.3, 0.6],
+        threshold: [0.4, 0.7],
       }
     );
 
@@ -130,9 +150,15 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
     return () => observer.disconnect();
   }, [pageNumber, containerRef, onBecomeVisible]);
 
-  // 3. Render page to canvas when within viewport range
+  // 3. Render page to canvas when within viewport pre-load range
+  // NOTE: isActive is NOT in dependencies so active page switches never wipe the canvas
   useEffect(() => {
     if (!isInViewportRange || !pdfDoc) return;
+
+    const currentRenderKey = `${scale}-${rotation}-${fitMode}-${pageWidth}-${pageHeight}`;
+    if (renderedKeyRef.current === currentRenderKey && hasRendered) {
+      return;
+    }
 
     let renderTask: pdfjsLib.RenderTask | null = null;
     let isCancelled = false;
@@ -144,10 +170,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
 
         const intrinsicRotate = (page as any).rotate || 0;
         const totalRotation = (intrinsicRotate + rotation) % 360;
-
         const unscaledViewport = page.getViewport({ scale: 1, rotation: totalRotation });
-        const ratio = unscaledViewport.height / unscaledViewport.width;
-        setAspectRatio(ratio);
 
         let effectiveScale = scale;
         if (fitMode === 'page' || fitMode === 'width') {
@@ -169,9 +192,8 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
         }
 
         const viewport = page.getViewport({ scale: effectiveScale, rotation: totalRotation });
-        setPageWidthPx(Math.floor(viewport.width));
 
-        if (!canvasRef.current) return;
+        if (!canvasRef.current || isCancelled) return;
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d', { alpha: false });
         if (!context) return;
@@ -192,7 +214,12 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
 
         await renderTask.promise;
 
-        if (isActive && onTextExtracted) {
+        if (!isCancelled) {
+          renderedKeyRef.current = currentRenderKey;
+          setHasRendered(true);
+        }
+
+        if (onTextExtracted) {
           setTimeout(async () => {
             if (isCancelled) return;
             try {
@@ -205,7 +232,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
                 .trim();
               if (!isCancelled && textStr) onTextExtracted(pageNumber, textStr);
             } catch {}
-          }, 60);
+          }, 80);
         }
       } catch (err: any) {
         if (err.name !== 'RenderingCancelledException') {
@@ -220,54 +247,69 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = ({
       isCancelled = true;
       if (renderTask) renderTask.cancel();
     };
-  }, [isInViewportRange, pdfDoc, pageNumber, scale, rotation, fitMode, isActive]);
+  }, [isInViewportRange, pdfDoc, pageNumber, scale, rotation, fitMode, pageWidth, pageHeight]);
 
-  const estimatedHeight =
-    pageWidthPx > 0
-      ? Math.floor(pageWidthPx * aspectRatio)
-      : typeof window !== 'undefined'
-      ? Math.floor(Math.min(window.innerWidth - 32, 800) * aspectRatio)
-      : 800;
+  // Use matching paper color so there is never a black-and-white blink
+  const paperBgColor =
+    readerTheme === 'dark'
+      ? 'bg-slate-900'
+      : readerTheme === 'sepia'
+      ? 'bg-[#fbf0d9]'
+      : 'bg-white';
+  const paperTextColor = readerTheme === 'dark' ? 'text-slate-500' : 'text-slate-300';
 
   return (
     <div
       ref={pageWrapperRef}
       id={`pdf-page-${pageNumber}`}
       data-page-number={pageNumber}
-      className={`w-full flex flex-col items-center justify-center transition-all ${
-        isActive ? 'ring-2 ring-emerald-500/50 rounded-2xl shadow-xl' : ''
+      className={`w-full flex flex-col items-center justify-center relative ${
+        isActive ? 'ring-2 ring-emerald-500/40 rounded-xl' : ''
       }`}
-      style={{ minHeight: `${Math.max(300, estimatedHeight)}px` }}
+      style={{
+        width: `${effectiveWidth}px`,
+        height: `${effectiveHeight}px`,
+        maxWidth: '100%',
+      }}
     >
       <div
-        className={`bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden border border-slate-700/60 transition-all relative ${canvasFilterStyle}`}
+        className={`${paperBgColor} rounded-xl shadow-md border border-slate-700/40 relative overflow-hidden flex items-center justify-center ${canvasFilterStyle}`}
         style={{
-          width: pageWidthPx > 0 ? `${pageWidthPx}px` : '100%',
+          width: `${effectiveWidth}px`,
+          height: `${effectiveHeight}px`,
           maxWidth: '100%',
-          minHeight: `${Math.max(300, estimatedHeight)}px`,
         }}
       >
-        {isInViewportRange ? (
-          <canvas ref={canvasRef} className="block mx-auto max-w-full" />
-        ) : (
+        {/* Canvas remains mounted once rendered to completely eliminate reload flashes */}
+        {(isInViewportRange || hasRendered) && (
+          <canvas
+            ref={canvasRef}
+            className={`block mx-auto max-w-full transition-opacity duration-200 ${
+              hasRendered ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        )}
+
+        {/* Paper Skeleton matching the canvas background exactly (ZERO black-white flashing) */}
+        {!hasRendered && (
           <div
-            className="w-full flex flex-col items-center justify-center text-slate-400 bg-slate-900/60"
-            style={{ height: `${Math.max(300, estimatedHeight)}px` }}
+            className={`absolute inset-0 flex flex-col items-center justify-center ${paperBgColor} select-none`}
           >
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500/60 animate-pulse" />
+            <div className={`flex items-center gap-2 text-xs font-mono font-bold ${paperTextColor}`}>
+              <Loader2 className="w-4 h-4 animate-spin text-emerald-500/80" />
               <span>Page {pageNumber}</span>
             </div>
           </div>
         )}
 
-        <div className="absolute bottom-2.5 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 text-white font-mono text-[10px] font-black pointer-events-none backdrop-blur-xs border border-slate-800/80 shadow-xs">
+        {/* Crisp page watermark badge */}
+        <div className="absolute bottom-2.5 right-3 px-2 py-0.5 rounded-md bg-slate-950/75 text-white font-mono text-[10px] font-black pointer-events-none backdrop-blur-xs border border-slate-800/80 shadow-xs">
           p. {pageNumber}
         </div>
       </div>
     </div>
   );
-};
+});
 
 interface PdfCanvasViewerProps {
   pdfBlob?: Blob | null;
@@ -305,8 +347,57 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const isHoveringOverlayRef = useRef(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [fitMode, setFitMode] = useState<'custom' | 'width' | 'page'>(isMobile ? 'width' : 'page');
-  const [showZoomToast, setShowZoomToast] = useState(false);
   const [readerTheme, setReaderTheme] = useState<'normal' | 'sepia' | 'dark' | 'contrast'>('normal');
+  const [showZoomToast, setShowZoomToast] = useState(false);
+  const [standardDimensions, setStandardDimensions] = useState<{ width: number; height: number } | null>(null);
+
+  // Pre-calculate exact page dimensions to guarantee 100% stable scrolling without layout jitter
+  useEffect(() => {
+    if (!pdfDoc) return;
+    let isCancelled = false;
+
+    const calcDimensions = async () => {
+      try {
+        const p1 = await pdfDoc.getPage(1);
+        if (isCancelled) return;
+        const intrinsicRotate = (p1 as any).rotate || 0;
+        const totalRot = (intrinsicRotate + rotation) % 360;
+        const unscaledVp = p1.getViewport({ scale: 1, rotation: totalRot });
+
+        let effScale = scale;
+        if (fitMode === 'page' || fitMode === 'width') {
+          if (containerRef.current) {
+            const isMobileDevice = window.innerWidth < 768;
+            const horizontalPadding = isMobileDevice ? 16 : 48;
+            const verticalPadding = isMobileDevice ? 24 : 48;
+            const containerW = Math.max(260, containerRef.current.clientWidth - horizontalPadding);
+            const containerH = Math.max(300, containerRef.current.clientHeight - verticalPadding);
+            if (fitMode === 'page') {
+              const scaleW = containerW / unscaledVp.width;
+              const scaleH = containerH / unscaledVp.height;
+              effScale = Math.max(0.35, Math.min(2.5, Math.min(scaleW, scaleH)));
+            } else if (fitMode === 'width') {
+              effScale = Math.max(0.35, Math.min(3.0, containerW / unscaledVp.width));
+            }
+          }
+        }
+        const vp = p1.getViewport({ scale: effScale, rotation: totalRot });
+        if (!isCancelled) {
+          setStandardDimensions({
+            width: Math.floor(vp.width),
+            height: Math.floor(vp.height),
+          });
+        }
+      } catch (err) {
+        console.warn('Failed to precalculate standard dimensions:', err);
+      }
+    };
+
+    calcDimensions();
+    return () => {
+      isCancelled = true;
+    };
+  }, [pdfDoc, fitMode, scale, rotation]);
 
   // Study Tools State
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -1713,8 +1804,13 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   fitMode={fitMode}
                   canvasFilterStyle={canvasFilterStyle}
                   containerRef={containerRef}
+                  pageWidth={standardDimensions?.width || 0}
+                  pageHeight={standardDimensions?.height || 0}
+                  readerTheme={readerTheme}
                   isActive={currentPage === pageNum}
-                  onBecomeVisible={(p) => setCurrentPage(p)}
+                  onBecomeVisible={(p) => {
+                    if (currentPage !== p) setCurrentPage(p);
+                  }}
                   onTextExtracted={(p, text) => {
                     if (p === currentPage) setCurrentPageText(text);
                   }}

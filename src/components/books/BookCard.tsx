@@ -5,6 +5,7 @@ import { ETHIOPIAN_SUBJECTS } from '../../data/subjects';
 import { useTranslation } from '../../i18n/useTranslation';
 import { CloudStorageService } from '../../services/cloudStorageService';
 import { LargeFileDownloadModal } from './LargeFileDownloadModal';
+import { getBookCoverUrl } from '../../utils/coverImage';
 import {
   BookOpen,
   DownloadCloud,
@@ -60,6 +61,8 @@ export const BookCard: React.FC<BookCardProps> = ({
     (LucideIcons as any)[book.iconName] ||
     (subjectInfo && (LucideIcons as any)[subjectInfo.icon]) ||
     BookOpen;
+
+  const coverUrl = getBookCoverUrl(book);
 
   const getBookTitle = () => {
     switch (language) {
@@ -220,10 +223,17 @@ export const BookCard: React.FC<BookCardProps> = ({
         </div>
 
         {/* Bottom subtle bar */}
-        <div className="relative z-10 flex items-center justify-between text-[11px] text-white/80 font-medium">
+        <div className="relative z-10 flex items-center justify-between text-[11px] text-white/80 font-medium pr-16">
           <span>{book.editionYear} Edition</span>
           <span>{book.totalUnits} Units</span>
         </div>
+
+        {/* Authentic cover image thumbnail on right edge */}
+        {coverUrl && (
+          <div className="absolute right-3.5 bottom-2.5 w-13 h-18 rounded-md overflow-hidden shadow-2xl border border-white/30 rotate-2 group-hover:rotate-0 group-hover:scale-110 transition-all duration-300 pointer-events-none z-10 bg-slate-950">
+            <img src={coverUrl} alt="" loading="lazy" className="w-full h-full object-cover" />
+          </div>
+        )}
       </div>
 
       {/* Card Content Details */}
