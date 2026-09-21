@@ -95,6 +95,22 @@
   }
 }
 
+/* Gentle infinite horizontal drift for background textbook shelf */
+@keyframes shelfDrift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.shelf-drift-track {
+  width: max-content;
+  animation: shelfDrift 42s linear infinite;
+  will-change: transform;
+}
+
 .luxury-flow-line {
   background: linear-gradient(
     90deg,

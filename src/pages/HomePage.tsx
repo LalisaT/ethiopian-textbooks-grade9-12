@@ -5,6 +5,7 @@ import { EXAM_PRACTICE_QUESTIONS } from '../data/examQuestions';
 import { PlayStoreShelf } from '../components/home/PlayStoreShelf';
 import { InteractiveBookshelf } from '../components/bookshelf/InteractiveBookshelf';
 import { CosmicParticleBackground } from '../components/common/CosmicParticleBackground';
+import { BackgroundDriftingShelf } from '../components/home/BackgroundDriftingShelf';
 import { NativeAdCard } from '../components/ads/NativeAdCard';
 import { StickyBannerAd } from '../components/ads/StickyBannerAd';
 import { AdService } from '../services/adService';
@@ -212,9 +213,13 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           {/* Hero Content Grid: Left Text + Right 3D Bookshelf Animation */}
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            {/* Left Column: Crisp Clean Typography & Action Buttons */}
-            <div className="md:col-span-7 lg:col-span-8 space-y-3.5 sm:space-y-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30 text-[11px] font-black backdrop-blur-md">
+            {/* Left Column: Crisp Clean Typography with Low-Opacity Drifting Shelf Background */}
+            <div className="relative md:col-span-7 lg:col-span-8 space-y-3.5 sm:space-y-4 overflow-hidden rounded-3xl p-3 sm:p-4">
+              {/* Single Horizontal Shelf behind the text block with 0.20 opacity and gentle infinite horizontal drift */}
+              <BackgroundDriftingShelf opacity={0.20} />
+
+              <div className="relative z-10 space-y-3.5 sm:space-y-4">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30 text-[11px] font-black backdrop-blur-md">
                 <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
                 <span>National High School Curriculum • 2026 Edition</span>
               </div>
@@ -251,6 +256,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </div>
               </div>
             </div>
+          </div>
 
             {/* Right Column: 3D Bookshelf Animated Showcase (100% zero text) */}
             <div className="hidden md:flex md:col-span-5 lg:col-span-4 items-center justify-center">
