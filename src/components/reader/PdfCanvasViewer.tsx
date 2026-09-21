@@ -64,8 +64,6 @@ interface ContinuousPdfPageProps {
   fitMode: 'custom' | 'width' | 'page';
   canvasFilterStyle: string;
   containerRef: React.RefObject<HTMLDivElement | null>;
-  pageWidth: number;
-  pageHeight: number;
   readerTheme?: 'normal' | 'sepia' | 'dark' | 'contrast';
   isActive: boolean;
   onBecomeVisible: (pageNumber: number) => void;
@@ -80,8 +78,6 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
   fitMode,
   canvasFilterStyle,
   containerRef,
-  pageWidth,
-  pageHeight,
   readerTheme = 'normal',
   isActive,
   onBecomeVisible,
@@ -91,21 +87,10 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isInViewportRange, setIsInViewportRange] = useState(false);
   const [hasRendered, setHasRendered] = useState(false);
+  const [pageDims, setPageDims] = useState<{ width: number; height: number } | null>(null);
   const renderedKeyRef = useRef<string>('');
 
-  // Use pre-calculated exact dimensions so height never shifts during scrolling
-  const effectiveWidth =
-    pageWidth > 0
-      ? pageWidth
-      : typeof window !== 'undefined'
-      ? Math.min(window.innerWidth - 32, 750)
-      : 750;
-  const effectiveHeight =
-    pageHeight > 0
-      ? pageHeight
-      : Math.floor(effectiveWidth * 1.414);
-
-  // 1. IntersectionObserver for pre-loading pages (generous 1500px prefetch buffer)
+  // 1. IntersectionObserver for pre-loading pages (1200px prefetch buffer)
   useEffect(() => {
     const el = pageWrapperRef.current;
     if (!el) return;
@@ -119,7 +104,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
       },
       {
         root: containerRef.current,
-        rootMargin: '1500px 0px 1500px 0px',
+        rootMargin: '1200px 0px 1200px 0px',
         threshold: 0,
       }
     );
@@ -150,12 +135,11 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
     return () => observer.disconnect();
   }, [pageNumber, containerRef, onBecomeVisible]);
 
-  // 3. Render page to canvas when within viewport pre-load range
-  // NOTE: isActive is NOT in dependencies so active page switches never wipe the canvas
+  // 3. Render page to canvas - 100% of the original page, NEVER CROPPED
   useEffect(() => {
     if (!isInViewportRange || !pdfDoc) return;
 
-    const currentRenderKey = `${scale}-${rotation}-${fitMode}-${pageWidth}-${pageHeight}`;
+    const currentRenderKey = `${scale}-${rotation}-${fitMode}`;
     if (renderedKeyRef.current === currentRenderKey && hasRendered) {
       return;
     }
@@ -176,8 +160,8 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
         if (fitMode === 'page' || fitMode === 'width') {
           if (containerRef.current) {
             const isMobileDevice = window.innerWidth < 768;
-            const horizontalPadding = isMobileDevice ? 16 : 48;
-            const verticalPadding = isMobileDevice ? 24 : 48;
+            const horizontalPadding = isMobileDevice ? 8 : 48;
+            const verticalPadding = isMobileDevice ? 16 : 48;
             const containerW = Math.max(260, containerRef.current.clientWidth - horizontalPadding);
             const containerH = Math.max(300, containerRef.current.clientHeight - verticalPadding);
 
@@ -192,6 +176,10 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
         }
 
         const viewport = page.getViewport({ scale: effectiveScale, rotation: totalRotation });
+        const displayWidth = Math.floor(viewport.width);
+        const displayHeight = Math.floor(viewport.height);
+
+        setPageDims({ width: displayWidth, height: displayHeight });
 
         if (!canvasRef.current || isCancelled) return;
         const canvas = canvasRef.current;
@@ -201,8 +189,8 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
         const outputScale = Math.min(window.devicePixelRatio || 1, 1.75);
         canvas.width = Math.floor(viewport.width * outputScale);
         canvas.height = Math.floor(viewport.height * outputScale);
-        canvas.style.width = `${Math.floor(viewport.width)}px`;
-        canvas.style.height = `${Math.floor(viewport.height)}px`;
+        canvas.style.width = `${displayWidth}px`;
+        canvas.style.height = `${displayHeight}px`;
         canvas.style.maxWidth = '100%';
 
         const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
@@ -236,7 +224,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
         }
       } catch (err: any) {
         if (err.name !== 'RenderingCancelledException') {
-          console.error(`Error rendering continuous page ${pageNumber}:`, err);
+          console.error(`Error rendering page ${pageNumber}:`, err);
         }
       }
     };
@@ -247,7 +235,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
       isCancelled = true;
       if (renderTask) renderTask.cancel();
     };
-  }, [isInViewportRange, pdfDoc, pageNumber, scale, rotation, fitMode, pageWidth, pageHeight]);
+  }, [isInViewportRange, pdfDoc, pageNumber, scale, rotation, fitMode]);
 
   // Use matching paper color so there is never a black-and-white blink
   const paperBgColor =
@@ -266,21 +254,16 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
       className={`w-full flex flex-col items-center justify-center relative ${
         isActive ? 'ring-2 ring-emerald-500/40 rounded-xl' : ''
       }`}
-      style={{
-        width: `${effectiveWidth}px`,
-        height: `${effectiveHeight}px`,
-        maxWidth: '100%',
-      }}
     >
       <div
-        className={`${paperBgColor} rounded-xl shadow-md border border-slate-700/40 relative overflow-hidden flex items-center justify-center ${canvasFilterStyle}`}
+        className={`${paperBgColor} rounded-xl sm:rounded-2xl shadow-xl border border-slate-700/60 relative flex flex-col items-center justify-center max-w-full ${canvasFilterStyle}`}
         style={{
-          width: `${effectiveWidth}px`,
-          height: `${effectiveHeight}px`,
+          width: pageDims ? `${pageDims.width}px` : '100%',
+          minHeight: pageDims ? `${pageDims.height}px` : '480px',
           maxWidth: '100%',
         }}
       >
-        {/* Canvas remains mounted once rendered to completely eliminate reload flashes */}
+        {/* Canvas - displays 100% of original page from top to bottom, ZERO CROPPING */}
         {(isInViewportRange || hasRendered) && (
           <canvas
             ref={canvasRef}
@@ -293,7 +276,8 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
         {/* Paper Skeleton matching the canvas background exactly (ZERO black-white flashing) */}
         {!hasRendered && (
           <div
-            className={`absolute inset-0 flex flex-col items-center justify-center ${paperBgColor} select-none`}
+            className={`w-full flex flex-col items-center justify-center ${paperBgColor} select-none py-32 px-4`}
+            style={{ minHeight: pageDims ? `${pageDims.height}px` : '480px' }}
           >
             <div className={`flex items-center gap-2 text-xs font-mono font-bold ${paperTextColor}`}>
               <Loader2 className="w-4 h-4 animate-spin text-emerald-500/80" />
@@ -349,55 +333,6 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const [fitMode, setFitMode] = useState<'custom' | 'width' | 'page'>(isMobile ? 'width' : 'page');
   const [readerTheme, setReaderTheme] = useState<'normal' | 'sepia' | 'dark' | 'contrast'>('normal');
   const [showZoomToast, setShowZoomToast] = useState(false);
-  const [standardDimensions, setStandardDimensions] = useState<{ width: number; height: number } | null>(null);
-
-  // Pre-calculate exact page dimensions to guarantee 100% stable scrolling without layout jitter
-  useEffect(() => {
-    if (!pdfDoc) return;
-    let isCancelled = false;
-
-    const calcDimensions = async () => {
-      try {
-        const p1 = await pdfDoc.getPage(1);
-        if (isCancelled) return;
-        const intrinsicRotate = (p1 as any).rotate || 0;
-        const totalRot = (intrinsicRotate + rotation) % 360;
-        const unscaledVp = p1.getViewport({ scale: 1, rotation: totalRot });
-
-        let effScale = scale;
-        if (fitMode === 'page' || fitMode === 'width') {
-          if (containerRef.current) {
-            const isMobileDevice = window.innerWidth < 768;
-            const horizontalPadding = isMobileDevice ? 16 : 48;
-            const verticalPadding = isMobileDevice ? 24 : 48;
-            const containerW = Math.max(260, containerRef.current.clientWidth - horizontalPadding);
-            const containerH = Math.max(300, containerRef.current.clientHeight - verticalPadding);
-            if (fitMode === 'page') {
-              const scaleW = containerW / unscaledVp.width;
-              const scaleH = containerH / unscaledVp.height;
-              effScale = Math.max(0.35, Math.min(2.5, Math.min(scaleW, scaleH)));
-            } else if (fitMode === 'width') {
-              effScale = Math.max(0.35, Math.min(3.0, containerW / unscaledVp.width));
-            }
-          }
-        }
-        const vp = p1.getViewport({ scale: effScale, rotation: totalRot });
-        if (!isCancelled) {
-          setStandardDimensions({
-            width: Math.floor(vp.width),
-            height: Math.floor(vp.height),
-          });
-        }
-      } catch (err) {
-        console.warn('Failed to precalculate standard dimensions:', err);
-      }
-    };
-
-    calcDimensions();
-    return () => {
-      isCancelled = true;
-    };
-  }, [pdfDoc, fitMode, scale, rotation]);
 
   // Study Tools State
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -1804,8 +1739,6 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   fitMode={fitMode}
                   canvasFilterStyle={canvasFilterStyle}
                   containerRef={containerRef}
-                  pageWidth={standardDimensions?.width || 0}
-                  pageHeight={standardDimensions?.height || 0}
                   readerTheme={readerTheme}
                   isActive={currentPage === pageNum}
                   onBecomeVisible={(p) => {
