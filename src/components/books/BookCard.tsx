@@ -5,24 +5,19 @@ import { ETHIOPIAN_SUBJECTS } from '../../data/subjects';
 import { useTranslation } from '../../i18n/useTranslation';
 import { CloudStorageService } from '../../services/cloudStorageService';
 import { LargeFileDownloadModal } from './LargeFileDownloadModal';
-import { getBookCoverUrl } from '../../utils/coverImage';
+import { BookCoverThumbnail } from './BookCoverThumbnail';
 import {
   BookOpen,
   DownloadCloud,
   CheckCircle,
-  Clock,
-  Sparkles,
   Edit3,
   Trash2,
-  FileText,
-  Zap,
   Loader2,
   Check,
   GraduationCap,
   Atom,
   TrendingUp,
 } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
 
 interface BookCardProps {
   book: Book;
@@ -55,14 +50,6 @@ export const BookCard: React.FC<BookCardProps> = ({
 
   const regionInfo = ETHIOPIAN_REGIONS.find((r) => r.id === book.regionId);
   const subjectInfo = ETHIOPIAN_SUBJECTS.find((s) => s.id === book.subject);
-
-  // Dynamic icon
-  const IconComponent =
-    (LucideIcons as any)[book.iconName] ||
-    (subjectInfo && (LucideIcons as any)[subjectInfo.icon]) ||
-    BookOpen;
-
-  const coverUrl = getBookCoverUrl(book);
 
   const getBookTitle = () => {
     switch (language) {
@@ -111,11 +98,13 @@ export const BookCard: React.FC<BookCardProps> = ({
     }
   };
 
+  const currentProgress = progressPercent || readingProgress?.percentComplete || 0;
+
   return (
-    <div className="group relative bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+    <div className="group relative bg-white dark:bg-slate-900/95 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-slate-800/90 hover:border-blue-500/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between active:scale-[0.99]">
       {/* Admin Action Buttons */}
       {isAdmin && (
-        <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1 bg-black/70 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-lg">
+        <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1 bg-black/80 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-lg">
           {onEditBook && (
             <button
               onClick={(e) => {
@@ -145,161 +134,125 @@ export const BookCard: React.FC<BookCardProps> = ({
         </div>
       )}
 
-      {/* Book Card Header / Visual Book Spine */}
-      <div className={`relative h-44 bg-gradient-to-br ${book.coverColor} p-5 flex flex-col justify-between overflow-hidden cursor-pointer`} onClick={handleOpenReader}>
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+      <div>
+        {/* Book Cover Container (Aspect Ratio 3:4) */}
+        <div
+          onClick={handleOpenReader}
+          className="relative aspect-[3/4] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 mb-2 sm:mb-2.5 shadow-md border border-slate-800/60 cursor-pointer"
+        >
+          <BookCoverThumbnail
+            book={book}
+            imgClassName="group-hover:scale-105 transition-transform duration-300"
+          />
 
-        {/* Top badges */}
-        <div className="relative z-10 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5">
-            <span className="px-2.5 py-1 bg-black/40 backdrop-blur-md text-white font-extrabold text-xs rounded-xl border border-white/20">
-              {t('grade')} {book.grade}
-            </span>
-            {book.stream && book.stream !== 'all' && (
-              <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-lg backdrop-blur-md border flex items-center gap-1 ${
-                book.stream === 'natural_science' 
-                  ? 'bg-cyan-500/40 text-cyan-100 border-cyan-300/40' 
-                  : book.stream === 'social_science' 
-                  ? 'bg-rose-500/40 text-rose-100 border-rose-300/40'
-                  : 'bg-blue-500/40 text-blue-100 border-blue-300/40'
+          {/* Grade Level Badge */}
+          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 px-1.5 sm:px-2 py-0.5 rounded-lg bg-slate-950/85 backdrop-blur-md text-amber-300 text-[9px] sm:text-[10px] font-black border border-amber-500/30 shadow-sm">
+            Grade {book.grade}
+          </div>
+
+          {/* Top Right Badges: TG / Stream / Language / Offline */}
+          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex items-center gap-1 z-10">
+            {book.bookType === 'teacher_guide' ? (
+              <span className="px-1.5 py-0.5 bg-amber-400 text-slate-950 text-[9px] sm:text-[10px] font-black rounded-lg shadow-sm flex items-center gap-0.5">
+                <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <span>TG</span>
+              </span>
+            ) : book.stream && book.stream !== 'all' && book.stream !== 'common' ? (
+              <span className={`px-1.5 py-0.5 text-[8px] sm:text-[9px] font-black rounded-lg backdrop-blur-md border flex items-center gap-0.5 ${
+                book.stream === 'natural_science'
+                  ? 'bg-cyan-950/85 text-cyan-300 border-cyan-500/30'
+                  : 'bg-rose-950/85 text-rose-300 border-rose-500/30'
               }`}>
                 {book.stream === 'natural_science' ? (
                   <>
                     <Atom className="w-2.5 h-2.5" />
-                    <span>Natural</span>
-                  </>
-                ) : book.stream === 'social_science' ? (
-                  <>
-                    <TrendingUp className="w-2.5 h-2.5" />
-                    <span>Social</span>
+                    <span className="hidden xs:inline">Natural</span>
                   </>
                 ) : (
-                  <span>Common</span>
+                  <>
+                    <TrendingUp className="w-2.5 h-2.5" />
+                    <span className="hidden xs:inline">Social</span>
+                  </>
                 )}
               </span>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5">
-            {book.language && book.language !== 'en' && (
-              <span className="px-2 py-0.5 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold rounded-lg tracking-wider uppercase">
-                {book.language}
-              </span>
-            )}
-            {book.bookType === 'teacher_guide' ? (
-              <span className="px-2 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black rounded-lg shadow-sm flex items-center gap-1">
-                <GraduationCap className="w-3 h-3" />
-                <span>Teacher Guide</span>
-              </span>
-            ) : (
-              <span className="px-2 py-0.5 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-black rounded-lg shadow-sm flex items-center gap-1">
-                <BookOpen className="w-3 h-3" />
-                <span>Student Book</span>
-              </span>
-            )}
+            ) : null}
+
             {isOffline && (
-              <span
-                className="p-1 bg-blue-600 text-white rounded-full shadow-sm"
-                title="Saved Offline"
-              >
-                <CheckCircle className="w-3.5 h-3.5" />
+              <span className="p-1 bg-blue-600 text-white rounded-lg shadow-md" title="Saved Offline">
+                <Check className="w-2.5 h-2.5 stroke-[3]" />
               </span>
             )}
           </div>
-        </div>
 
-        {/* Center icon / subject illustration */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-inner">
-            <IconComponent className="w-6 h-6" />
-          </div>
-          <div className="text-white">
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-white/80">
-              {subjectInfo ? subjectInfo.name : book.subject}
-            </span>
-            <div className="text-xs font-medium text-white/90">
-              {book.curriculum}
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom subtle bar */}
-        <div className="relative z-10 flex items-center justify-between text-[11px] text-white/80 font-medium pr-16">
-          <span>{book.editionYear} Edition</span>
-          <span>{book.totalUnits} Units</span>
-        </div>
-
-        {/* Authentic cover image thumbnail on right edge */}
-        {coverUrl && (
-          <div className="absolute right-3.5 bottom-2.5 w-13 h-18 rounded-md overflow-hidden shadow-2xl border border-white/30 rotate-2 group-hover:rotate-0 group-hover:scale-110 transition-all duration-300 pointer-events-none z-10 bg-slate-950">
-            <img src={coverUrl} alt="" loading="lazy" className="w-full h-full object-cover" />
-          </div>
-        )}
-      </div>
-
-      {/* Card Content Details */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-        <div>
-          <h3
-            onClick={() => (onSelectBook ? onSelectBook(book) : handleOpenReader())}
-            className="font-extrabold text-base text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-sky-400 transition-colors line-clamp-2 cursor-pointer leading-snug"
-          >
-            {getBookTitle()}
-          </h3>
-
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-            {book.description}
-          </p>
-        </div>
-
-        {/* Reading Progress Indicator */}
-        {(progressPercent || (readingProgress && readingProgress.percentComplete > 0)) && (
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
-              <span>Progress</span>
-              <span>{progressPercent || readingProgress?.percentComplete}%</span>
-            </div>
-            <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+          {/* Reading Progress Bar (if in progress) */}
+          {currentProgress > 0 && (
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-800/80">
               <div
-                className="h-full bg-sky-400 rounded-full transition-all duration-300"
-                style={{ width: `${progressPercent || readingProgress?.percentComplete}%` }}
+                className="h-full bg-sky-400"
+                style={{ width: `${currentProgress}%` }}
               />
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Action Buttons */}
-        <div className="pt-2">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleOpenReader}
-              className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-2xl text-xs font-black transition-all shadow-md flex items-center justify-center gap-2 shadow-blue-600/25"
-            >
-              <BookOpen className="w-4 h-4" />
-              <span>Read Textbook</span>
-            </button>
+        {/* Subject & Stream Info */}
+        <div className="flex items-center justify-between gap-1 mb-1 text-[10px] sm:text-xs">
+          <span className="font-bold text-blue-600 dark:text-sky-400 truncate uppercase tracking-wider text-[9px] sm:text-[11px]">
+            {subjectInfo ? subjectInfo.name : book.subject}
+          </span>
+          <span className="text-slate-400 text-[9px] sm:text-[10px] shrink-0 font-medium">
+            {book.editionYear}
+          </span>
+        </div>
 
-            <button
-              onClick={handleDownloadClick}
-              disabled={isDownloading}
-              className={`p-2.5 rounded-2xl border transition-all active:scale-90 ${
-                isOffline
-                  ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 border-blue-300'
-                  : 'text-slate-400 hover:text-blue-600 dark:hover:text-white border-slate-200 dark:border-slate-800 hover:bg-slate-100'
-              }`}
-              title={isOffline ? 'Saved to Device (Click to toggle)' : 'Download PDF to Mobile Storage & Cache in App'}
-            >
-              {isDownloading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-              ) : (
-                <DownloadCloud className="w-4 h-4" />
-              )}
-            </button>
-          </div>
+        {/* Book Title */}
+        <h3
+          onClick={() => (onSelectBook ? onSelectBook(book) : handleOpenReader())}
+          className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 cursor-pointer leading-tight min-h-[2rem] sm:min-h-[2.5rem]"
+        >
+          {getBookTitle()}
+        </h3>
 
-          <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-            <span>{book.totalEstimatedPages || 210} Pages</span>
-            <span>{book.fileSizeMb} MB</span>
-          </div>
+        {/* Desktop Description */}
+        <p className="hidden sm:block mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+          {book.description}
+        </p>
+      </div>
+
+      {/* Action Buttons & Card Footer */}
+      <div className="pt-2 sm:pt-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <button
+            onClick={handleOpenReader}
+            className="flex-1 py-1.5 sm:py-2 px-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-black transition-all shadow-md shadow-blue-600/25 flex items-center justify-center gap-1 sm:gap-1.5"
+          >
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
+            <span>Read</span>
+          </button>
+
+          <button
+            onClick={handleDownloadClick}
+            disabled={isDownloading}
+            className={`p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border transition-all active:scale-90 shrink-0 ${
+              isOffline
+                ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 border-blue-300 dark:border-blue-700'
+                : 'text-slate-400 hover:text-blue-600 dark:hover:text-white border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+            }`}
+            title={isOffline ? 'Saved to Device (Click to toggle)' : 'Download PDF to Mobile Storage & Cache in App'}
+          >
+            {isDownloading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />
+            ) : isOffline ? (
+              <CheckCircle className="w-3.5 h-3.5 text-sky-400" />
+            ) : (
+              <DownloadCloud className="w-3.5 h-3.5" />
+            )}
+          </button>
+        </div>
+
+        <div className="mt-1.5 flex items-center justify-between text-[9px] sm:text-[10px] text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+          <span>{book.totalEstimatedPages || 210} Pages</span>
+          <span>{book.fileSizeMb} MB</span>
         </div>
       </div>
 
