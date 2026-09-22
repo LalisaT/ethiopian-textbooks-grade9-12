@@ -18,15 +18,15 @@ export const AudioPlayerControl: React.FC<AudioPlayerControlProps> = ({
   if (!isPlaying) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white rounded-3xl p-4 shadow-2xl border border-emerald-500/50 backdrop-blur-xl flex items-center gap-4 max-w-sm animate-in slide-in-from-bottom-4 duration-300">
-      <div className="w-10 h-10 rounded-2xl bg-emerald-500 flex items-center justify-center text-slate-950 font-bold shrink-0 animate-pulse">
+    <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white rounded-3xl p-4 shadow-2xl border border-blue-500/50 backdrop-blur-xl flex items-center gap-4 max-w-sm animate-in slide-in-from-bottom-4 duration-300">
+      <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold shrink-0 animate-pulse">
         <Volume2 className="w-5 h-5 text-white" />
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+          <span className="inline-block w-2 h-2 rounded-full bg-sky-400 animate-ping" />
+          <span className="text-[11px] font-bold text-sky-400 uppercase tracking-wider">
             Audio Reader Active
           </span>
         </div>

@@ -108,13 +108,13 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
         <div className="relative aspect-video w-full bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 flex flex-col items-center justify-center p-6 text-center overflow-hidden">
           {/* Animated Background Visual */}
           <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <div className="absolute -top-10 -left-10 w-48 h-48 bg-emerald-500 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -top-10 -left-10 w-48 h-48 bg-blue-600 rounded-full blur-3xl animate-pulse" />
             <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-amber-500 rounded-full blur-3xl animate-pulse" />
           </div>
 
           {!isCompleted ? (
             <div className="relative z-10 space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto shadow-lg animate-bounce">
+              <div className="w-14 h-14 rounded-2xl bg-blue-500/20 text-sky-400 border border-blue-500/40 flex items-center justify-center mx-auto shadow-lg animate-bounce">
                 <Play className="w-6 h-6 fill-current" />
               </div>
 
@@ -133,17 +133,17 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
 
               {/* Countdown Badge */}
               <div className="inline-block px-4 py-1.5 rounded-2xl bg-slate-900 border border-slate-700 text-xs font-black text-white shadow-md">
-                Reward in <span className="text-emerald-400 font-mono text-sm">{secondsLeft}s</span>
+                Reward in <span className="text-sky-400 font-mono text-sm">{secondsLeft}s</span>
               </div>
             </div>
           ) : (
             <div className="relative z-10 space-y-3 animate-in zoom-in-95 duration-200">
-              <div className="w-16 h-16 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center mx-auto shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mx-auto shadow-xl">
                 <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
               </div>
 
               <div>
-                <h4 className="text-base sm:text-lg font-black text-emerald-400">
+                <h4 className="text-base sm:text-lg font-black text-sky-400">
                   Reward Earned!
                 </h4>
                 <p className="text-xs text-slate-300">
@@ -156,7 +156,7 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
           {/* Video Linear Progress Bar */}
           <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-slate-800">
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 shadow-sm"
+              className="h-full bg-gradient-to-r from-blue-600 to-sky-400 transition-all duration-300 shadow-sm"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -168,7 +168,7 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
             {!isCompleted ? (
               <span>Watch full video to unlock your exam questions</span>
             ) : (
-              <span className="text-emerald-400 font-bold">Ready to start your exam</span>
+              <span className="text-sky-400 font-bold">Ready to start your exam</span>
             )}
           </div>
 
@@ -177,7 +177,7 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
             disabled={!isCompleted}
             className={`px-5 py-2.5 rounded-2xl font-black text-xs transition-all active:scale-95 flex items-center gap-1.5 ${
               isCompleted
-                ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/25 cursor-pointer'
+                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25 cursor-pointer'
                 : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-60'
             }`}
           >
@@ -205,7 +205,7 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
             <div className="flex items-center gap-2.5 w-full max-w-xs pt-2">
               <button
                 onClick={() => setShowExitWarning(false)}
-                className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all active:scale-95"
+                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition-all active:scale-95"
               >
                 Keep Watching ({secondsLeft}s)
               </button>

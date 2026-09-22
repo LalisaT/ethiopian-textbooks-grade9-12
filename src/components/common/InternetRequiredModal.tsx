@@ -180,7 +180,7 @@ export const InternetRequiredModal: React.FC<InternetRequiredModalProps> = ({
           <button
             onClick={handleRetry}
             disabled={isChecking}
-            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition flex items-center justify-center gap-2 disabled:opacity-60"
+            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-extrabold text-sm shadow-lg shadow-blue-500/20 active:scale-[0.98] transition flex items-center justify-center gap-2 disabled:opacity-60"
           >
             <RefreshCw className={`w-4 h-4 ${isChecking ? 'animate-spin' : ''}`} />
             <span>{isChecking ? localizedContent.checkingBtn : localizedContent.retryBtn}</span>

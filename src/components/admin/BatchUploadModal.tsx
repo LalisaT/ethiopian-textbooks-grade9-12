@@ -193,8 +193,8 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
           )}
 
           {/* Persistent Storage Badge Notice */}
-          <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <div className="p-3.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs text-emerald-800 dark:text-sky-300 flex items-center gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-sky-400 shrink-0" />
             <span>
               <strong>100% Persistent Storage:</strong> All uploaded books and PDFs are saved securely in local device storage and remain available offline.
             </span>
@@ -256,7 +256,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                 onClick={() => folderInputRef.current?.click()}
                 className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition-colors flex items-center gap-2"
               >
-                <FolderPlus className="w-4 h-4 text-emerald-400" />
+                <FolderPlus className="w-4 h-4 text-sky-400" />
                 <span>Select Whole Folder</span>
               </button>
             </div>
@@ -270,7 +270,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                   <span className="font-extrabold text-sm text-slate-900 dark:text-white">
                     Queued Books to Upload ({drafts.length})
                   </span>
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                  <span className="text-xs text-emerald-600 dark:text-sky-400 font-bold flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     <span>Metadata Auto-Detected</span>
                   </span>
@@ -293,7 +293,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                       <Loader2 className="w-4 h-4 animate-spin text-amber-500" />
                       <span>
                         Publishing & Saving to Persistent Storage ({uploadProgress.current} / {uploadProgress.total}):{' '}
-                        <span className="text-emerald-600 dark:text-emerald-400">{uploadProgress.currentTitle}</span>
+                        <span className="text-emerald-600 dark:text-sky-400">{uploadProgress.currentTitle}</span>
                       </span>
                     </span>
                     <span>
@@ -302,7 +302,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                   </div>
                   <div className="w-full bg-amber-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
                     <div
-                      className="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-blue-500 to-sky-400 h-full rounded-full transition-all duration-300"
                       style={{
                         width: `${(uploadProgress.current / Math.max(1, uploadProgress.total)) * 100}%`,
                       }}
@@ -319,7 +319,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
                     className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-black text-xs shrink-0">
                         {draft.grade}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -443,7 +443,7 @@ export const BatchUploadModal: React.FC<BatchUploadModalProps> = ({
               type="button"
               onClick={handleUploadAll}
               disabled={isUploading}
-              className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black rounded-xl shadow-lg transition-transform active:scale-95 flex items-center gap-2"
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black rounded-xl shadow-lg transition-transform active:scale-95 flex items-center gap-2"
             >
               {isUploading ? (
                 <>

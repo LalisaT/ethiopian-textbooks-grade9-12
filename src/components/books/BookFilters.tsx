@@ -56,59 +56,59 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
     searchQuery.trim() !== '';
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 border border-slate-200/90 dark:border-slate-800/90 shadow-sm space-y-4">
+    <div className="bg-slate-900/90 dark:bg-slate-950/90 rounded-3xl p-4 sm:p-5 border border-slate-800 shadow-xl space-y-4">
       {/* Search and Quick Reset */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="flex-1">
           <SearchBar
             value={searchQuery}
             onChange={onSearchChange}
-            placeholder="Search Grade 9-12 textbooks, teacher guides, subjects..."
+            placeholder="Search books, subjects, guides..."
             className="w-full"
           />
         </div>
         {hasActiveFilters && (
           <button
             onClick={onResetFilters}
-            className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-2xl transition-all active:scale-95 shrink-0"
+            className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 text-xs font-bold text-rose-400 bg-rose-950/50 hover:bg-rose-900/50 border border-rose-800/50 rounded-2xl transition-all active:scale-95 shrink-0"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>Reset Filters</span>
+            <span>Reset</span>
           </button>
         )}
       </div>
 
-      {/* Book Type Selector: All Resources / Student Textbooks / Teacher Guides */}
+      {/* Book Type Segmented Selector: All Books / Textbooks / Teacher Guides */}
       {onSelectBookType && (
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/90 rounded-2xl">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-950/80 rounded-2xl border border-slate-800">
           <button
             onClick={() => onSelectBookType('all')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
               selectedBookType === 'all'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25 ring-1 ring-sky-400/30'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>All Curriculum</span>
+            <span>All Books</span>
           </button>
           <button
             onClick={() => onSelectBookType('textbook')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
               selectedBookType === 'textbook'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25 ring-1 ring-sky-400/30'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Student Textbooks</span>
+            <span>Textbooks</span>
           </button>
           <button
             onClick={() => onSelectBookType('teacher_guide')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
               selectedBookType === 'teacher_guide'
-                ? 'bg-amber-500 text-slate-950 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25 ring-1 ring-sky-400/30'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             <GraduationCap className="w-3.5 h-3.5" />
@@ -121,13 +121,10 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
       {onSelectStream && (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
-              <Layers className="w-3 h-3 text-emerald-500" />
-              <span>Academic Stream (Grades 9–12)</span>
+            <label className="text-[11px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-sky-400" />
+              <span>Stream</span>
             </label>
-            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-              National MOE Curriculum
-            </span>
           </div>
           <div className="flex sm:grid sm:grid-cols-4 gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
             {streams.map((s) => {
@@ -138,8 +135,8 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
                   onClick={() => onSelectStream(s.id)}
                   className={`py-2 px-3.5 rounded-2xl text-xs font-black transition-all text-center flex items-center justify-center gap-1.5 shrink-0 sm:shrink active:scale-95 whitespace-nowrap ${
                     isSelected
-                      ? 'bg-slate-900 text-white dark:bg-emerald-600 dark:text-white shadow-md ring-2 ring-emerald-500/40'
-                      : 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25 ring-1 ring-sky-400/40'
+                      : 'bg-slate-800/80 text-slate-300 border border-slate-700/60 hover:border-slate-600 hover:text-white'
                   }`}
                 >
                   <span>{s.label}</span>
@@ -152,8 +149,8 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
 
       {/* Grade Selector Pills (Grade 9 - 12) */}
       <div>
-        <label className="text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
-          Select Grade Level
+        <label className="text-[11px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">
+          Grade Level
         </label>
         <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
           {grades.map((g) => {
@@ -164,29 +161,29 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
                 onClick={() => onSelectGrade(g)}
                 className={`py-2 sm:py-2.5 px-2 rounded-2xl text-xs font-black transition-all text-center flex flex-col items-center justify-center gap-0.5 active:scale-95 ${
                   isSelected
-                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25 ring-2 ring-emerald-500'
-                    : 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25 ring-2 ring-sky-400/40'
+                    : 'bg-slate-800/80 text-slate-300 border border-slate-700/60 hover:border-slate-600 hover:text-white'
                 }`}
               >
-                <span>{g === 'all' ? t('allGrades') : `Grade ${g}`}</span>
+                <span>{g === 'all' ? 'All' : `Grade ${g}`}</span>
                 {g === 12 && (
-                  <span className={`text-[9px] font-extrabold ${isSelected ? 'text-amber-200' : 'text-amber-500'}`}>
+                  <span className={`text-[9px] font-extrabold ${isSelected ? 'text-amber-300' : 'text-amber-400'}`}>
                     EUEE
                   </span>
                 )}
                 {g === 11 && (
-                  <span className={`text-[9px] font-semibold ${isSelected ? 'text-emerald-100' : 'text-slate-400'}`}>
+                  <span className={`text-[9px] font-semibold ${isSelected ? 'text-sky-200' : 'text-slate-400'}`}>
                     Prep
                   </span>
                 )}
                 {g === 10 && (
-                  <span className={`text-[9px] font-semibold ${isSelected ? 'text-sky-100' : 'text-slate-400'}`}>
-                    Secondary
+                  <span className={`text-[9px] font-semibold ${isSelected ? 'text-sky-200' : 'text-slate-400'}`}>
+                    Sec
                   </span>
                 )}
                 {g === 9 && (
-                  <span className={`text-[9px] font-semibold ${isSelected ? 'text-emerald-100' : 'text-slate-400'}`}>
-                    Freshman
+                  <span className={`text-[9px] font-semibold ${isSelected ? 'text-sky-200' : 'text-slate-400'}`}>
+                    Fresh
                   </span>
                 )}
               </button>
@@ -196,17 +193,17 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
       </div>
 
       {/* Subject Filter Row */}
-      <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-        <label className="text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
-          Filter by Subject
+      <div className="pt-2 border-t border-slate-800">
+        <label className="text-[11px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">
+          Subject
         </label>
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
           <button
             onClick={() => onSelectSubject('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap active:scale-95 shrink-0 ${
               selectedSubject === 'all'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-slate-800/80 text-slate-300 border border-slate-700/60 hover:text-white hover:border-slate-600'
             }`}
           >
             All Subjects
@@ -219,8 +216,8 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
                 onClick={() => onSelectSubject(s.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap active:scale-95 shrink-0 ${
                   isSelected
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-800/80 text-slate-300 border border-slate-700/60 hover:text-white hover:border-slate-600'
                 }`}
               >
                 {language === 'am' ? s.nameAmharic : language === 'om' ? s.nameOromo : s.name}

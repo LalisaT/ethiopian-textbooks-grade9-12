@@ -24,7 +24,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     >
       {/* Subtle luxury ambient glow */}
       {showGlow && (
-        <div className={`absolute inset-0 ${dimensions} bg-gradient-to-tr from-emerald-500/30 via-amber-500/20 to-teal-500/30 blur-md pointer-events-none`} />
+        <div className={`absolute inset-0 ${dimensions} bg-gradient-to-tr from-blue-600/30 via-indigo-500/20 to-sky-500/30 blur-md pointer-events-none`} />
       )}
 
       {/* Official 3D Wisdom Book & Graduation Cap Icon */}

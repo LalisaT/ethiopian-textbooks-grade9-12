@@ -70,14 +70,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               }}
               className={`relative flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-150 active:scale-90 min-w-[58px] ${
                 isActive
-                  ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+                  ? 'text-blue-600 dark:text-sky-400 font-bold'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               <div className="relative">
                 <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
                 {tab.badge !== undefined && (
-                  <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 bg-emerald-600 text-white text-[10px] font-black rounded-full shadow-sm animate-pulse">
+                  <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 bg-blue-600 text-white text-[10px] font-black rounded-full shadow-sm animate-pulse">
                     {tab.badge}
                   </span>
                 )}
@@ -86,7 +86,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 {tab.label}
               </span>
               {isActive && (
-                <span className="w-1 h-1 rounded-full bg-emerald-600 dark:bg-emerald-400 mt-0.5" />
+                <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-sky-400 mt-0.5" />
               )}
             </button>
           );

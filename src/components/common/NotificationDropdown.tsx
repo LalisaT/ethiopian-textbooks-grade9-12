@@ -68,7 +68,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
       case 'welcome':
         return <Sparkles className="w-4 h-4 text-yellow-400" />;
       case 'download':
-        return <DownloadCloud className="w-4 h-4 text-emerald-400" />;
+        return <DownloadCloud className="w-4 h-4 text-sky-400" />;
       case 'exam_alert':
         return <Award className="w-4 h-4 text-amber-400" />;
       default:
@@ -86,7 +86,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
         }}
         className={`relative w-9 h-9 rounded-xl border transition-all flex items-center justify-center active:scale-95 shadow-xs ${
           isOpen
-            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'
+            ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 border-blue-300 dark:border-blue-800'
             : 'text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 bg-slate-100 dark:bg-slate-800 border-slate-200/80 dark:border-slate-700/80'
         }`}
         title="App & Study Notifications"
@@ -94,8 +94,8 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-600 text-white text-[9px] font-black items-center justify-center ring-2 ring-white dark:ring-slate-900">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-600 text-white text-[9px] font-black items-center justify-center ring-2 ring-white dark:ring-slate-900">
               {unreadCount}
             </span>
           </span>
@@ -108,12 +108,12 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           {/* Header */}
           <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/80">
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <Bell className="w-4 h-4 text-blue-600 dark:text-sky-400" />
               <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
                 Notifications
               </h3>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] rounded-full">
+                <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 font-bold text-[10px] rounded-full">
                   {unreadCount} new
                 </span>
               )}
@@ -124,7 +124,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                 <>
                   <button
                     onClick={handleMarkAllRead}
-                    className="p-1 text-xs text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                    className="p-1 text-xs text-slate-500 hover:text-blue-600 dark:hover:text-sky-400 transition-colors"
                     title="Mark all as read"
                   >
                     <Check className="w-3.5 h-3.5" />
@@ -162,7 +162,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
               </button>
             </div>
           ) : (
-            <div className="px-4 py-2.5 bg-emerald-50/50 dark:bg-emerald-950/20 border-b border-emerald-200/40 dark:border-emerald-800/40 flex items-center gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-400 font-bold">
+            <div className="px-4 py-2.5 bg-blue-50/50 dark:bg-blue-950/20 border-b border-blue-200/40 dark:border-blue-800/40 flex items-center gap-1.5 text-[11px] text-blue-700 dark:text-sky-400 font-bold">
               <CheckCircle className="w-3.5 h-3.5" />
               <span>Device Push Notifications Active</span>
             </div>
@@ -189,7 +189,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                   }}
                   className={`p-4 transition-all cursor-pointer flex gap-3 items-start group ${
                     !n.read
-                      ? 'bg-emerald-50/30 dark:bg-emerald-950/20 hover:bg-emerald-100/40 dark:hover:bg-emerald-900/30'
+                      ? 'bg-blue-50/30 dark:bg-blue-950/20 hover:bg-blue-100/40 dark:hover:bg-blue-900/30'
                       : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
                   }`}
                 >
@@ -198,11 +198,11 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                   </div>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-extrabold text-xs text-slate-900 dark:text-white leading-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      <h4 className="font-extrabold text-xs text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">
                         {n.title}
                       </h4>
                       {!n.read && (
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0" />
                       )}
                     </div>
                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -216,7 +216,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                           minute: '2-digit',
                         })}
                       </span>
-                      <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-[10px] font-bold text-blue-600 dark:text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity">
                         Open &rarr;
                       </span>
                     </div>

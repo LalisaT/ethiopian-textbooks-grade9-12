@@ -27,7 +27,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
   const [editingNoteId, setEditingNoteId] = useState<string | undefined>(undefined);
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
-  const [colorTag, setColorTag] = useState<string>('emerald');
+  const [colorTag, setColorTag] = useState<string>('blue');
 
   if (!isOpen) return null;
 
@@ -35,7 +35,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
     setEditingNoteId(undefined);
     setNoteTitle(`Unit ${unitNumber} Key Insights`);
     setNoteContent('');
-    setColorTag('emerald');
+    setColorTag('blue');
     setIsEditing(true);
   };
 
@@ -43,7 +43,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
     setEditingNoteId(note.id);
     setNoteTitle(note.title);
     setNoteContent(note.content);
-    setColorTag(note.colorTag || 'emerald');
+    setColorTag(note.colorTag || 'blue');
     setIsEditing(true);
   };
 
@@ -126,7 +126,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
     },
   };
 
-  const activeTheme = tagColorThemes[colorTag] || tagColorThemes.emerald;
+  const activeTheme = tagColorThemes[colorTag] || tagColorThemes.blue;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-xs flex justify-end animate-in fade-in duration-200">
@@ -134,7 +134,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
         {/* Drawer Header */}
         <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-sky-400 flex items-center justify-center font-bold">
               <FileText className="w-4 h-4" />
             </div>
             <div>
@@ -219,9 +219,9 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
           ) : (
             <button
               onClick={handleStartAdd}
-              className="w-full py-3 px-4 border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-2xl text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 transition-all shadow-xs"
+              className="w-full py-3 px-4 border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-2xl text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 hover:bg-blue-50/50 dark:hover:bg-blue-950/30 transition-all shadow-xs"
             >
-              <Plus className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <Plus className="w-4 h-4 text-blue-600 dark:text-sky-400" />
               <span>{t('addNote')}</span>
             </button>
           )}
@@ -235,7 +235,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
           ) : (
             <div className="space-y-3">
               {notes.map((n) => {
-                const noteTheme = tagColorThemes[n.colorTag || 'emerald'] || tagColorThemes.emerald;
+                const noteTheme = tagColorThemes[n.colorTag || 'blue'] || tagColorThemes.blue;
                 return (
                   <div
                     key={n.id}
@@ -254,7 +254,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
                         <button
                           type="button"
                           onClick={() => handleStartEdit(n)}
-                          className="p-1 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-white/80 dark:hover:bg-slate-800"
+                          className="p-1 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-white/80 dark:hover:bg-slate-800"
                           title="Edit Note"
                         >
                           <Edit2 className="w-3.5 h-3.5" />

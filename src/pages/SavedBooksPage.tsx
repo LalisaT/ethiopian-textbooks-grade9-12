@@ -68,7 +68,7 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
       {/* Page Header */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2.5">
-          <Bookmark className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+          <Bookmark className="w-7 h-7 text-blue-600 dark:text-sky-400" />
           <span>{t('savedBooks')}</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -82,14 +82,14 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
           onClick={() => setActiveTab('offline')}
           className={`pb-3 flex items-center gap-2 transition-colors relative ${
             activeTab === 'offline'
-              ? 'text-emerald-600 dark:text-emerald-400'
+              ? 'text-blue-600 dark:text-sky-400'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <DownloadCloud className="w-4 h-4" />
           <span>Offline Books ({offlineBooks.length})</span>
           {activeTab === 'offline' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
           )}
         </button>
 
@@ -97,14 +97,14 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
           onClick={() => setActiveTab('bookmarks')}
           className={`pb-3 flex items-center gap-2 transition-colors relative ${
             activeTab === 'bookmarks'
-              ? 'text-emerald-600 dark:text-emerald-400'
+              ? 'text-blue-600 dark:text-sky-400'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <Bookmark className="w-4 h-4" />
           <span>{t('bookmarks')} ({bookmarks.length})</span>
           {activeTab === 'bookmarks' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
           )}
         </button>
 
@@ -112,14 +112,14 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
           onClick={() => setActiveTab('notes')}
           className={`pb-3 flex items-center gap-2 transition-colors relative ${
             activeTab === 'notes'
-              ? 'text-emerald-600 dark:text-emerald-400'
+              ? 'text-blue-600 dark:text-sky-400'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <FileText className="w-4 h-4" />
           <span>{t('notes')} ({notes.length})</span>
           {activeTab === 'notes' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
           )}
         </button>
       </div>
@@ -128,8 +128,8 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
       {activeTab === 'offline' && (
         <div className="space-y-6">
           {/* Mobile Storage Device Banner */}
-          <div className="p-5 rounded-3xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-600/10 border border-emerald-300 dark:border-emerald-800 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
+          <div className="p-5 rounded-3xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-sky-600/10 border border-blue-300 dark:border-blue-800 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-md">
               <HardDrive className="w-5 h-5" />
             </div>
             <div>
@@ -188,19 +188,19 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
               {bookmarks.map((bm) => (
                 <div
                   key={bm.id}
-                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 shadow-xs flex items-center justify-between gap-4 transition-all"
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-400 shadow-xs flex items-center justify-between gap-4 transition-all"
                 >
                   <div
                     onClick={() => handleOpenBookmark(bm)}
                     className="cursor-pointer flex-1 space-y-1"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] rounded-md">
+                      <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 font-extrabold text-[10px] rounded-md">
                         Grade {bm.grade}
                       </span>
                       <span className="text-xs text-slate-400">{bm.bookTitle}</span>
                     </div>
-                    <h4 className="font-bold text-sm text-slate-900 dark:text-white hover:text-emerald-600 transition-colors">
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-white hover:text-blue-600 transition-colors">
                       Unit {bm.unitNumber}: {bm.unitTitle}
                     </h4>
                     <div className="text-[10px] text-slate-400">
@@ -211,7 +211,7 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleOpenBookmark(bm)}
-                      className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 text-xs font-bold flex items-center gap-1"
+                      className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 hover:bg-blue-100 text-xs font-bold flex items-center gap-1"
                       title="Jump to Unit"
                     >
                       <BookOpen className="w-4 h-4" />
@@ -255,7 +255,7 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                        <span className="text-[11px] font-bold text-blue-600 dark:text-sky-400">
                           {book ? book.title.split(' ')[0] : 'Textbook'} • Unit {n.unitNumber}
                         </span>
                         <button
@@ -281,7 +281,7 @@ export const SavedBooksPage: React.FC<SavedBooksPageProps> = ({
                       {book && (
                         <button
                           onClick={() => onOpenInteractive(book, n.unitNumber)}
-                          className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+                          className="text-blue-600 dark:text-sky-400 font-semibold hover:underline"
                         >
                           Open Unit →
                         </button>

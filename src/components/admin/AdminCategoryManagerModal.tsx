@@ -173,7 +173,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
             onClick={() => setActiveTab('subjects')}
             className={`py-3 flex items-center gap-1.5 border-b-2 transition-colors ${
               activeTab === 'subjects'
-                ? 'border-emerald-400 text-emerald-400'
+                ? 'border-sky-400 text-sky-400'
                 : 'border-transparent text-slate-400 hover:text-white'
             }`}
           >
@@ -295,7 +295,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
               <form onSubmit={handleAddOrUpdateSubject} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-extrabold text-white flex items-center gap-1.5">
-                    <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                    <Plus className="w-3.5 h-3.5 text-sky-400" />
                     <span>Add / Customize Curriculum Subject</span>
                   </h4>
                   <button
@@ -317,7 +317,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
                       value={subName}
                       onChange={(e) => setSubName(e.target.value)}
                       placeholder="e.g. Economics"
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </div>
 
@@ -328,7 +328,7 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
                       value={subNameAmharic}
                       onChange={(e) => setSubNameAmharic(e.target.value)}
                       placeholder="e.g. ኢኮኖሚክስ"
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </div>
 
@@ -340,11 +340,11 @@ export const AdminCategoryManagerModal: React.FC<AdminCategoryManagerModalProps>
                         value={subNameOromo}
                         onChange={(e) => setSubNameOromo(e.target.value)}
                         placeholder="e.g. Ikonoomiksii"
-                        className="flex-1 px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        className="flex-1 px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                       <button
                         type="submit"
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1"
                       >
                         <Save className="w-3.5 h-3.5" />
                         <span>Save</span>

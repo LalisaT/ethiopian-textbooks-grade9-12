@@ -361,14 +361,14 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             onClick={() => setActiveTab('exams')}
             className={`pb-3 flex items-center gap-2 transition-colors relative whitespace-nowrap ${
               activeTab === 'exams'
-                ? 'text-emerald-600 dark:text-emerald-400'
+                ? 'text-blue-600 dark:text-sky-400'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Award className="w-4 h-4" />
             <span>EUEE Model Examinations</span>
             {activeTab === 'exams' && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
             )}
           </button>
 
@@ -376,7 +376,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             onClick={() => setActiveTab('past_papers')}
             className={`pb-3 flex items-center gap-2 transition-colors relative whitespace-nowrap ${
               activeTab === 'past_papers'
-                ? 'text-emerald-600 dark:text-emerald-400'
+                ? 'text-blue-600 dark:text-sky-400'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -386,7 +386,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
               {pastPapers.length}
             </span>
             {activeTab === 'past_papers' && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
             )}
           </button>
 
@@ -394,14 +394,14 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             onClick={() => setActiveTab('flashcards')}
             className={`pb-3 flex items-center gap-2 transition-colors relative whitespace-nowrap ${
               activeTab === 'flashcards'
-                ? 'text-emerald-600 dark:text-emerald-400'
+                ? 'text-blue-600 dark:text-sky-400'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Layers className="w-4 h-4" />
             <span>{t('flashcards')}</span>
             {activeTab === 'flashcards' && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
             )}
           </button>
 
@@ -409,14 +409,14 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             onClick={() => setActiveTab('history')}
             className={`pb-3 flex items-center gap-2 transition-colors relative whitespace-nowrap ${
               activeTab === 'history'
-                ? 'text-emerald-600 dark:text-emerald-400'
+                ? 'text-blue-600 dark:text-sky-400'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <History className="w-4 h-4" />
             <span>My Exam History ({pastAttempts.length})</span>
             {activeTab === 'history' && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
             )}
           </button>
         </div>
@@ -471,7 +471,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   onClick={() => setSelectedSourceGrade(sg.id as any)}
                   className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
                     selectedSourceGrade === sg.id
-                      ? 'bg-slate-900 text-white dark:bg-emerald-600 dark:text-white shadow-sm'
+                      ? 'bg-slate-900 text-white dark:bg-blue-600 dark:text-white shadow-sm'
                       : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
@@ -506,7 +506,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   onClick={() => setSelectedSubject(s.id as SubjectCategory)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                     selectedSubject === s.id
-                      ? 'bg-emerald-600 text-white shadow-sm'
+                      ? 'bg-blue-600 text-white shadow-sm'
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
@@ -528,14 +528,14 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-xs rounded-full">
+                        <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 font-extrabold text-xs rounded-full">
                           {pack.stream === 'natural_science' ? 'Natural Sci' : pack.stream === 'social_science' ? 'Social Sci' : 'All Streams'}
                         </span>
                         <span className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
                           pack.language === 'am'
                             ? 'bg-blue-950 text-blue-300 border border-blue-800'
                             : pack.language === 'om'
-                            ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                            ? 'bg-indigo-950 text-indigo-300 border border-indigo-800'
                             : 'bg-purple-950 text-purple-300 border border-purple-800'
                         }`}>
                           {pack.language === 'am' ? 'አማርኛ' : pack.language === 'om' ? 'Afaan Oromoo' : 'English'}
@@ -582,7 +582,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                         <span>{pack.timeLimitMinutes || 60} Mins</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                        <CheckCircle className="w-3.5 h-3.5 text-sky-400" />
                         <span>100+ Questions (Grades 9-12)</span>
                       </div>
                     </div>
@@ -591,7 +591,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   <button
                     onClick={() => handleStartExam(packTitle, pack.questions, pack.language, pack.subject, pack.stream)}
                     disabled={pack.questions.length === 0}
-                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                   >
                     <Award className="w-4 h-4" />
                     <span>{t('startPractice')}</span>
@@ -649,7 +649,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                       <span>{paper.timeAllowedMinutes} Mins</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                      <CheckCircle className="w-3.5 h-3.5 text-sky-400" />
                       <span>{paper.totalQuestions} Questions</span>
                     </div>
                   </div>
@@ -665,7 +665,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                         handleStartExam(paper.title, fallbackQ, paper.language, paper.subject, paper.stream);
                       }
                     }}
-                    className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                    className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5"
                   >
                     <Award className="w-3.5 h-3.5" />
                     <span>Practice Paper</span>
@@ -697,7 +697,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <h3 className="font-extrabold text-lg text-slate-900 dark:text-white flex items-center gap-2">
-              <History className="w-5 h-5 text-emerald-500" />
+              <History className="w-5 h-5 text-sky-400" />
               <span>Previous Examination Attempts</span>
             </h3>
             <span className="text-xs text-slate-400 font-bold">
@@ -729,7 +729,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
 
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <div className="text-lg font-black text-emerald-600 dark:text-emerald-400">
+                      <div className="text-lg font-black text-blue-600 dark:text-sky-400">
                         {attempt.score} / {attempt.totalQuestions}
                       </div>
                       <div className="text-[10px] font-bold text-slate-400">

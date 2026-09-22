@@ -136,20 +136,20 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <span className="p-2 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <span className="p-2 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-sky-400">
               <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
             </span>
-            <span>Secondary & Preparatory Textbooks</span>
+            <span>Books</span>
           </h1>
           <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1">
-            Official Ministry of Education National Curriculum (Grades 9–12)
+            Official Curriculum &amp; Teacher Guides (Grades 9–12)
           </p>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
-          <div className="px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-black flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-            <span>{filteredBooks.length} Textbooks</span>
+          <div className="px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-sky-300 border border-blue-200 dark:border-blue-800 text-xs font-black flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+            <span>{filteredBooks.length} Books</span>
           </div>
 
           {(selectedGrade !== 'all' || selectedStream !== 'all' || selectedSubject !== 'all' || searchQuery) && (

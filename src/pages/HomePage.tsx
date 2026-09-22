@@ -126,7 +126,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search Grade 9–12 textbooks, EUEE past papers, subjects..."
-            className="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-800 rounded-full text-xs sm:text-sm text-white placeholder-slate-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all"
+            className="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-800 rounded-full text-xs sm:text-sm text-white placeholder-slate-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
           />
           {searchQuery && (
             <button
@@ -164,7 +164,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 }}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-xs ${
                   isSelected
-                    ? 'bg-teal-500 text-slate-950 font-black shadow-md shadow-teal-500/25 ring-2 ring-teal-400/40'
+                    ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/25 ring-2 ring-sky-400/40'
                     : 'bg-slate-900/90 text-slate-300 border border-slate-800 hover:border-slate-700 hover:text-white'
                 }`}
               >
@@ -208,8 +208,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Subtle Ambient Glow Orbs */}
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 sm:w-96 h-72 sm:h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 -mb-10 w-64 sm:w-80 h-64 sm:h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 sm:w-96 h-72 sm:h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/3 -mb-10 w-64 sm:w-80 h-64 sm:h-80 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
 
           {/* Hero Content Grid: Left Text + Right 3D Bookshelf Animation */}
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
@@ -219,14 +219,14 @@ export const HomePage: React.FC<HomePageProps> = ({
               <BackgroundDriftingShelf opacity={0.20} />
 
               <div className="relative z-10 space-y-3.5 sm:space-y-4">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30 text-[11px] font-black backdrop-blur-md">
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 text-sky-300 border border-blue-500/30 text-[11px] font-black backdrop-blur-md">
+                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
                 <span>National High School Curriculum • 2026 Edition</span>
               </div>
 
               <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
                 Ethiopian Grade 9–12 <br className="hidden sm:inline" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-300 to-amber-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-300 to-indigo-300">
                   Textbooks &amp; EUEE Matric Hub
                 </span>
               </h2>
@@ -239,7 +239,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               {/* Micro Feature Metrics */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                  <CheckCircle className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                   <span>MOE Syllabus</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -251,7 +251,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <span>2020–2024 Past Papers</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <BookMarked className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                  <BookMarked className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                   <span>100% Offline</span>
                 </div>
               </div>
@@ -337,7 +337,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               title: 'Grade 10 Secondary',
               subtitle: 'General Secondary',
               desc: 'Mechanics, Hydrocarbons, Physiology, Relations & ICT',
-              color: 'from-emerald-600 to-teal-700',
+              color: 'from-blue-600 to-indigo-700',
               badge: 'Secondary',
             },
             {
@@ -352,7 +352,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div
               key={item.grade}
               onClick={() => onSelectGradeFilter(item.grade)}
-              className="group cursor-pointer bg-white dark:bg-slate-900/90 rounded-3xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800/90 hover:border-emerald-500/50 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between active:scale-95"
+              className="group cursor-pointer bg-white dark:bg-slate-900/90 rounded-3xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800/90 hover:border-blue-500/50 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between active:scale-95"
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -364,7 +364,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </div>
                 </div>
 
-                <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white mb-0.5 group-hover:text-emerald-500 transition-colors">
+                <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white mb-0.5 group-hover:text-blue-500 transition-colors">
                   {item.title}
                 </h4>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -372,7 +372,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </p>
               </div>
 
-              <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-emerald-600 dark:text-emerald-400">
+              <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400">
                 <span>Open Grade</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -381,18 +381,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 5. Shelf 2: Top Textbooks • Grade 12 EUEE Prep */}
-      <PlayStoreShelf
-        title="Top Textbooks • Grade 12 EUEE Prep"
-        books={grade12Books}
-        onOpenPdf={onOpenPdf}
-        onToggleOffline={onToggleOffline}
-        offlineBookIds={offlineBookIds}
-        readingProgress={readingProgress}
-        onSeeAll={() => onSelectGradeFilter(12)}
-      />
-
-      {/* 6. Native In-Feed Sponsored Card */}
+      {/* Native In-Feed Sponsored Card */}
       <NativeAdCard />
 
       {/* 7. Shelf 4: Natural Science Core Textbooks */}

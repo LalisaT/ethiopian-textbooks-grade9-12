@@ -182,7 +182,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
         <form onSubmit={handleSendBroadcast} className="p-6 sm:p-7 space-y-4">
           {isSuccess ? (
             <div className="py-12 text-center space-y-3 animate-in zoom-in-95 duration-200">
-              <div className="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mx-auto shadow-xl">
                 <CheckCircle className="w-10 h-10" />
               </div>
               <h4 className="text-xl font-black text-white">Broadcast & Post Dispatched!</h4>
@@ -311,7 +311,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         setImageUrl('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
                         setImageCaption('Ethiopian Curriculum Textbooks');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-emerald-300 border border-slate-800 font-bold"
+                      className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-sky-300 border border-slate-800 font-bold"
                     >
                       Textbooks Library
                     </button>
@@ -542,7 +542,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                       setImageUrl('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
                       setImageCaption('Grade 12 Textbooks Series');
                     }}
-                    className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-emerald-300 font-bold border border-slate-700 transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-sky-300 font-bold border border-slate-700 transition-colors"
                   >
                     New Book Upload
                   </button>
@@ -701,8 +701,8 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                     }}
                     className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all border ${
                       actionUrl === 'tab:examprep'
-                        ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-sm'
-                        : 'bg-emerald-950/60 text-emerald-300 border-emerald-800 hover:bg-emerald-900'
+                        ? 'bg-blue-600 text-slate-950 border-sky-400 shadow-sm'
+                        : 'bg-emerald-950/60 text-sky-300 border-emerald-800 hover:bg-emerald-900'
                     }`}
                   >
                     Exam Prep Hub
@@ -763,7 +763,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   <div className="space-y-1 pt-1">
                     <div className="flex items-center justify-between">
                       <label className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
-                        <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+                        <BookOpen className="w-3.5 h-3.5 text-sky-400" />
                         <span>Or Attach Specific Textbook Shortcut:</span>
                       </label>
                       {attachedBookId && (
@@ -812,7 +812,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                         {linkType === 'download' ? <Download className="w-3 h-3 text-blue-400" /> : <ExternalLink className="w-3 h-3" />}
                       </span>
                     ) : attachedBookId ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-bold bg-blue-600/20 text-sky-300 border border-blue-500/40">
                         <BookOpen className="w-3 h-3" />
                         <span>Open Attached Textbook &rarr;</span>
                       </span>
@@ -875,13 +875,13 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
               {/* Sound sample preview */}
               <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <Volume2 className="w-4 h-4 text-emerald-400" />
+                  <Volume2 className="w-4 h-4 text-sky-400" />
                   <span>Phone chime sound & vibration will trigger</span>
                 </div>
                 <button
                   type="button"
                   onClick={handlePlaySoundSample}
-                  className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
+                  className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
                 >
                   <Volume2 className="w-3.5 h-3.5" />
                   <span>Test Sound</span>

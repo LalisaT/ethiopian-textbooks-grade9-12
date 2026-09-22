@@ -83,7 +83,7 @@ export const LanguageBrowseSection: React.FC<LanguageBrowseSectionProps> = ({
     <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+          <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-sky-400">
             <Globe className="w-5 h-5" />
           </div>
           <div>
@@ -106,8 +106,8 @@ export const LanguageBrowseSection: React.FC<LanguageBrowseSectionProps> = ({
               onClick={() => onSelectLanguage(langItem.code)}
               className={`p-4 rounded-2xl text-left border transition-all relative flex flex-col justify-between ${
                 isSelected
-                  ? 'bg-emerald-50/80 dark:bg-emerald-950/60 border-emerald-500 shadow-md ring-2 ring-emerald-500'
-                  : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-blue-50/80 dark:bg-blue-950/60 border-blue-500 shadow-md ring-2 ring-blue-500'
+                  : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <div>
@@ -119,11 +119,11 @@ export const LanguageBrowseSection: React.FC<LanguageBrowseSectionProps> = ({
                     </span>
                   </div>
                   {isSelected && (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-sky-400" />
                   )}
                 </div>
 
-                <div className="text-xs font-bold text-emerald-700 dark:text-emerald-400 mb-1">
+                <div className="text-xs font-bold text-blue-700 dark:text-sky-400 mb-1">
                   {langItem.nativeTitle}
                 </div>
 

@@ -83,7 +83,7 @@ export const InteractiveChapterReader: React.FC<InteractiveChapterReaderProps> =
       wrapperBg: 'bg-slate-950',
       paperBg: 'bg-slate-900 text-slate-100 border-slate-800 shadow-2xl',
       headingColor: 'text-white border-b-2 border-slate-700',
-      sectionHeading: 'text-emerald-400 border-b border-slate-800',
+      sectionHeading: 'text-sky-400 border-b border-slate-800',
       paragraphColor: 'text-slate-300',
       headerFooterColor: 'text-slate-500 border-slate-800',
       cardBg: 'bg-slate-950 border-slate-800 text-slate-200',
@@ -195,7 +195,7 @@ export const InteractiveChapterReader: React.FC<InteractiveChapterReaderProps> =
           <button
             onClick={onResyncPdfNotes}
             disabled={isSyncingPdfNotes}
-            className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition-colors flex items-center gap-1.5 shadow-sm active:scale-95"
+            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-colors flex items-center gap-1.5 shadow-sm active:scale-95"
             title="Clean and re-extract text directly from PDF"
           >
             {isSyncingPdfNotes ? (

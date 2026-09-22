@@ -28,7 +28,7 @@ export const StickyBannerAd: React.FC<StickyBannerAdProps> = ({
         </div>
       </div>
 
-      <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-[11px] rounded-xl shrink-0">
+      <div className="px-3 py-1 bg-blue-500/20 border border-blue-500/40 text-sky-300 font-black text-[11px] rounded-xl shrink-0">
         Sponsored
       </div>
     </div>

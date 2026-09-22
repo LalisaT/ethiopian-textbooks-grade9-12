@@ -36,7 +36,7 @@ const QUESTION_OPTIONS: QuestionCountOption[] = [
     tag: 'Standard Paper',
     description: 'Official standard examination length with rigorous topic distribution.',
     icon: CheckCircle2,
-    badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+    badgeColor: 'bg-blue-500/10 text-blue-600 dark:text-sky-400 border-blue-500/30',
   },
   {
     count: 100,
@@ -85,7 +85,7 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
         {/* Modal Header */}
         <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3 shrink-0">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 rounded-full text-[11px] font-black border border-emerald-300 dark:border-emerald-800">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-300 rounded-full text-[11px] font-black border border-blue-300 dark:border-blue-800">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>Grade 12 EUEE Preparation</span>
             </div>
@@ -120,7 +120,7 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
                     onClick={() => setSelectedCount(opt.count)}
                     className={`p-3 sm:p-3.5 rounded-2xl border-2 transition-all cursor-pointer select-none relative flex flex-col justify-between ${
                       isSelected
-                        ? 'border-emerald-600 bg-emerald-50/70 dark:bg-emerald-950/40 shadow-sm ring-2 ring-emerald-500/20'
+                        ? 'border-blue-600 bg-blue-50/70 dark:bg-blue-950/40 shadow-sm ring-2 ring-blue-500/20'
                         : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30'
                     }`}
                   >
@@ -131,7 +131,7 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
                         </span>
                         <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                           isSelected
-                            ? 'border-emerald-600 bg-emerald-600 text-white'
+                            ? 'border-blue-600 bg-blue-600 text-white'
                             : 'border-slate-300 dark:border-slate-600'
                         }`}>
                           {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
@@ -163,16 +163,16 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
           {/* Best of Best High-Yield Priority Box */}
           <div
             onClick={() => setBestOfBestOnly(!bestOfBestOnly)}
-            className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-emerald-500/10 border border-amber-500/30 flex items-center justify-between gap-3 cursor-pointer select-none transition-all hover:bg-amber-500/15"
+            className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-sky-500/10 border border-blue-500/30 flex items-center justify-between gap-3 cursor-pointer select-none transition-all hover:bg-blue-500/15"
           >
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <div className="space-y-0.5 min-w-0">
                 <div className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5 flex-wrap">
                   <span>Best of Best High-Yield Questions</span>
-                  <span className="px-1.5 py-0.2 bg-amber-500 text-slate-950 text-[10px] font-black rounded-md shrink-0">
+                  <span className="px-1.5 py-0.2 bg-blue-500 text-white text-[10px] font-black rounded-md shrink-0">
                     MoE Verified
                   </span>
                 </div>
@@ -184,7 +184,7 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
 
             <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 ${
               bestOfBestOnly
-                ? 'bg-emerald-600 border-emerald-600 text-white'
+                ? 'bg-blue-600 border-blue-600 text-white'
                 : 'border-slate-400'
             }`}>
               {bestOfBestOnly && <CheckCircle2 className="w-4 h-4" />}
@@ -210,7 +210,7 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
             </button>
             <button
               onClick={handleStart}
-              className="flex-1 sm:flex-none px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black rounded-xl shadow-lg shadow-emerald-600/25 active:scale-95 transition-all flex items-center justify-center gap-2"
+              className="flex-1 sm:flex-none px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black rounded-xl shadow-lg shadow-blue-600/25 active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <Award className="w-4 h-4" />
               <span>Start Exam ({selectedCount} Qs)</span>

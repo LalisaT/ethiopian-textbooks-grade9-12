@@ -64,7 +64,7 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({ cards = [], fl
             }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all ${
               selectedCategory === cat
-                ? 'bg-emerald-600 text-white shadow-sm'
+                ? 'bg-blue-600 text-white shadow-sm'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -81,8 +81,8 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({ cards = [], fl
         <div
           className={`w-full h-full rounded-3xl p-8 shadow-xl border flex flex-col justify-between transition-all duration-300 transform ${
             isFlipped
-              ? 'bg-gradient-to-br from-slate-900 to-slate-950 text-white border-emerald-500/50 shadow-emerald-950/30'
-              : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-emerald-400'
+              ? 'bg-gradient-to-br from-slate-900 to-slate-950 text-white border-blue-500/50 shadow-blue-950/30'
+              : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-blue-400'
           }`}
         >
           {/* Top category & grade tag */}
@@ -90,7 +90,7 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({ cards = [], fl
             <span
               className={`px-2.5 py-0.5 rounded-full font-bold uppercase text-[10px] tracking-wider ${
                 isFlipped
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  ? 'bg-blue-500/20 text-sky-300 border border-blue-500/30'
                   : 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300'
               }`}
             >
@@ -113,7 +113,7 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({ cards = [], fl
             <span className="font-mono">
               Card {currentIndex + 1} / {filteredCards.length}
             </span>
-            <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+            <div className="flex items-center gap-1 text-blue-600 dark:text-sky-400 font-semibold">
               <RotateCw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
               <span>{t('flipCard')}</span>
             </div>
@@ -133,7 +133,7 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({ cards = [], fl
 
         <button
           onClick={handleNext}
-          className="flex items-center gap-1.5 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-sm transition-all active:scale-95"
+          className="flex items-center gap-1.5 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-extrabold shadow-sm transition-all active:scale-95"
         >
           <span>Next Card</span>
           <ChevronRight className="w-4 h-4" />

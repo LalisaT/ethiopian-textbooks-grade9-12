@@ -34,7 +34,7 @@ export const ReaderBottomAdBanner: React.FC<ReaderBottomAdBannerProps> = ({ clas
           </div>
         </div>
 
-        <div className="px-2.5 py-1 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-xl text-[10px] font-black shrink-0">
+        <div className="px-2.5 py-1 bg-blue-500/15 border border-blue-500/30 text-sky-300 rounded-xl text-[10px] font-black shrink-0">
           Sponsored
         </div>
       </div>

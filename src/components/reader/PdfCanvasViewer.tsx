@@ -252,7 +252,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
       id={`pdf-page-${pageNumber}`}
       data-page-number={pageNumber}
       className={`w-full flex flex-col items-center justify-center relative ${
-        isActive ? 'ring-2 ring-emerald-500/40 rounded-xl' : ''
+        isActive ? 'ring-2 ring-blue-500/40 rounded-xl' : ''
       }`}
     >
       <div
@@ -280,7 +280,7 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
             style={{ minHeight: pageDims ? `${pageDims.height}px` : '480px' }}
           >
             <div className={`flex items-center gap-2 text-xs font-mono font-bold ${paperTextColor}`}>
-              <Loader2 className="w-4 h-4 animate-spin text-emerald-500/80" />
+              <Loader2 className="w-4 h-4 animate-spin text-sky-400/80" />
               <span>Page {pageNumber}</span>
             </div>
           </div>
@@ -1062,7 +1062,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   if (isLoading) {
     return (
       <div className="py-40 flex flex-col items-center justify-center space-y-4 bg-slate-950 text-white min-h-screen">
-        <Loader2 className="w-12 h-12 animate-spin text-emerald-400" />
+        <Loader2 className="w-12 h-12 animate-spin text-sky-400" />
         <div className="text-base font-black">Opening Authentic Textbook Canvas...</div>
         <div className="text-xs text-slate-500">Preparing pixel-perfect pages with all math equations and figures</div>
       </div>
@@ -1128,7 +1128,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         <div className="w-full space-y-2.5 pt-2">
           <button
             onClick={handleForceGenerateCurriculum}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white rounded-xl text-xs font-black shadow-lg shadow-emerald-950/40 transition-all"
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-98 text-white rounded-xl text-xs font-black shadow-lg shadow-blue-950/40 transition-all"
           >
             <BookOpen className="w-4 h-4" />
             <span>Open Official Curriculum Edition</span>
@@ -1177,16 +1177,16 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     >
       {/* 🔍 Realtime Touch Pinch Zoom Feedback Badge */}
       {showZoomToast && (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-slate-900/95 backdrop-blur-md border border-emerald-500/60 text-white px-5 py-2.5 rounded-2xl shadow-2xl font-mono text-sm font-black flex items-center gap-2 animate-in zoom-in-90 duration-150">
-          <ZoomIn className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-slate-900/95 backdrop-blur-md border border-blue-500/60 text-white px-5 py-2.5 rounded-2xl shadow-2xl font-mono text-sm font-black flex items-center gap-2 animate-in zoom-in-90 duration-150">
+          <ZoomIn className="w-4 h-4 text-sky-400" />
           <span>Zoom: {Math.round(scale * 100)}%</span>
         </div>
       )}
 
       {/* 💾 In-App Offline Storage Feedback Toast */}
       {showSavedToast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none bg-emerald-950/95 backdrop-blur-md border border-emerald-500/80 text-white px-5 py-2.5 rounded-2xl shadow-2xl text-xs font-black flex items-center gap-2 animate-in fade-in duration-150">
-          <Check className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none bg-blue-950/95 backdrop-blur-md border border-blue-500/80 text-white px-5 py-2.5 rounded-2xl shadow-2xl text-xs font-black flex items-center gap-2 animate-in fade-in duration-150">
+          <Check className="w-4 h-4 text-sky-400" />
           <span>Saved to Private In-App Storage (Offline Ready)</span>
         </div>
       )}
@@ -1218,7 +1218,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           >
             <button
               onClick={() => setIsZenMode(false)}
-              className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300"
+              className="flex items-center gap-1.5 text-xs font-bold text-sky-400 hover:text-sky-300"
               title="Restore Toolbars (Press H)"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -1230,10 +1230,10 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white font-bold"
               title="Open Notes"
             >
-              <Edit3 className="w-3.5 h-3.5 text-emerald-400" />
+              <Edit3 className="w-3.5 h-3.5 text-sky-400" />
               <span>Notes</span>
               {notes.length > 0 && (
-                <span className="px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px]">
+                <span className="px-1.5 py-0.2 bg-blue-600 text-white rounded-full text-[10px]">
                   {notes.length}
                 </span>
               )}
@@ -1241,7 +1241,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             <div className="h-3.5 w-px bg-slate-700" />
             <button
               onClick={() => setRotation((r) => (r + 90) % 360)}
-              className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-emerald-400 font-bold transition-colors"
+              className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-sky-400 font-bold transition-colors"
               title="Rotate Page 90° Clockwise (Press R)"
             >
               <RotateCw className="w-3.5 h-3.5" />
@@ -1268,7 +1268,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={onBack}
               className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1 text-xs font-bold border border-slate-700 shadow-sm active:scale-95 shrink-0"
             >
-              <ArrowLeft className="w-4 h-4 text-emerald-400" />
+              <ArrowLeft className="w-4 h-4 text-sky-400" />
               <span className="text-[11px]">Library</span>
             </button>
 
@@ -1277,7 +1277,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 {book.title}
               </div>
               <div className="text-[10px] text-slate-400 flex items-center gap-1.5 truncate">
-                <span className="text-emerald-400 font-bold">Grade {book.grade}</span>
+                <span className="text-sky-400 font-bold">Grade {book.grade}</span>
                 <span>•</span>
                 <span className="capitalize">{book.subject}</span>
               </div>
@@ -1290,7 +1290,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={() => setIsContinuousScroll(!isContinuousScroll)}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-black shadow-sm active:scale-95 transition-all ${
                 isContinuousScroll
-                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                  ? 'bg-blue-500/20 text-sky-400 border-blue-500/40'
                   : 'bg-slate-950 text-slate-400 border-slate-800'
               }`}
               title={isContinuousScroll ? 'Continuous Scroll Active (Tap for Page-by-Page)' : 'Page Mode Active (Tap for Top-to-Down Scroll)'}
@@ -1302,7 +1302,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Dedicated prominent Clean View button */}
             <button
               onClick={() => setIsZenMode(true)}
-              className="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 hover:text-emerald-300 rounded-xl border border-emerald-500/40 text-xs font-black shadow-sm active:scale-95 transition-all"
+              className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-500/15 hover:bg-blue-500/25 text-sky-400 hover:text-sky-300 rounded-xl border border-blue-500/40 text-xs font-black shadow-sm active:scale-95 transition-all"
               title="Clean View (Hide all controls for full-screen reading)"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -1314,7 +1314,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className={`p-2 rounded-xl border transition-all active:scale-95 ${
                 isSidebarOpen
-                  ? 'bg-emerald-600 text-white border-emerald-500'
+                  ? 'bg-blue-600 text-white border-blue-500'
                   : 'bg-slate-950 text-slate-300 border-slate-800'
               }`}
               title="Chapters & Page Jump"
@@ -1348,7 +1348,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 onClick={onBack}
                 className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
               >
-                <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                <ArrowLeft className="w-4 h-4 text-sky-400" />
                 <span>Library</span>
               </button>
 
@@ -1358,7 +1358,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 </div>
                 <div className="text-[10px] text-slate-400 flex items-center gap-2">
                   <span>Grade {book.grade} • {book.subject}</span>
-                  <span className="text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.2 rounded border border-emerald-800">
+                  <span className="text-sky-400 font-bold bg-blue-950/80 px-2 py-0.2 rounded border border-blue-800">
                     Official MoE Textbook
                   </span>
                 </div>
@@ -1373,7 +1373,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className={`p-2 rounded-xl border transition-all ${
                 isSidebarOpen
-                  ? 'bg-emerald-600 text-white border-emerald-500'
+                  ? 'bg-blue-600 text-white border-blue-500'
                   : 'bg-slate-950 text-slate-400 hover:text-white border-slate-800'
               }`}
               title="Page Thumbnails & Jump Drawer"
@@ -1411,7 +1411,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                     const val = Number(e.target.value);
                     if (val >= 1 && val <= totalPages) setCurrentPage(val);
                   }}
-                  className="w-12 text-center bg-slate-900 border border-slate-700 rounded px-1 text-emerald-400 font-bold text-xs focus:ring-1 focus:ring-emerald-400"
+                  className="w-12 text-center bg-slate-900 border border-slate-700 rounded px-1 text-sky-400 font-bold text-xs focus:ring-1 focus:ring-blue-400"
                 />
                 <span className="text-slate-500">/ {totalPages}</span>
               </div>
@@ -1441,7 +1441,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 onClick={() => setFitMode('page')}
                 className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1 ${
                   fitMode === 'page'
-                    ? 'bg-emerald-600 text-white shadow-sm'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
                 title="Fit Full Page in Viewport"
@@ -1454,7 +1454,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 onClick={() => setFitMode('width')}
                 className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1 ${
                   fitMode === 'width'
-                    ? 'bg-emerald-600 text-white shadow-sm'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
                 title="Fit Page to Width"
@@ -1474,7 +1474,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   isAudioPlaying
                     ? 'bg-rose-500 text-white shadow-md animate-pulse'
-                    : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
+                    : 'bg-blue-500/20 text-sky-300 hover:bg-blue-500/30 border border-blue-500/40'
                 }`}
                 title="Read Current Page Aloud"
               >
@@ -1489,10 +1489,10 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-800"
               title="Open Notes for Current Page"
             >
-              <Edit3 className="w-3.5 h-3.5 text-emerald-400" />
+              <Edit3 className="w-3.5 h-3.5 text-sky-400" />
               <span className="hidden lg:inline">Notes</span>
               {notes.length > 0 && (
-                <span className="px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px]">
+                <span className="px-1.5 py-0.2 bg-blue-600 text-white rounded-full text-[10px]">
                   {notes.length}
                 </span>
               )}
@@ -1513,7 +1513,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Clean View / Zen Mode Toggle */}
             <button
               onClick={() => setIsZenMode(true)}
-              className="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 rounded-xl border border-emerald-500/30 text-xs font-bold transition-colors"
+              className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-sky-400 hover:text-sky-300 rounded-xl border border-blue-500/30 text-xs font-bold transition-colors"
               title="Hide All Bars for 100% Clean View (Press H)"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -1538,7 +1538,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={() => setIsContinuousScroll(!isContinuousScroll)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all active:scale-95 ${
                 isContinuousScroll
-                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                  ? 'bg-blue-500/20 text-sky-400 border-blue-500/40'
                   : 'bg-slate-950 text-slate-300 border-slate-800 hover:text-white'
               }`}
               title={isContinuousScroll ? 'Continuous Top-to-Down Scroll (Click for Single Page)' : 'Single Page View (Click for Continuous Top-to-Down Scroll)'}
@@ -1562,13 +1562,13 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
             {/* Zoom controls */}
             <div className="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-xl border border-slate-800 text-xs">
-              <button onClick={handleZoomOut} className="p-1 text-slate-400 hover:text-emerald-400">
+              <button onClick={handleZoomOut} className="p-1 text-slate-400 hover:text-sky-400">
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
               <span className="font-mono text-[11px] px-1 font-bold text-slate-300">
                 {Math.round(scale * 100)}%
               </span>
-              <button onClick={handleZoomIn} className="p-1 text-slate-400 hover:text-emerald-400">
+              <button onClick={handleZoomIn} className="p-1 text-slate-400 hover:text-sky-400">
                 <ZoomIn className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -1576,7 +1576,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Rotate Page Button */}
             <button
               onClick={() => setRotation((r) => (r + 90) % 360)}
-              className="p-2 bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-emerald-400 rounded-xl border border-slate-800 shadow-sm active:scale-95 transition-colors"
+              className="p-2 bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-sky-400 rounded-xl border border-slate-800 shadow-sm active:scale-95 transition-colors"
               title="Rotate Page 90° Clockwise (Press R)"
             >
               <RotateCw className="w-3.5 h-3.5" />
@@ -1595,7 +1595,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Download */}
             <button
               onClick={handleDownload}
-              className="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-md active:scale-95"
+              className="p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-md active:scale-95"
               title="Download PDF Document"
             >
               <Download className="w-3.5 h-3.5" />
@@ -1614,18 +1614,18 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="Search words, terms, equations in this textbook..."
-            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleSearch}
             disabled={isSearching}
-            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center gap-1"
+            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl flex items-center gap-1"
           >
             {isSearching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <span>Search</span>}
           </button>
 
           {searchResults.length > 0 && (
-            <div className="text-xs font-bold text-emerald-400 flex items-center gap-2">
+            <div className="text-xs font-bold text-sky-400 flex items-center gap-2">
               <span>Found in {searchResults.length} pages:</span>
               <div className="flex gap-1 overflow-x-auto max-w-xs">
                 {searchResults.slice(0, 8).map((pNum) => (
@@ -1667,7 +1667,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   }}
                   className={`p-2 rounded-xl text-xs font-bold text-center border transition-all ${
                     currentPage === pageNum
-                      ? 'bg-emerald-600 text-white border-emerald-400 shadow-md scale-105'
+                      ? 'bg-blue-600 text-white border-sky-400 shadow-md scale-105'
                       : 'bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-600'
                   }`}
                 >
@@ -1822,7 +1822,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   e.stopPropagation();
                   setIsZenMode(false);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-black shadow-md active:scale-95 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-black shadow-md active:scale-95 transition-all"
                 title="Exit Clean View"
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -1857,7 +1857,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={() => setIsSidebarOpen(true)}
               className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs font-bold text-slate-200 hover:border-slate-600 transition-colors flex items-center gap-1.5"
             >
-              <span className="text-emerald-400 font-black">{currentPage}</span>
+              <span className="text-sky-400 font-black">{currentPage}</span>
               <span className="text-slate-500">/</span>
               <span className="text-slate-400">{totalPages}</span>
             </button>
@@ -1877,7 +1877,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               onClick={() => setFitMode(fitMode === 'width' ? 'page' : 'width')}
               className={`px-2.5 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1 ${
                 fitMode === 'width'
-                  ? 'bg-emerald-600 text-white border-emerald-500'
+                  ? 'bg-blue-600 text-white border-blue-500'
                   : 'bg-slate-950 text-slate-300 border-slate-800'
               }`}
               title="Fit Page to Width"
@@ -1970,17 +1970,17 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                           onClick={() => setSelectedQuizTopic(t.id)}
                           className={`p-2.5 rounded-xl border text-left text-xs font-bold flex items-center gap-2.5 transition-all ${
                             isSelected
-                              ? 'bg-emerald-950/80 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/40 shadow-sm'
+                              ? 'bg-blue-950/80 border-sky-400 text-sky-300 ring-2 ring-blue-500/40 shadow-sm'
                               : 'bg-slate-800/80 border-slate-700/80 text-slate-300 hover:bg-slate-700 hover:text-white'
                           }`}
                         >
                           {t.id === 'all' ? (
                             <Layers className="w-4 h-4 text-amber-400 shrink-0" />
                           ) : (
-                            <BookOpen className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <BookOpen className="w-4 h-4 text-sky-400 shrink-0" />
                           )}
                           <span className="truncate flex-1">{topicName}</span>
-                          {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0" />}
+                          {isSelected && <Check className="w-4 h-4 text-sky-400 shrink-0" />}
                         </button>
                       );
                     })}
@@ -2000,7 +2000,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                       <div className="font-extrabold text-sm text-white">{pickerLabels.q25}</div>
                       <div className="text-[11px] text-slate-400">{pickerLabels.q25desc}</div>
                     </div>
-                    <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
+                    <span className="px-3 py-1 bg-blue-500/20 text-sky-300 border border-blue-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
                       25 Qs
                     </span>
                   </button>

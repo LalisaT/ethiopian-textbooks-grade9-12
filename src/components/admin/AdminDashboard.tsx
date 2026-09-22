@@ -172,7 +172,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             <button
               onClick={onOpenUploadModal}
-              className="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-transform active:scale-95 flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-transform active:scale-95 flex items-center gap-1.5"
             >
               <PlusCircle className="w-4 h-4" />
               <span>+ Single Book</span>
@@ -237,13 +237,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div className="text-xs text-slate-400">Total Active Books</div>
             <div className="text-2xl font-black text-white mt-1">{allBooks.length}</div>
-            <div className="text-[11px] text-emerald-400 mt-0.5">Grades 5, 6, 7 & 8</div>
+            <div className="text-[11px] text-sky-400 mt-0.5">Grades 5, 6, 7 & 8</div>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div className="text-xs text-slate-400">Custom Uploaded</div>
             <div className="text-2xl font-black text-amber-400 mt-1">{customBooks.length}</div>
-            <div className="text-[11px] text-emerald-400 mt-0.5 flex items-center gap-1">
+            <div className="text-[11px] text-sky-400 mt-0.5 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" />
               <span>Saved Permanently</span>
             </div>
@@ -257,7 +257,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div className="text-xs text-slate-400">Languages Covered</div>
-            <div className="text-2xl font-black text-emerald-400 mt-1">5 Languages</div>
+            <div className="text-2xl font-black text-sky-400 mt-1">5 Languages</div>
             <div className="text-[11px] text-slate-400 mt-0.5">EN, AM, OM, TI, SO</div>
           </div>
         </div>
@@ -379,7 +379,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </td>
                     <td className="py-3.5 px-4">
                       {isCustom ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded-full font-bold text-[10px]">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950/60 text-emerald-800 dark:text-sky-300 rounded-full font-bold text-[10px]">
                           <ShieldCheck className="w-3 h-3" />
                           <span>Saved in DB</span>
                         </span>

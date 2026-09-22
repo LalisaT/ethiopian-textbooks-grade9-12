@@ -34,7 +34,7 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({
 
           <div className="hidden sm:flex items-center gap-2 text-xs text-slate-300">
             <span className="flex items-center gap-1 bg-slate-900 px-2.5 py-0.5 rounded-lg border border-slate-800 font-mono">
-              <HardDrive className="w-3 h-3 text-emerald-400" />
+              <HardDrive className="w-3 h-3 text-sky-400" />
               <span>{storageUsedMb} MB Storage</span>
             </span>
             <span className="bg-slate-900 px-2.5 py-0.5 rounded-lg border border-slate-800 font-bold text-amber-400">
@@ -68,7 +68,7 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({
           {/* Single Upload Book Button */}
           <button
             onClick={onOpenUploadModal}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-extrabold shadow-md transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-extrabold shadow-md transition-all active:scale-95"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Upload Single Book</span>

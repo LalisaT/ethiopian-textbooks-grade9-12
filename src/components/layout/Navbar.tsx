@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Ethiopian Textbooks
               </span>
               <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
-                <span className="text-emerald-600 dark:text-emerald-400 font-black">Grades 9–12</span>
+                <span className="text-blue-600 dark:text-sky-400 font-black">Grades 9–12</span>
                 <span className="text-slate-300 dark:text-slate-600">•</span>
                 <span className="truncate">EUEE &amp; Guides</span>
               </div>
@@ -99,14 +99,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => handleNavClick(item.id)}
                   className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
                     isActive
-                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 shadow-sm'
+                      ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-600 dark:text-emerald-400' : ''}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600 dark:text-sky-400' : ''}`} />
                   <span>{item.label}</span>
                   {item.badge !== undefined && (
-                    <span className="ml-1 px-1.5 py-0.2 bg-emerald-600 text-white text-xs rounded-full font-bold">
+                    <span className="ml-1 px-1.5 py-0.2 bg-blue-600 text-white text-xs rounded-full font-bold">
                       {item.badge}
                     </span>
                   )}
@@ -179,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <BrandLogo size="sm" />
                   <div>
                     <h3 className="font-black text-sm text-white">Ethiopian Textbooks</h3>
-                    <p className="text-[10px] text-emerald-400 font-bold">Menu &amp; Navigation</p>
+                    <p className="text-[10px] text-sky-400 font-bold">Menu &amp; Navigation</p>
                   </div>
                 </div>
                 <button
@@ -204,7 +204,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all ${
                         isActive
-                          ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20'
+                          ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/30'
                           : 'text-slate-300 hover:bg-slate-900/90 hover:text-white'
                       }`}
                     >
@@ -213,7 +213,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span>{item.label}</span>
                       </div>
                       {item.badge !== undefined && (
-                        <span className="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-black rounded-full">
+                        <span className="px-2 py-0.5 bg-blue-700 text-white text-[10px] font-black rounded-full">
                           {item.badge}
                         </span>
                       )}

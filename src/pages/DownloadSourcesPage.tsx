@@ -52,7 +52,7 @@ export const DownloadSourcesPage: React.FC = () => {
 
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
             Ethiopian Student Textbooks Download Hub <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-emerald-400 to-amber-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-300">
               Grade 1 to 12 (New & Old Curriculum)
             </span>
           </h1>
@@ -157,7 +157,7 @@ export const DownloadSourcesPage: React.FC = () => {
       {/* 2. Dedicated Educational Portals */}
       <section className="space-y-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+          <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-sky-400">
             <Globe className="w-5 h-5" />
           </div>
           <div>
@@ -174,11 +174,11 @@ export const DownloadSourcesPage: React.FC = () => {
           {portalSources.map((src) => (
             <div
               key={src.id}
-              className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-emerald-500 transition-all flex flex-col justify-between"
+              className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500 transition-all flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-xs rounded-full">
+                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 font-extrabold text-xs rounded-full">
                     {src.badge}
                   </span>
                   <span className="text-[11px] font-semibold text-slate-400">{src.coverage}</span>
@@ -192,7 +192,7 @@ export const DownloadSourcesPage: React.FC = () => {
                   {getSourceDesc(src)}
                 </p>
 
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-[11px] text-emerald-700 dark:text-emerald-300 font-medium">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-[11px] text-blue-700 dark:text-sky-300 font-medium">
                   ⭐ <strong>Best for:</strong> {src.recommendedFor}
                 </div>
               </div>
@@ -201,7 +201,7 @@ export const DownloadSourcesPage: React.FC = () => {
                 href={src.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md flex items-center justify-center gap-2"
+                className="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 shadow-blue-600/25"
               >
                 <span>Download on {src.name.split(' ')[0]}</span>
                 <ExternalLink className="w-3.5 h-3.5" />

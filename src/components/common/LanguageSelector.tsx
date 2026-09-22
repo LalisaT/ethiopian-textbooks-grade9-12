@@ -35,9 +35,9 @@ export const LanguageSelector: React.FC = () => {
         className="flex items-center gap-1.5 h-9 px-2.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200/80 dark:border-slate-700/80 shadow-xs active:scale-95"
         title="Change Language"
       >
-        <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400 shrink-0" />
         <span className="hidden sm:inline font-semibold">{currentLang.native}</span>
-        <span className="font-black text-[10px] tracking-wider uppercase text-emerald-600 dark:text-emerald-400">
+        <span className="font-black text-[10px] tracking-wider uppercase text-blue-600 dark:text-sky-400">
           {currentLang.code}
         </span>
       </button>
@@ -56,7 +56,7 @@ export const LanguageSelector: React.FC = () => {
               }}
               className={`w-full text-left px-3 py-2 flex items-center justify-between text-sm transition-colors ${
                 language === lang.code
-                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 font-semibold'
+                  ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 font-semibold'
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
               }`}
             >
@@ -67,7 +67,7 @@ export const LanguageSelector: React.FC = () => {
                   <div className="text-xs text-slate-400">{lang.label}</div>
                 </div>
               </div>
-              {language === lang.code && <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
+              {language === lang.code && <Check className="w-4 h-4 text-blue-600 dark:text-sky-400" />}
             </button>
           ))}
         </div>

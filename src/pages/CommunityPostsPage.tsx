@@ -404,7 +404,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               </button>
             ) : (
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 font-bold">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <ShieldCheck className="w-4 h-4 text-sky-400" />
                 <span>Verified Admin Feed</span>
               </div>
             )}
@@ -582,7 +582,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     </button>
                     <button
                       onClick={() => handleOpenEditModal(post)}
-                      className="p-1.5 text-slate-400 hover:text-emerald-500 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-sky-400 rounded-lg transition-colors"
                       title="Edit post"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -606,7 +606,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-slate-950'
                       : post.authorRole === 'teacher'
                       ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white'
-                      : 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white'
+                      : 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white'
                   }`}
                 >
                   {post.authorRole === 'admin' ? (
@@ -636,7 +636,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     {post.subject && (
                       <>
                         <span className="text-slate-300 dark:text-slate-700">•</span>
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{post.subject}</span>
+                        <span className="font-semibold text-emerald-600 dark:text-sky-400">{post.subject}</span>
                       </>
                     )}
                   </div>
@@ -706,9 +706,9 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                           onSelectBook(book);
                         }
                       }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors shadow-sm active:scale-95"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-300 border border-blue-200 dark:border-blue-800 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors shadow-sm active:scale-95"
                     >
-                      <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <BookOpen className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
                       <span>Open Attached Textbook: {post.attachedBookTitle || 'View Textbook'} &rarr;</span>
                     </button>
                   )}
@@ -817,7 +817,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     onClick={() => handleReadAloud(post)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
                       speakingPostId === post.id
-                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 animate-pulse'
+                        ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 border border-blue-300 dark:border-blue-800 animate-pulse'
                         : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                     title={speakingPostId === post.id ? 'Stop audio' : 'Listen to announcement (Read Aloud)'}
@@ -829,7 +829,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <Volume2 className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
                         <span className="hidden sm:inline">Listen</span>
                       </>
                     )}
@@ -858,8 +858,8 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   >
                     {copiedPostId === post.id ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-500" />
-                        <span className="text-emerald-600 dark:text-emerald-400 font-black">Copied!</span>
+                        <Check className="w-3.5 h-3.5 text-sky-400" />
+                        <span className="text-emerald-600 dark:text-sky-400 font-black">Copied!</span>
                       </>
                     ) : (
                       <>
@@ -983,7 +983,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   onClick={() => applyPresetTemplate('book')}
                   className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
                 >
-                  <BookOpen className="w-3 h-3 text-emerald-500" />
+                  <BookOpen className="w-3 h-3 text-sky-400" />
                   <span>New Textbook Notice</span>
                 </button>
                 <button
@@ -1027,7 +1027,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 >
                   <ImageIcon className="w-4 h-4" />
                   <span>Picture</span>
-                  {imageUrl && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
+                  {imageUrl && <span className="w-2 h-2 rounded-full bg-sky-400 ml-1"></span>}
                 </button>
 
                 <button
@@ -1041,7 +1041,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 >
                   <LinkIcon className="w-4 h-4" />
                   <span>Link</span>
-                  {linkUrl && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
+                  {linkUrl && <span className="w-2 h-2 rounded-full bg-sky-400 ml-1"></span>}
                 </button>
 
                 <button
@@ -1055,7 +1055,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>Book</span>
-                  {attachedBookId && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
+                  {attachedBookId && <span className="w-2 h-2 rounded-full bg-sky-400 ml-1"></span>}
                 </button>
               </div>
 
@@ -1152,7 +1152,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setImageUrl('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
                         setImageCaption('Ethiopian Curriculum Textbooks');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-emerald-600 dark:text-emerald-300 border border-slate-200 dark:border-slate-700 font-bold"
+                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-blue-600 dark:text-sky-300 border border-slate-200 dark:border-slate-700 font-bold"
                     >
                       Textbooks Library
                     </button>

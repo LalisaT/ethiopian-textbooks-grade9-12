@@ -57,7 +57,7 @@ export const PwaInstallPrompt: React.FC = () => {
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-sm w-full bg-slate-900 text-white rounded-3xl p-4 shadow-2xl border border-slate-700 animate-in slide-in-from-bottom-5 duration-300 flex items-center justify-between gap-3">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black shrink-0 shadow-md">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-sky-500 text-white flex items-center justify-center font-black shrink-0 shadow-md">
           <Smartphone className="w-5 h-5" />
         </div>
         <div>
@@ -77,7 +77,7 @@ export const PwaInstallPrompt: React.FC = () => {
       <div className="flex items-center gap-1.5 shrink-0">
         <button
           onClick={handleInstallClick}
-          className="px-3.5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-black shadow-md transition-all active:scale-95 flex items-center gap-1"
+          className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-black shadow-md transition-all active:scale-95 flex items-center gap-1"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Install</span>

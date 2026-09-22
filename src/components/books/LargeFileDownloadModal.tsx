@@ -63,7 +63,7 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
 
             <div className="flex items-center justify-between gap-2">
               <span className="font-bold text-slate-500 dark:text-slate-400">Download Size:</span>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-black text-[11px] border border-emerald-500/20">
+              <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-sky-400 font-black text-[11px] border border-blue-500/20">
                 {book.fileSizeMb} MB
               </span>
             </div>
@@ -77,15 +77,15 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
 
             <div className="flex items-center justify-between gap-2">
               <span className="font-bold text-slate-500 dark:text-slate-400">Storage Type:</span>
-              <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
+              <span className="font-extrabold text-blue-600 dark:text-sky-400">
                 Private In-App Sandbox (Offline)
               </span>
             </div>
           </div>
 
           {/* Tip */}
-          <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 flex items-start gap-2.5 text-emerald-800 dark:text-emerald-300">
-            <BookOpen className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
+          <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 flex items-start gap-2.5 text-blue-800 dark:text-sky-300">
+            <BookOpen className="w-4 h-4 shrink-0 mt-0.5 text-blue-600 dark:text-sky-400" />
             <p className="text-[11px] leading-tight">
               <strong>Private & Offline:</strong> The book is stored securely inside the app. It will not clutter your phone's public file storage, and you can open it anytime without internet.
             </p>
@@ -105,7 +105,7 @@ export const LargeFileDownloadModal: React.FC<LargeFileDownloadModalProps> = ({
               onClose();
               onConfirm();
             }}
-            className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black rounded-xl shadow-lg shadow-emerald-600/25 active:scale-95 transition-all flex items-center gap-1.5"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black rounded-xl shadow-lg shadow-blue-600/25 active:scale-95 transition-all flex items-center gap-1.5"
           >
             <DownloadCloud className="w-4 h-4" />
             <span>Download ({book.fileSizeMb} MB)</span>

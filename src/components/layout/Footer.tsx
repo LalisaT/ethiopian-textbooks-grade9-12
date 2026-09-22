@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
         {/* Centered Brand Icon & Title Card */}
         <div className="flex flex-col items-center text-center gap-3 w-full">
           {/* Centered Icon with Glowing Luxury Border */}
-          <div className="relative p-1 rounded-2xl bg-gradient-to-tr from-cyan-500/40 via-teal-500/30 to-indigo-500/40 shadow-xl ring-1 ring-cyan-500/20 shrink-0 mx-auto">
+          <div className="relative p-1 rounded-2xl bg-gradient-to-tr from-blue-600/40 via-indigo-600/30 to-sky-500/40 shadow-xl ring-1 ring-blue-500/30 shrink-0 mx-auto">
             <div className="w-14 h-14 rounded-[14px] overflow-hidden bg-slate-950 shadow-inner">
               <img
                 src="/brand/app-icon.jpg"
@@ -59,7 +59,7 @@ export const Footer: React.FC = () => {
             }}
             title="MOE Ethiopia Verified PWA"
           >
-            <Shield className="w-3.5 h-3.5 text-emerald-400" />
+            <Shield className="w-3.5 h-3.5 text-sky-400" />
             <span>100% Offline PWA</span>
           </div>
 

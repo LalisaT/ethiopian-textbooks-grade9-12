@@ -51,7 +51,7 @@ export const BookCoverThumbnail: React.FC<BookCoverThumbnailProps> = ({
       />
       {!isLoaded && (
         <div className="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center p-3 text-center">
-          <div className="w-5 h-5 border-2 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin mb-1.5" />
+          <div className="w-5 h-5 border-2 border-blue-500/30 border-t-sky-400 rounded-full animate-spin mb-1.5" />
           <span className="text-[10px] font-mono text-slate-400 font-bold">Grade {book.grade}</span>
         </div>
       )}

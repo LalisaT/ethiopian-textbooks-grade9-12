@@ -264,7 +264,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                 <button
                   onClick={recheckNetwork}
                   disabled={isNetworkChecking}
-                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 disabled:opacity-60"
+                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 text-white font-extrabold text-sm shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   <RefreshCw className={`w-4 h-4 ${isNetworkChecking ? 'animate-spin' : ''}`} />
                   <span>{isNetworkChecking ? 'Verifying...' : 'Check Connection & Resume'}</span>
@@ -291,7 +291,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                 {title}
               </h3>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-xs text-emerald-400 font-bold">
+                <span className="text-xs text-sky-400 font-bold">
                   {labels.questionOf}
                 </span>
                 <span className="text-slate-600">•</span>
@@ -336,9 +336,9 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                   onClick={() => setCurrentIndex(idx)}
                   className={`w-7 h-7 shrink-0 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
                     isCurrent
-                      ? 'bg-emerald-500 text-slate-950 ring-2 ring-emerald-300 font-black scale-110 shadow-md'
+                      ? 'bg-blue-600 text-white ring-2 ring-sky-300 font-black scale-110 shadow-md'
                       : isAnswered
-                      ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-700/80'
+                      ? 'bg-blue-950/80 text-sky-300 border border-blue-700/80'
                       : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700 hover:text-white'
                   }`}
                   title={`Question ${idx + 1}`}
@@ -353,7 +353,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
         {/* Progress Bar */}
         <div className="w-full bg-slate-800 h-1.5">
           <div
-            className="bg-emerald-500 h-full transition-all duration-300 shadow-sm"
+            className="bg-blue-600 h-full transition-all duration-300 shadow-sm"
             style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
           />
         </div>
@@ -364,7 +364,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
             /* Result Summary & Deep Question Review */
             <div className="space-y-6 animate-in zoom-in-95 duration-200">
               <div className="text-center py-4 space-y-3 bg-slate-950/70 p-6 rounded-3xl border border-slate-800">
-                <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-3xl font-black bg-gradient-to-tr from-emerald-500 to-teal-400 text-white shadow-2xl">
+                <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-3xl font-black bg-gradient-to-tr from-blue-600 to-sky-500 text-white shadow-2xl">
                   {percent}%
                 </div>
 
@@ -386,7 +386,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                     onClick={() => setReviewFilter('all')}
                     className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
                       reviewFilter === 'all'
-                        ? 'bg-emerald-600 text-white shadow-md'
+                        ? 'bg-blue-600 text-white shadow-md'
                         : 'bg-slate-800 text-slate-400 hover:text-white'
                     }`}
                   >
@@ -406,7 +406,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                     onClick={() => setReviewFilter('correct')}
                     className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
                       reviewFilter === 'correct'
-                        ? 'bg-emerald-600 text-white shadow-md'
+                        ? 'bg-blue-600 text-white shadow-md'
                         : 'bg-slate-800 text-slate-400 hover:text-white'
                     }`}
                   >
@@ -418,7 +418,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
               {/* Review answers list */}
               <div className="space-y-4">
                 <div className="font-bold text-xs text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Filter className="w-3.5 h-3.5 text-emerald-400" />
+                  <Filter className="w-3.5 h-3.5 text-sky-400" />
                   <span>{labels.questionReview}</span>
                 </div>
 
@@ -432,13 +432,13 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                       key={q.id}
                       className={`p-4 sm:p-5 rounded-2xl border text-xs space-y-3 transition-all ${
                         isCorrect
-                          ? 'bg-emerald-950/30 border-emerald-800/60 text-emerald-200'
+                          ? 'bg-blue-950/30 border-blue-800/60 text-blue-200'
                           : 'bg-rose-950/30 border-rose-800/60 text-rose-200'
                       }`}
                     >
                       <div className="font-bold flex items-start gap-2.5 text-white text-sm">
                         {isCorrect ? (
-                          <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                          <CheckCircle className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
                         ) : (
                           <XCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                         )}
@@ -450,12 +450,12 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                       <div className="pl-7 space-y-1.5">
                         <div className="text-xs">
                           {labels.yourAnswer}{' '}
-                          <span className={`font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          <span className={`font-bold ${isCorrect ? 'text-sky-400' : 'text-rose-400'}`}>
                             {userChoice !== undefined ? opts[userChoice] : labels.notAnswered}
                           </span>
                         </div>
                         {!isCorrect && (
-                          <div className="text-emerald-400 font-bold text-xs">
+                          <div className="text-sky-400 font-bold text-xs">
                             {labels.correctAnswer} {opts[q.correctOptionIndex]}
                           </div>
                         )}
@@ -480,7 +480,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
             <div className="space-y-6 animate-in fade-in duration-150">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-emerald-950 text-emerald-400 border border-emerald-800 font-black text-xs rounded-xl shadow-xs">
+                  <span className="px-3 py-1 bg-blue-950 text-sky-400 border border-blue-800 font-black text-xs rounded-xl shadow-xs">
                     {language === 'om'
                       ? `Boqonnaa ${currentQ.unitNumber || 1}`
                       : language === 'am'
@@ -507,19 +507,19 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                       onClick={() => handleSelectOption(optIdx)}
                       className={`w-full text-left p-4 rounded-2xl border text-sm font-semibold transition-all flex items-center justify-between group active:scale-[0.99] ${
                         isSelected
-                          ? 'bg-emerald-950/80 border-emerald-400 text-white ring-2 ring-emerald-500 shadow-lg'
+                          ? 'bg-blue-950/80 border-sky-400 text-white ring-2 ring-blue-500 shadow-lg'
                           : 'bg-slate-950 border-slate-800 text-slate-200 hover:bg-slate-800 hover:border-slate-700'
                       }`}
                     >
                       <div className="flex items-center gap-3.5">
                         <span className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-black shrink-0 transition-colors ${
-                          isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-emerald-400 group-hover:bg-slate-700'
+                          isSelected ? 'bg-blue-600 text-white' : 'bg-slate-800 text-sky-400 group-hover:bg-slate-700'
                         }`}>
                           {String.fromCharCode(65 + optIdx)}
                         </span>
                         <span className="leading-snug">{opt}</span>
                       </div>
-                      {isSelected && <Check className="w-5 h-5 text-emerald-400 shrink-0" />}
+                      {isSelected && <Check className="w-5 h-5 text-sky-400 shrink-0" />}
                     </button>
                   );
                 })}
@@ -533,7 +533,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
           {isSubmitted ? (
             <button
               onClick={handleRestart}
-              className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black flex items-center gap-2 transition-all shadow-md active:scale-95"
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs font-black flex items-center gap-2 transition-all shadow-md active:scale-95"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{labels.retake}</span>
@@ -553,7 +553,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                 {currentIndex === questions.length - 1 ? (
                   <button
                     onClick={handleSubmit}
-                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-2xl text-xs font-black shadow-lg transition-all active:scale-95"
+                    className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-black shadow-lg transition-all active:scale-95"
                   >
                     {labels.submit}
                   </button>

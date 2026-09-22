@@ -45,13 +45,13 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
       <div className="flex items-center justify-between px-1 mb-1">
         <div>
           {badge && (
-            <div className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-teal-400 mb-0.5">
+            <div className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-sky-400 mb-0.5">
               <Sparkles className="w-3 h-3" />
               <span>{badge}</span>
             </div>
           )}
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-1 h-4 sm:h-5 rounded-full bg-gradient-to-b from-teal-400 to-cyan-500 shadow-xs shrink-0" />
+            <div className="w-1 h-4 sm:h-5 rounded-full bg-gradient-to-b from-blue-500 to-sky-400 shadow-xs shrink-0" />
             <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
               {title}
             </h3>
@@ -66,7 +66,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
         {onSeeAll && (
           <button
             onClick={onSeeAll}
-            className="text-xs font-black text-teal-500 dark:text-teal-400 hover:text-teal-300 flex items-center gap-0.5 transition-colors group shrink-0"
+            className="text-xs font-black text-sky-500 dark:text-sky-400 hover:text-sky-300 flex items-center gap-0.5 transition-colors group shrink-0"
           >
             <span>See all</span>
             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -84,7 +84,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
             <div
               key={book.id}
               onClick={() => onOpenPdf(book)}
-              className="w-40 sm:w-48 shrink-0 snap-start group cursor-pointer bg-white dark:bg-slate-900/90 rounded-3xl p-3 border border-slate-200/90 dark:border-slate-800/90 hover:border-emerald-500/50 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between active:scale-[0.98]"
+              className="w-40 sm:w-48 shrink-0 snap-start group cursor-pointer bg-white dark:bg-slate-900/90 rounded-3xl p-3 border border-slate-200/90 dark:border-slate-800/90 hover:border-blue-500/50 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between active:scale-[0.98]"
             >
               <div>
                 {/* Book Cover Container */}
@@ -101,7 +101,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
 
                   {/* Offline Cached Tag */}
                   {isDownloaded && (
-                    <div className="absolute top-2 right-2 p-1 rounded-lg bg-emerald-500 text-slate-950 font-black shadow-md">
+                    <div className="absolute top-2 right-2 p-1 rounded-lg bg-blue-600 text-white font-black shadow-md">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}
@@ -110,7 +110,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
                   {progress > 0 && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-800">
                       <div
-                        className="h-full bg-emerald-400"
+                        className="h-full bg-sky-400"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
@@ -135,7 +135,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
                 )}
 
                 {/* Book Title */}
-                <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white line-clamp-2 leading-tight group-hover:text-emerald-500 transition-colors">
+                <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white line-clamp-2 leading-tight group-hover:text-blue-500 dark:group-hover:text-sky-400 transition-colors">
                   {getTitle(book)}
                 </h4>
               </div>
@@ -147,7 +147,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
                     e.stopPropagation();
                     onOpenPdf(book);
                   }}
-                  className="flex-1 py-1.5 px-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-[11px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1"
+                  className="flex-1 py-1.5 px-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-[11px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1 shadow-blue-600/25"
                 >
                   <BookOpen className="w-3 h-3" />
                   <span>Read</span>
@@ -160,7 +160,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
                   }}
                   className={`p-1.5 rounded-xl border transition-all ${
                     isDownloaded
-                      ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+                      ? 'bg-blue-500/15 border-blue-500/30 text-sky-400'
                       : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-white'
                   }`}
                   title={isDownloaded ? 'Saved Offline' : 'Save for Offline'}

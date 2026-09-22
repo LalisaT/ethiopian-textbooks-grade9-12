@@ -161,7 +161,7 @@ export const BookCard: React.FC<BookCardProps> = ({
                   ? 'bg-cyan-500/40 text-cyan-100 border-cyan-300/40' 
                   : book.stream === 'social_science' 
                   ? 'bg-rose-500/40 text-rose-100 border-rose-300/40'
-                  : 'bg-emerald-500/40 text-emerald-100 border-emerald-300/40'
+                  : 'bg-blue-500/40 text-blue-100 border-blue-300/40'
               }`}>
                 {book.stream === 'natural_science' ? (
                   <>
@@ -198,7 +198,7 @@ export const BookCard: React.FC<BookCardProps> = ({
             )}
             {isOffline && (
               <span
-                className="p-1 bg-emerald-500 text-white rounded-full shadow-sm"
+                className="p-1 bg-blue-600 text-white rounded-full shadow-sm"
                 title="Saved Offline"
               >
                 <CheckCircle className="w-3.5 h-3.5" />
@@ -241,7 +241,7 @@ export const BookCard: React.FC<BookCardProps> = ({
         <div>
           <h3
             onClick={() => (onSelectBook ? onSelectBook(book) : handleOpenReader())}
-            className="font-extrabold text-base text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors line-clamp-2 cursor-pointer leading-snug"
+            className="font-extrabold text-base text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-sky-400 transition-colors line-clamp-2 cursor-pointer leading-snug"
           >
             {getBookTitle()}
           </h3>
@@ -260,7 +260,7 @@ export const BookCard: React.FC<BookCardProps> = ({
             </div>
             <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                className="h-full bg-sky-400 rounded-full transition-all duration-300"
                 style={{ width: `${progressPercent || readingProgress?.percentComplete}%` }}
               />
             </div>
@@ -272,7 +272,7 @@ export const BookCard: React.FC<BookCardProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleOpenReader}
-              className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-2xl text-xs font-black transition-all shadow-md flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-2xl text-xs font-black transition-all shadow-md flex items-center justify-center gap-2 shadow-blue-600/25"
             >
               <BookOpen className="w-4 h-4" />
               <span>Read Textbook</span>
@@ -283,13 +283,13 @@ export const BookCard: React.FC<BookCardProps> = ({
               disabled={isDownloading}
               className={`p-2.5 rounded-2xl border transition-all active:scale-90 ${
                 isOffline
-                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border-emerald-300'
-                  : 'text-slate-400 hover:text-emerald-600 dark:hover:text-white border-slate-200 dark:border-slate-800 hover:bg-slate-100'
+                  ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 border-blue-300'
+                  : 'text-slate-400 hover:text-blue-600 dark:hover:text-white border-slate-200 dark:border-slate-800 hover:bg-slate-100'
               }`}
               title={isOffline ? 'Saved to Device (Click to toggle)' : 'Download PDF to Mobile Storage & Cache in App'}
             >
               {isDownloading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
               ) : (
                 <DownloadCloud className="w-4 h-4" />
               )}

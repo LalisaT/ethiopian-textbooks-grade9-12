@@ -15,29 +15,29 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden flex flex-col text-slate-100 my-auto animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full max-h-[92dvh] sm:max-h-[88vh] shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-in zoom-in-95 duration-200">
         
         {/* Top Header */}
-        <div className="pt-6 pb-2 px-6 text-center border-b border-slate-800 bg-slate-950/80">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-2 shadow-inner">
-            <Shield className="w-6 h-6" />
+        <div className="shrink-0 pt-4 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 text-center border-b border-slate-800 bg-slate-950/80">
+          <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-600/10 border border-blue-500/20 text-sky-400 mb-1.5 shadow-inner">
+            <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-200 bg-clip-text text-transparent tracking-wider uppercase">
+          <h2 className="text-lg sm:text-2xl font-black bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent tracking-wider uppercase">
             DISCLAIMER
           </h2>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
             Ethiopian Grade 9–12 Textbooks Portal
           </p>
 
           {/* Sub Tabs: Disclaimer | Privacy Policy | Terms */}
-          <div className="flex items-center justify-center gap-1.5 mt-3">
+          <div className="flex items-center justify-center gap-1.5 mt-2.5">
             <button
               type="button"
               onClick={() => setActiveTab('disclaimer')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
                 activeTab === 'disclaimer'
-                  ? 'bg-emerald-600 text-white shadow-md ring-1 ring-emerald-400/40'
+                  ? 'bg-blue-600 text-white shadow-md ring-1 ring-sky-400/40'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -50,7 +50,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               onClick={() => setActiveTab('privacy')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
                 activeTab === 'privacy'
-                  ? 'bg-emerald-600 text-white shadow-md ring-1 ring-emerald-400/40'
+                  ? 'bg-blue-600 text-white shadow-md ring-1 ring-sky-400/40'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -63,7 +63,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               onClick={() => setActiveTab('terms')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
                 activeTab === 'terms'
-                  ? 'bg-emerald-600 text-white shadow-md ring-1 ring-emerald-400/40'
+                  ? 'bg-blue-600 text-white shadow-md ring-1 ring-sky-400/40'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -74,12 +74,12 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-5 sm:p-6 space-y-4 max-h-[60vh] overflow-y-auto text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5 sm:space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed overscroll-contain">
           {activeTab === 'disclaimer' && (
-            <div className="space-y-3.5 animate-in fade-in duration-150">
+            <div className="space-y-3 sm:space-y-3.5 animate-in fade-in duration-150">
               <p>
                 <strong className="text-white">Ethiopian Grade 9–12 Textbooks</strong> is a privately developed educational application and is{' '}
-                <span className="text-emerald-400 font-extrabold">NOT affiliated with, endorsed by, or officially connected</span> to the Ministry of Education of Ethiopia or any government entity. The app is intended solely to provide convenient digital access to publicly available educational learning materials for reference purposes.
+                <span className="text-sky-400 font-extrabold">NOT affiliated with, endorsed by, or officially connected</span> to the Ministry of Education of Ethiopia or any government entity. The app is intended solely to provide convenient digital access to publicly available educational learning materials for reference purposes.
               </p>
 
               <p>
@@ -104,7 +104,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                 If any content owner or legal authority believes that specific material should be removed, please contact us using the email provided, and we will review and take appropriate action promptly.
               </p>
 
-              {/* Links metadata exactly matching user screenshot */}
+              {/* Links metadata */}
               <div className="pt-2 border-t border-slate-800 space-y-2 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-400">Website</span>
@@ -140,8 +140,8 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
 
           {activeTab === 'privacy' && (
             <div className="space-y-3.5 animate-in fade-in duration-150">
-              <div className="p-3 bg-emerald-950/40 border border-emerald-800/50 rounded-2xl flex items-center gap-2 text-emerald-300 font-bold text-xs">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              <div className="p-3 bg-blue-950/40 border border-blue-800/50 rounded-2xl flex items-center gap-2 text-sky-300 font-bold text-xs">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-sky-400" />
                 <span>100% Student Privacy Guarantee: No Personal Data Tracking</span>
               </div>
 
@@ -215,14 +215,14 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           )}
         </div>
 
-        {/* Bottom Action Footer */}
-        <div className="p-4 sm:p-6 bg-slate-950 border-t border-slate-800 flex flex-col gap-2">
+        {/* Bottom Action Footer - Pinned & ALWAYS fully visible on mobile */}
+        <div className="shrink-0 p-3 sm:p-4 bg-slate-950/95 border-t border-slate-800 flex flex-col gap-2">
           <button
             type="button"
             onClick={onAgree}
-            className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 active:scale-[0.98] text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3 sm:py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 active:scale-[0.98] text-white font-black text-xs sm:text-sm shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2"
           >
-            <CheckCircle2 className="w-5 h-5" />
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
             <span>Agree &amp; Continue</span>
           </button>
         </div>

@@ -44,9 +44,9 @@ export const ExamCompletionAd: React.FC<ExamCompletionAdProps> = ({
 
       <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
         <div className="text-[11px] text-slate-400">
-          Exam Score: <strong className="text-emerald-400">{percent}%</strong> • High-Yield Practice Complete
+          Exam Score: <strong className="text-sky-400">{percent}%</strong> • High-Yield Practice Complete
         </div>
-        <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs rounded-xl">
+        <div className="px-3 py-1 bg-blue-500/20 border border-blue-500/40 text-sky-300 font-bold text-xs rounded-xl">
           Sponsored
         </div>
       </div>

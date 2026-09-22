@@ -163,11 +163,11 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
         {/* Header */}
         <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black shadow-md">
               <UploadCloud className="w-5 h-5" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rounded-full text-[10px] font-bold">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 dark:bg-blue-950 text-emerald-700 dark:text-sky-300 rounded-full text-[10px] font-bold">
                 <Sparkles className="w-3 h-3" />
                 <span>Auto Extracts Interactive Notes from PDF</span>
               </div>
@@ -202,8 +202,8 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
               onClick={() => fileInputRef.current?.click()}
               className={`cursor-pointer p-6 rounded-2xl border-2 border-dashed transition-all text-center flex flex-col items-center justify-center gap-2 ${
                 selectedFile
-                  ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20'
-                  : 'border-slate-300 dark:border-slate-700 hover:border-emerald-400 bg-slate-50 dark:bg-slate-800/40'
+                  ? 'border-blue-500 bg-blue-50/40 dark:bg-blue-950/20'
+                  : 'border-slate-300 dark:border-slate-700 hover:border-blue-400 bg-slate-50 dark:bg-slate-800/40'
               }`}
             >
               <input
@@ -219,13 +219,13 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
               />
               {selectedFile ? (
                 <div className="space-y-1">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-md">
+                  <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center mx-auto shadow-md">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="text-xs font-bold text-slate-900 dark:text-white">
                     {selectedFile.name}
                   </div>
-                  <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center justify-center gap-1">
+                  <div className="text-[11px] text-emerald-600 dark:text-sky-400 font-semibold flex items-center justify-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     <span>{(selectedFile.size / (1024 * 1024)).toFixed(1)} MB • Click to change</span>
                   </div>
@@ -357,7 +357,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Mathematics Grade 12 Natural Science Student Textbook"
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -370,7 +370,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                 value={titleAmharic}
                 onChange={(e) => setTitleAmharic(e.target.value)}
                 placeholder="ምሳሌ፡ ሒሳብ 12ኛ ክፍል የተማሪ መጽሐፍ"
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -383,7 +383,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                 value={titleOromo}
                 onChange={(e) => setTitleOromo(e.target.value)}
                 placeholder="fakkeenya: Fiiziksii Kutaa 12 Kitaaba Barataa"
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -399,7 +399,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                   setTitleSomali(e.target.value);
                 }}
                 placeholder="Tigrinya / Somali Title"
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -420,7 +420,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
                   }}
                   className={`p-2.5 rounded-xl border flex items-center gap-2 transition-all ${
                     coverColor === preset.value
-                      ? 'border-emerald-500 ring-2 ring-emerald-500 bg-slate-50 dark:bg-slate-800'
+                      ? 'border-blue-500 ring-2 ring-blue-500 bg-slate-50 dark:bg-slate-800'
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-400'
                   }`}
                 >
@@ -446,7 +446,7 @@ export const UploadBookModal: React.FC<UploadBookModalProps> = ({
             <button
               type="submit"
               disabled={isUploading}
-              className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-2"
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-2"
             >
               {isUploading ? (
                 <>
