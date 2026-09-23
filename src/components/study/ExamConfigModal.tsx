@@ -131,10 +131,10 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
                         </span>
                         <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                           isSelected
-                            ? 'border-blue-600 bg-blue-600 text-white'
+                            ? 'border-sky-400 bg-slate-900 text-sky-400'
                             : 'border-slate-300 dark:border-slate-600'
                         }`}>
-                          {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                          {isSelected && <div className="w-1.5 h-1.5 bg-sky-400 rounded-full" />}
                         </div>
                       </div>
 
@@ -184,7 +184,7 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
 
             <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 ${
               bestOfBestOnly
-                ? 'bg-blue-600 border-blue-600 text-white'
+                ? 'bg-slate-900 border-sky-400 text-sky-400 shadow-sm'
                 : 'border-slate-400'
             }`}>
               {bestOfBestOnly && <CheckCircle2 className="w-4 h-4" />}
@@ -210,9 +210,9 @@ export const ExamConfigModal: React.FC<ExamConfigModalProps> = ({
             </button>
             <button
               onClick={handleStart}
-              className="flex-1 sm:flex-none px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black rounded-xl shadow-lg shadow-blue-600/25 active:scale-95 transition-all flex items-center justify-center gap-2"
+              className="flex-1 sm:flex-none px-5 sm:px-6 py-2.5 sm:py-3 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Award className="w-4 h-4" />
+              <Award className="w-4 h-4 text-sky-400" />
               <span>Start Exam ({selectedCount} Qs)</span>
             </button>
           </div>

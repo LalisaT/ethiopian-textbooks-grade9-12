@@ -97,16 +97,6 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
     // Determine target destination
     const destination = attachedBookId ? `book:${attachedBookId}` : actionUrl || 'tab:community';
 
-    // 1. Dispatch Notification with Phone Chime & Vibration
-    NotificationService.broadcastAdminAlert(
-      title.trim(),
-      message.trim(),
-      category,
-      targetGrade,
-      destination
-    );
-
-    // 2. Also Publish to Community Notice Board if selected
     if (alsoPostToCommunity) {
       let postCat: 'Exam Announcement' | 'Curriculum Update' | 'Study Tip' | 'General Notice' = 'General Notice';
       if (category === 'Exam Prep') postCat = 'Exam Announcement';
@@ -123,15 +113,33 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
         subject: 'Official Broadcast',
         isOfficial: true,
         pinned: true,
-        attachedBookId: attachedBookId || undefined,
-        attachedBookTitle: targetAttachedBookTitle,
+        attachedBookId: attachedBookId || '',
+        attachedBookTitle: targetAttachedBookTitle || '',
         actionUrl: destination,
-        linkUrl: linkUrl.trim() || undefined,
-        linkTitle: linkTitle.trim() || undefined,
-        linkType: linkType || undefined,
-        imageUrl: imageUrl.trim() || undefined,
-        imageCaption: imageCaption.trim() || undefined,
+        linkUrl: linkUrl.trim() || '',
+        linkTitle: linkTitle.trim() || '',
+        linkType: linkType || 'website',
+        imageUrl: imageUrl.trim() || '',
+        imageCaption: imageCaption.trim() || '',
+        sendPush: true,
       });
+    } else {
+      // 1. Dispatch Notification with Phone Chime, Vibration & Rich Details
+      NotificationService.broadcastAdminAlert(
+        title.trim(),
+        message.trim(),
+        category,
+        targetGrade,
+        destination,
+        {
+          imageUrl: imageUrl.trim() || '',
+          imageCaption: imageCaption.trim() || '',
+          attachedBookId: attachedBookId || '',
+          attachedBookTitle: targetAttachedBookTitle || '',
+          linkUrl: linkUrl.trim() || '',
+          linkTitle: linkTitle.trim() || '',
+        }
+      );
     }
 
     setIsSuccess(true);
@@ -151,17 +159,21 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-slate-900 rounded-3xl max-w-xl w-full border border-slate-800 shadow-2xl overflow-hidden flex flex-col my-auto text-slate-100">
+    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+      <div className="bg-slate-950/95 backdrop-blur-2xl rounded-3xl max-w-xl w-full border border-slate-800 shadow-[0_25px_70px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col my-auto text-slate-100 relative group">
+        {/* Luxury top flowing runner */}
+        <div className="luxury-flow-line h-[2px] absolute top-0 left-0 right-0 opacity-90 z-20" />
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
         {/* Header */}
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center font-black shadow-md">
-              <Megaphone className="w-6 h-6" />
+        <div className="p-5 sm:p-6 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/90 relative z-10">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-lg shadow-amber-500/25 shrink-0">
+              <Megaphone className="w-5 h-5 text-slate-950" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full text-[10px] font-black border border-amber-500/30">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-amber-500/15 text-amber-300 rounded-full text-[10px] font-black border border-amber-500/30">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>Admin Push Broadcast with Sound</span>
               </div>
               <h3 className="font-black text-lg text-white">
@@ -170,49 +182,60 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handlePlaySoundSample}
+              className="btn-luxury-idle luxury-pressable inline-flex items-center gap-1.5 px-3 py-1.5 text-amber-300 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+              title="Test Push Notification Sound Chime"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+              <span>Test Sound</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Form Body */}
         <form onSubmit={handleSendBroadcast} className="p-6 sm:p-7 space-y-4">
           {isSuccess ? (
             <div className="py-12 text-center space-y-3 animate-in zoom-in-95 duration-200">
-              <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mx-auto shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-white flex items-center justify-center mx-auto shadow-xl shadow-emerald-500/20">
                 <CheckCircle className="w-10 h-10" />
               </div>
               <h4 className="text-xl font-black text-white">Broadcast & Post Dispatched!</h4>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300">
                 Notification chime alert sent & published to Student Notice Board with picture & links.
               </p>
             </div>
           ) : (
             <>
               {/* 🌟 ACTION BUTTONS TOOLBAR FIRST (Picture, Link, Book, Templates) */}
-              <div className="bg-slate-950 p-2.5 rounded-2xl border border-slate-800 space-y-2">
+              <div className="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 space-y-2.5">
                 <div className="flex items-center justify-between px-1">
                   <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                     <span>Quick Attachment Toolbar:</span>
                   </span>
-                  <span className="text-[10px] text-slate-500">Select what to attach</span>
+                  <span className="text-[10px] text-slate-400 font-bold">Select what to attach</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
                     onClick={() => setActiveTab('photo')}
-                    className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-black transition-all ${
+                    className={`luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                       activeTab === 'photo'
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md scale-[1.02]'
-                        : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                        ? 'btn-luxury-active font-black'
+                        : 'btn-luxury-idle'
                     }`}
                   >
-                    <ImageIcon className="w-4 h-4" />
+                    <ImageIcon className="w-4 h-4 text-amber-400" />
                     <span>Picture</span>
                     {imageUrl && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>
@@ -222,13 +245,13 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   <button
                     type="button"
                     onClick={() => setActiveTab('link')}
-                    className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-black transition-all ${
+                    className={`luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                       activeTab === 'link'
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md scale-[1.02]'
-                        : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                        ? 'btn-luxury-active font-black'
+                        : 'btn-luxury-idle'
                     }`}
                   >
-                    <LinkIcon className="w-4 h-4" />
+                    <LinkIcon className="w-4 h-4 text-sky-400" />
                     <span>Link</span>
                     {linkUrl && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>
@@ -238,13 +261,13 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
                   <button
                     type="button"
                     onClick={() => setActiveTab('book')}
-                    className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-black transition-all ${
+                    className={`luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                       activeTab === 'book'
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md scale-[1.02]'
-                        : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                        ? 'btn-luxury-active font-black'
+                        : 'btn-luxury-idle'
                     }`}
                   >
-                    <BookOpen className="w-4 h-4" />
+                    <BookOpen className="w-4 h-4 text-sky-400" />
                     <span>Textbook</span>
                     {attachedBookId && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>
@@ -889,20 +912,20 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
               </div>
 
               {/* Submit Action */}
-              <div className="pt-2 flex items-center justify-end gap-3">
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
+                  className="btn-luxury-idle luxury-pressable px-5 py-2.5 rounded-2xl text-slate-300 font-bold text-xs cursor-pointer"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-xl transition-transform active:scale-95 flex items-center gap-2"
+                  className="btn-luxury-active luxury-pressable luxury-sheen-sweep px-7 py-3 rounded-2xl text-amber-200 font-black text-xs shadow-xl shadow-amber-500/25 transition-all cursor-pointer flex items-center gap-2"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 text-amber-400" />
                   <span>Broadcast Alert & Publish Post</span>
                 </button>
               </div>

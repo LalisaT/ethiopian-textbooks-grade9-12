@@ -66,10 +66,10 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
         {onSeeAll && (
           <button
             onClick={onSeeAll}
-            className="text-xs font-black text-sky-500 dark:text-sky-400 hover:text-sky-300 flex items-center gap-0.5 transition-colors group shrink-0"
+            className="px-2.5 py-1 rounded-xl text-xs font-black text-sky-400 hover:text-white btn-luxury-idle luxury-pressable flex items-center gap-1 transition-all group shrink-0 cursor-pointer"
           >
             <span>See all</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-sky-400" />
           </button>
         )}
       </div>
@@ -101,7 +101,7 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
 
                   {/* Offline Cached Tag */}
                   {isDownloaded && (
-                    <div className="absolute top-2 right-2 p-1 rounded-lg bg-blue-600 text-white font-black shadow-md">
+                    <div className="absolute top-2 right-2 p-1 rounded-lg bg-slate-900/90 text-sky-400 border border-sky-500/50 font-black shadow-md">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}
@@ -147,9 +147,9 @@ export const PlayStoreShelf: React.FC<PlayStoreShelfProps> = ({
                     e.stopPropagation();
                     onOpenPdf(book);
                   }}
-                  className="flex-1 py-1.5 px-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-[11px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1 shadow-blue-600/25"
+                  className="flex-1 py-1.5 px-2 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-black text-[11px] rounded-xl flex items-center justify-center gap-1 cursor-pointer"
                 >
-                  <BookOpen className="w-3 h-3" />
+                  <BookOpen className="w-3 h-3 text-sky-400" />
                   <span>Read</span>
                 </button>
 

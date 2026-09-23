@@ -177,11 +177,11 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
             disabled={!isCompleted}
             className={`px-5 py-2.5 rounded-2xl font-black text-xs transition-all active:scale-95 flex items-center gap-1.5 ${
               isCompleted
-                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25 cursor-pointer'
+                ? 'btn-luxury-action luxury-pressable text-white cursor-pointer'
                 : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-60'
             }`}
           >
-            <Award className="w-4 h-4" />
+            <Award className="w-4 h-4 text-sky-400" />
             <span>{isCompleted ? 'Start Questions Now' : `Wait ${secondsLeft}s`}</span>
           </button>
         </div>
@@ -205,7 +205,7 @@ export const RewardedVideoAdModal: React.FC<RewardedVideoAdModalProps> = ({
             <div className="flex items-center gap-2.5 w-full max-w-xs pt-2">
               <button
                 onClick={() => setShowExitWarning(false)}
-                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition-all active:scale-95"
+                className="flex-1 py-2.5 rounded-xl btn-luxury-action luxury-pressable text-white font-black text-xs transition-all cursor-pointer"
               >
                 Keep Watching ({secondsLeft}s)
               </button>

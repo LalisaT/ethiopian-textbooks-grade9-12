@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Book, GradeLevel, RegionId, LanguageCode } from './types/book';
 import { QuizAttempt } from './types/quiz';
 import { ETHIOPIAN_BOOKS } from './data/booksDatabase';
@@ -7,49 +7,90 @@ import { DbService } from './services/dbService';
 import { AuthService } from './services/authService';
 import { Navbar } from './components/layout/Navbar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
-import { Footer } from './components/layout/Footer';
 import { HomePage } from './pages/HomePage';
 import { BooksExplorePage } from './pages/BooksExplorePage';
-import { BookDetailPage } from './pages/BookDetailPage';
 import { ReaderPage } from './pages/ReaderPage';
 import { ExamPracticeHub } from './components/study/ExamPracticeHub';
 import { SavedBooksPage } from './pages/SavedBooksPage';
 import { AboutCurriculumPage } from './pages/AboutCurriculumPage';
+import { AboutPage } from './pages/AboutPage';
 import { CommunityPostsPage } from './pages/CommunityPostsPage';
 import { AdminTopBar } from './components/admin/AdminTopBar';
-import { AdminDashboard } from './components/admin/AdminDashboard';
-import { UploadBookModal } from './components/admin/UploadBookModal';
-import { BatchUploadModal } from './components/admin/BatchUploadModal';
-import { EditBookModal } from './components/admin/EditBookModal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { BroadcastNotificationModal } from './components/admin/BroadcastNotificationModal';
 import { DownloadSourcesModal } from './components/books/DownloadSourcesModal';
 import { DisclaimerModal } from './components/common/DisclaimerModal';
 import { PwaInstallPrompt } from './components/common/PwaInstallPrompt';
-import { AppNotification } from './services/notificationService';
+import { PushNotificationBanner } from './components/common/PushNotificationBanner';
+import { NotificationDetailModal } from './components/common/NotificationDetailModal';
+import { AppNotification, NotificationService } from './services/notificationService';
+import { AdminWebLoginPage } from './components/admin/AdminWebLoginPage';
+import { ShareAppModal } from './components/common/ShareAppModal';
+import { ExitConfirmModal } from './components/common/ExitConfirmModal';
+import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about'>('home');
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum'>('home');
+  // Navigation history stack for professional step-by-step back navigation
+  const [tabHistory, setTabHistory] = useState<('home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum')[]>(['home']);
+
   const [readerState, setReaderState] = useState<{
     book: Book;
     unitNumber: number;
     mode: 'interactive' | 'pdf';
   } | null>(null);
 
-  // Admin State & Modals
+  // Live Push Notification Banner State
+  const [activePushNotification, setActivePushNotification] = useState<AppNotification | null>(null);
+
+  // Interactive Notification Details Modal State
+  const [selectedNotificationDetail, setSelectedNotificationDetail] = useState<AppNotification | null>(null);
+  const [targetPostId, setTargetPostId] = useState<string | null>(null);
+
+  // Share App Modal State
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  // Exit App Confirmation Modal State & 3-Tap Counter
+  const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+  const [exitToastMessage, setExitToastMessage] = useState<string | null>(null);
+  const exitTapCountRef = useRef(0);
+  const lastExitTapTimeRef = useRef(0);
+  const exitToastTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Mobile Navigation Drawer State
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Admin State (Strictly for Broadcast Notifications & Official Announcements)
   const [isAdmin, setIsAdmin] = useState<boolean>(() => AuthService.isAuthenticated());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [downloadModalBook, setDownloadModalBook] = useState<Book | null>(null);
-  const [editingBook, setEditingBook] = useState<Book | null>(null);
 
-  // Legal Disclaimer & Privacy Policy (First-open requirement)
+  // Dedicated Web Admin Studio detection (Firebase hosting ethiopian-textbooks.web.app or #admin)
+  const [forceStudentView, setForceStudentView] = useState(false);
+  const isWebDeploy = useMemo(() => {
+    if (forceStudentView) return false;
+    if (typeof window === 'undefined') return false;
+    if (Capacitor.isNativePlatform()) return false;
+    return (
+      window.location.hostname.includes('web.app') ||
+      window.location.hostname.includes('firebaseapp.com') ||
+      window.location.hash === '#admin' ||
+      window.location.hash === '#admin-studio' ||
+      window.location.search.toLowerCase().includes('admin')
+    );
+  }, [forceStudentView]);
+
+  // Legal Disclaimer & Privacy Policy (First-open requirement for students)
   const [isDisclaimerOpen, setIsDisclaimerOpen] = useState<boolean>(() => {
+    if (
+      typeof window !== 'undefined' &&
+      (window.location.hostname.includes('web.app') || window.location.hostname.includes('firebaseapp.com'))
+    ) {
+      return false;
+    }
     return localStorage.getItem('ethio_disclaimer_agreed') !== 'true';
   });
 
@@ -74,8 +115,12 @@ export const App: React.FC = () => {
   const [storageUsage, setStorageUsage] = useState({ usedBytes: 0, usedMb: 0, totalBooksCount: 0 });
 
   const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>(() => {
-    const savedSettings = StorageService.getSettings();
-    return savedSettings.theme || 'light';
+    const isExplicitUserChoice = localStorage.getItem('ethio_explicit_theme_selected');
+    if (isExplicitUserChoice) {
+      const savedSettings = StorageService.getSettings();
+      return savedSettings.theme || 'dark';
+    }
+    return 'dark';
   });
 
   const [offlineBookIds, setOfflineBookIds] = useState<string[]>(() => {
@@ -117,12 +162,25 @@ export const App: React.FC = () => {
     window.addEventListener('visibilitychange', handleSync);
     window.addEventListener('storage', handleSync);
 
+    // Real-time Firestore Broadcast Alert Listener (triggers chime & popup for all students)
+    const unsubscribeBroadcast = NotificationService.subscribeToBroadcastNotifications((newAlert) => {
+      setActivePushNotification(newAlert);
+    });
+
     return () => {
+      unsubscribeBroadcast();
       window.removeEventListener('focus', handleSync);
       window.removeEventListener('visibilitychange', handleSync);
       window.removeEventListener('storage', handleSync);
     };
   }, []);
+
+  // Automatically activate Admin Announcements tab when in Web Admin Studio
+  useEffect(() => {
+    if (isWebDeploy && isAdmin) {
+      setActiveTab('community');
+    }
+  }, [isWebDeploy, isAdmin]);
 
   // Compute final effective library of books
   const allBooks = useMemo(() => {
@@ -177,26 +235,18 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleCloseAdminStudio = () => {
-    setIsAdminDashboardOpen(false);
-    if (window.location.hash === '#admin-studio') {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
-  };
-
   const handleExitAdmin = () => {
     AuthService.logout();
     setIsAdmin(false);
-    setIsAdminDashboardOpen(false);
-    if (window.location.hash === '#admin-studio') {
+    if (window.location.hash === '#admin-studio' || window.location.hash === '#admin') {
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
   };
 
   const handleLoginSuccess = () => {
     setIsAdmin(true);
-    setIsAdminDashboardOpen(true);
     setIsLoginModalOpen(false);
+    setActiveTab('community');
     refreshLibraryState();
   };
 
@@ -205,12 +255,13 @@ export const App: React.FC = () => {
     const checkAdminStudioIntent = () => {
       const isStudioRequested =
         window.location.hash === '#admin-studio' ||
-        window.location.search.includes('admin=studio');
+        window.location.hash === '#admin' ||
+        window.location.search.toLowerCase().includes('admin');
 
       if (isStudioRequested) {
         if (AuthService.isAuthenticated()) {
           setIsAdmin(true);
-          setIsAdminDashboardOpen(true);
+          setActiveTab('community');
         } else {
           setIsLoginModalOpen(true);
         }
@@ -225,8 +276,7 @@ export const App: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
         e.preventDefault();
         if (AuthService.isAuthenticated()) {
-          setIsAdmin(true);
-          setIsAdminDashboardOpen((prev) => !prev);
+          setIsAdmin((prev) => !prev);
         } else {
           setIsLoginModalOpen(true);
         }
@@ -237,7 +287,7 @@ export const App: React.FC = () => {
     const handleOpenStudioEvent = () => {
       if (AuthService.isAuthenticated()) {
         setIsAdmin(true);
-        setIsAdminDashboardOpen(true);
+        setActiveTab('community');
       } else {
         setIsLoginModalOpen(true);
       }
@@ -254,51 +304,6 @@ export const App: React.FC = () => {
   }, []);
 
   // Handle Single Book Uploaded
-  const handleBookUploaded = (newBook: Book) => {
-    refreshLibraryState();
-    handleOpenPdf(newBook);
-  };
-
-  // Handle Batch Books Uploaded
-  const handleBatchBooksUploaded = (newBooks: Book[]) => {
-    refreshLibraryState();
-    if (newBooks.length > 0) {
-      handleOpenPdf(newBooks[0]);
-    }
-  };
-
-  // Handle Book Edited / Customized
-  const handleBookUpdated = (updatedBook: Book) => {
-    setEditingBook(null);
-    refreshLibraryState();
-    if (selectedBook && selectedBook.id === updatedBook.id) {
-      setSelectedBook(updatedBook);
-    }
-  };
-
-  // Handle Delete Any Book
-  const handleDeleteBook = async (bookId: string) => {
-    await DbService.deleteBook(bookId);
-    if (selectedBook && selectedBook.id === bookId) {
-      setSelectedBook(null);
-    }
-    await refreshLibraryState();
-  };
-
-  // Handle Delete ALL Books
-  const handleDeleteAllBooks = async () => {
-    await DbService.deleteAllBooks();
-    setSelectedBook(null);
-    setReaderState(null);
-    await refreshLibraryState();
-  };
-
-  // Handle Restore Default Books
-  const handleRestoreDefaultBooks = async () => {
-    await DbService.restoreDefaultBooks();
-    await refreshLibraryState();
-  };
-
   // Open Interactive Reader
   const handleOpenInteractive = (book: Book, unitNumber = 1) => {
     if (book.id.startsWith('custom-') && (!book.chapters || book.chapters.length === 0)) {
@@ -321,7 +326,6 @@ export const App: React.FC = () => {
       unitNumber: 1,
       mode: 'pdf',
     });
-    setIsAdminDashboardOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -352,15 +356,188 @@ export const App: React.FC = () => {
     setPastQuizAttempts(StorageService.getQuizAttempts());
   };
 
+  // Step-by-step history navigation handler
+  const handleNavigateTab = (
+    newTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum',
+    replace = false
+  ) => {
+    if (newTab === 'explore') {
+      setExploreInitialBookType('all');
+    }
+    setReaderState(null);
+    setActiveTab(newTab);
+    setTabHistory((prev) => {
+      if (replace) {
+        return [...prev.slice(0, -1), newTab];
+      }
+      if (prev[prev.length - 1] === newTab) {
+        return prev;
+      }
+      return [...prev, newTab];
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Professional Step-by-Step Back Navigation & 3-Tap Exit Flow
+  const handleStepBack = () => {
+    // 1. If Exit Confirm modal is open, cancel exit
+    if (isExitConfirmOpen) {
+      setIsExitConfirmOpen(false);
+      exitTapCountRef.current = 0;
+      return;
+    }
+
+    // 2. If Share modal is open, close it
+    if (isShareModalOpen) {
+      setIsShareModalOpen(false);
+      return;
+    }
+
+    // 3. If Mobile menu drawer is open, close it
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
+    // 4. If Notification detail modal is open, close it
+    if (selectedNotificationDetail) {
+      setSelectedNotificationDetail(null);
+      return;
+    }
+
+    // 5. If Download sources modal is open, close it
+    if (isDownloadModalOpen) {
+      setIsDownloadModalOpen(false);
+      return;
+    }
+
+    // 6. If Admin login or broadcast modal is open, close it
+    if (isLoginModalOpen) {
+      setIsLoginModalOpen(false);
+      return;
+    }
+    if (isBroadcastModalOpen) {
+      setIsBroadcastModalOpen(false);
+      return;
+    }
+
+    // 7. If Reader is open:
+    // First ask inner reader component if any inner modal (quiz modal, search, notes) is open
+    if (readerState) {
+      let innerHandled = false;
+      window.dispatchEvent(
+        new CustomEvent('reader-back-requested', {
+          detail: {
+            setHandled: () => {
+              innerHandled = true;
+            },
+          },
+        })
+      );
+      if (innerHandled) {
+        return; // Inner reader dialog was dismissed
+      }
+      // No inner dialog was open, exit reader to library
+      setOfflineBookIds(StorageService.getOfflineBookIds());
+      setReaderState(null);
+      return;
+    }
+
+    // 8. If user navigated tabs and history has more than 1 entry:
+    // Step back to the previous tab they were on
+    if (tabHistory.length > 1) {
+      const nextHistory = tabHistory.slice(0, -1);
+      const prevTab = nextHistory[nextHistory.length - 1] || 'home';
+      setTabHistory(nextHistory);
+      setActiveTab(prevTab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 9. If activeTab is not home, go to home
+    if (activeTab !== 'home') {
+      setActiveTab('home');
+      setTabHistory(['home']);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 10. From Home: "From the Home : Tapping < exits the app cleanly but if user Tapping < exits click 3 times ask, this do you want to close app ? if yes close"
+    const now = Date.now();
+    if (now - lastExitTapTimeRef.current > 3000) {
+      exitTapCountRef.current = 1;
+    } else {
+      exitTapCountRef.current += 1;
+    }
+    lastExitTapTimeRef.current = now;
+
+    if (exitToastTimerRef.current) {
+      clearTimeout(exitToastTimerRef.current);
+    }
+
+    if (exitTapCountRef.current === 1) {
+      setExitToastMessage('Press back 2 more times to close app');
+      exitToastTimerRef.current = setTimeout(() => {
+        setExitToastMessage(null);
+      }, 2500);
+    } else if (exitTapCountRef.current === 2) {
+      setExitToastMessage('Press back 1 more time to close app');
+      exitToastTimerRef.current = setTimeout(() => {
+        setExitToastMessage(null);
+      }, 2500);
+    } else if (exitTapCountRef.current >= 3) {
+      exitTapCountRef.current = 0;
+      setExitToastMessage(null);
+      setIsExitConfirmOpen(true);
+    }
+  };
+
+  // Hardware Back Button (Android Capacitor) & Browser Popstate Listener
+  useEffect(() => {
+    let backSub: any = null;
+
+    const initBackButton = async () => {
+      try {
+        backSub = await CapApp.addListener('backButton', () => {
+          handleStepBack();
+        });
+      } catch (err) {
+        // Not native Android platform
+      }
+    };
+
+    initBackButton();
+
+    const handlePopState = (e: PopStateEvent) => {
+      handleStepBack();
+    };
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      if (backSub) {
+        backSub.remove();
+      }
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [
+    isExitConfirmOpen,
+    isShareModalOpen,
+    isMobileMenuOpen,
+    selectedNotificationDetail,
+    isDownloadModalOpen,
+    isLoginModalOpen,
+    isBroadcastModalOpen,
+    readerState,
+    tabHistory,
+    activeTab,
+  ]);
+
   // Navigate to Explore with Grade filter
   const handleSelectGradeFilter = (grade: GradeLevel) => {
     setExploreInitialGrade(grade);
     setExploreInitialRegion('all');
     setExploreInitialLanguage('all');
-    setActiveTab('explore');
-    setSelectedBook(null);
-    setReaderState(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigateTab('explore');
   };
 
   // Navigate to Explore with Region filter
@@ -368,10 +545,7 @@ export const App: React.FC = () => {
     setExploreInitialRegion(region);
     setExploreInitialGrade('all');
     setExploreInitialLanguage('all');
-    setActiveTab('explore');
-    setSelectedBook(null);
-    setReaderState(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigateTab('explore');
   };
 
   // Navigate to Explore with Language filter
@@ -380,140 +554,48 @@ export const App: React.FC = () => {
     setExploreInitialRegion('all');
     setExploreInitialGrade('all');
     setExploreInitialBookType('all');
-    setActiveTab('explore');
-    setSelectedBook(null);
-    setReaderState(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigateTab('explore');
   };
 
   // Direct shortcut to Teacher Guides in Explore
   const handleNavigateToTeacherGuides = () => {
     setExploreInitialBookType('teacher_guide');
     setExploreInitialGrade('all');
-    setActiveTab('explore');
-    setSelectedBook(null);
-    setReaderState(null);
-    setIsAdminDashboardOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigateTab('explore');
   };
 
   const handleNavigateToExplore = () => {
     setExploreInitialBookType('all');
-    setActiveTab('explore');
-    setSelectedBook(null);
-    setReaderState(null);
-    setIsAdminDashboardOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigateTab('explore');
   };
 
   const handleNotificationNavigation = (n: AppNotification) => {
-    setIsAdminDashboardOpen(false);
+    // 1. Immediately open the rich Interactive Notification Detail Modal
+    setSelectedNotificationDetail(n);
 
-    // 1. Helper to find a matching book from notification metadata
-    const findTargetBook = (): Book | undefined => {
-      // Check explicit book: actionUrl
-      if (n.actionUrl && n.actionUrl.startsWith('book:')) {
-        const bookId = n.actionUrl.replace('book:', '').trim().toLowerCase();
-        const found = allBooks.find(
-          (b) =>
-            b.id.toLowerCase() === bookId ||
-            b.title.toLowerCase() === bookId ||
-            b.title.toLowerCase().includes(bookId) ||
-            bookId.includes(b.id.toLowerCase())
-        );
-        if (found) return found;
-      }
-
-      // Check notification title & body text for book titles or keywords
-      const fullText = `${n.title} ${n.body} ${n.grade || ''} ${n.actionUrl || ''}`.toLowerCase();
-
-      // Check exact textbook title match
-      for (const b of allBooks) {
-        if (
-          fullText.includes(b.title.toLowerCase()) ||
-          (b.titleAmharic && fullText.includes(b.titleAmharic.toLowerCase())) ||
-          (b.titleOromo && fullText.includes(b.titleOromo.toLowerCase()))
-        ) {
-          return b;
-        }
-      }
-
-      // Check subject + grade match (e.g. "Grade 7" and "Mathematics")
-      for (const b of allBooks) {
-        const gradeTag = `grade ${b.grade}`;
-        const subjectTag = b.subject.toLowerCase();
-        if (fullText.includes(gradeTag) && fullText.includes(subjectTag)) {
-          return b;
-        }
-      }
-
-      // Check grade match if specific (e.g. "Grade 7" -> returns first Grade 7 textbook)
-      for (const g of [8, 7, 6, 5]) {
-        if (fullText.includes(`grade ${g}`)) {
-          const match = allBooks.find((b) => b.grade === g);
-          if (match) return match;
-        }
-      }
-
-      // If notification is a book_update or New Book category, default to first available book
-      if (
-        n.type === 'book_update' ||
-        n.category === 'New Book' ||
-        n.category === 'Textbook Upload' ||
-        n.category === 'New Textbook Published'
-      ) {
-        return allBooks.length > 0 ? allBooks[0] : undefined;
-      }
-
-      return undefined;
-    };
-
-    const targetBook = findTargetBook();
-
-    // 2. If a textbook is identified, OPEN IT IMMEDIATELY IN THE READER!
-    if (targetBook) {
-      setSelectedBook(targetBook);
-      setActiveTab('home');
-
-      // Launch the reader directly
-      if (targetBook.chapters && targetBook.chapters.length > 0) {
-        handleOpenInteractive(targetBook, 1);
-      } else {
-        handleOpenPdf(targetBook);
-      }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // 3. If no specific book matched, route to requested destination tab
-    setReaderState(null);
-
-    if (n.actionUrl === 'tab:examprep' || n.actionUrl === 'tab:exam' || n.type === 'exam_alert') {
-      setSelectedBook(null);
-      setActiveTab('examprep');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
+    // 2. Direct offline download navigation
     if (n.actionUrl === 'tab:saved' || n.type === 'download') {
-      setSelectedBook(null);
-      setActiveTab('saved');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      handleNavigateTab('saved');
       return;
     }
 
-    if (n.actionUrl === 'tab:explore') {
-      setSelectedBook(null);
-      setActiveTab('explore');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 3. Exam Prep specific navigation
+    if (n.actionUrl === 'tab:examprep') {
+      handleNavigateTab('examprep');
       return;
     }
 
-    // Default fallback to Notice Board (Community)
-    setSelectedBook(null);
-    setActiveTab('community');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 4. Community / Announcements / Notices / Study Tips
+    // Navigate in the background so closing or interacting with the modal reveals the post
+    const targetPostIdCandidate =
+      n.postId ||
+      (n.actionUrl && n.actionUrl.includes('#') ? n.actionUrl.split('#')[1] : null);
+
+    if (targetPostIdCandidate) {
+      setTargetPostId(targetPostIdCandidate);
+    }
+
+    handleNavigateTab('community');
   };
 
   // If Reader is active, render full-screen reading experience
@@ -524,14 +606,21 @@ export const App: React.FC = () => {
           book={readerState.book}
           initialUnitNumber={readerState.unitNumber}
           mode={readerState.mode}
-          onBack={() => {
-            setOfflineBookIds(StorageService.getOfflineBookIds());
-            setReaderState(null);
-          }}
+          onBack={handleStepBack}
           onUpdateReadingProgress={handleUpdateReadingProgress}
           onOpenDownloadModal={() => handleOpenDownloadModal(readerState.book)}
         />
       </div>
+    );
+  }
+
+  // Dedicated Web Admin Studio: If running on ethiopian-textbooks.web.app and not logged in, show Admin Login Page!
+  if (isWebDeploy && !isAdmin) {
+    return (
+      <AdminWebLoginPage
+        onLoginSuccess={handleLoginSuccess}
+        onViewStudentMode={() => setForceStudentView(true)}
+      />
     );
   }
 
@@ -540,162 +629,112 @@ export const App: React.FC = () => {
       {/* Admin Top Bar */}
       {isAdmin && (
         <AdminTopBar
-          storageUsedMb={storageUsage.usedMb}
-          customBooksCount={customBooks.length}
-          onOpenUploadModal={() => setIsUploadModalOpen(true)}
-          onOpenBatchModal={() => setIsBatchModalOpen(true)}
           onOpenBroadcastModal={() => setIsBroadcastModalOpen(true)}
-          onOpenDashboard={() => setIsAdminDashboardOpen(!isAdminDashboardOpen)}
+          onOpenAnnouncements={() => {
+            handleNavigateTab('community');
+          }}
           onExitAdmin={handleExitAdmin}
-          isDashboardOpen={isAdminDashboardOpen}
+          theme={theme}
+          setTheme={setTheme}
         />
       )}
 
-      {/* Navigation Bar */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={(tab) => {
-          if (tab === 'explore') {
-            setExploreInitialBookType('all');
-          }
-          setActiveTab(tab);
-          setSelectedBook(null);
-          setReaderState(null);
-          setIsAdminDashboardOpen(false);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigateToTeacherGuides={handleNavigateToTeacherGuides}
-        theme={theme}
-        setTheme={setTheme}
-        offlineCount={offlineBookIds.length}
-        isAdmin={isAdmin}
-        onToggleAdmin={handleToggleAdmin}
-        onOpenUploadModal={() => {
-          if (isAdmin) {
-            setIsBatchModalOpen(true);
-          } else {
-            setIsLoginModalOpen(true);
-          }
-        }}
-        onNavigateNotification={handleNotificationNavigation}
-      />
+      {/* Navigation Bar - Only for Students, hidden for Admin */}
+      {!isAdmin && (
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={handleNavigateTab}
+          onNavigateToTeacherGuides={handleNavigateToTeacherGuides}
+          theme={theme}
+          setTheme={setTheme}
+          offlineCount={offlineBookIds.length}
+          isAdmin={isAdmin}
+          onToggleAdmin={handleToggleAdmin}
+          onNavigateNotification={handleNotificationNavigation}
+          onOpenShareModal={() => setIsShareModalOpen(true)}
+          canGoBack={tabHistory.length > 1 || activeTab !== 'home'}
+          onBackStep={handleStepBack}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+        />
+      )}
 
       {/* Main Page Routing */}
       <main className={`flex-1 ${activeTab === 'about' ? 'pb-2' : 'pb-16 lg:pb-8'}`}>
-        {isAdminDashboardOpen ? (
-          <AdminDashboard
-            allBooks={allBooks}
-            customBooks={customBooks}
-            storageUsage={storageUsage}
-            onOpenUploadModal={() => setIsUploadModalOpen(true)}
-            onOpenBatchModal={() => setIsBatchModalOpen(true)}
-            onEditBook={(book) => setEditingBook(book)}
-            onDeleteBook={handleDeleteBook}
-            onDeleteAllBooks={handleDeleteAllBooks}
-            onRestoreDefaultBooks={handleRestoreDefaultBooks}
-            onPreviewBook={(book) => handleOpenPdf(book)}
-            onClose={handleCloseAdminStudio}
-            onLogout={handleExitAdmin}
-          />
-        ) : selectedBook ? (
-          <BookDetailPage
-            book={selectedBook}
-            onBack={() => setSelectedBook(null)}
+        {activeTab === 'home' && (
+          <HomePage
+            books={allBooks}
             onOpenInteractive={handleOpenInteractive}
             onOpenPdf={handleOpenPdf}
             onToggleOffline={handleToggleOffline}
-            isOffline={offlineBookIds.includes(selectedBook.id)}
-            readingProgress={readingProgress[selectedBook.id]}
+            offlineBookIds={offlineBookIds}
+            readingProgress={readingProgress}
+            onSelectGradeFilter={handleSelectGradeFilter}
+            onSelectRegionFilter={handleSelectRegionFilter}
+            onSelectLanguageFilter={handleSelectLanguageFilter}
+            onNavigateToExplore={handleNavigateToExplore}
+            onNavigateToTeacherGuides={handleNavigateToTeacherGuides}
+            onNavigateToExamPrep={() => {
+              handleNavigateTab('examprep');
+            }}
+            onNavigateToCommunity={() => {
+              handleNavigateTab('community');
+            }}
             isAdmin={isAdmin}
-            onEditBook={(b) => setEditingBook(b)}
-            onDeleteBook={handleDeleteBook}
-            onOpenDownloadModal={handleOpenDownloadModal}
           />
-        ) : (
-          <>
-            {activeTab === 'home' && (
-              <HomePage
-                books={allBooks}
-                onOpenInteractive={handleOpenInteractive}
-                onOpenPdf={handleOpenPdf}
-                onToggleOffline={handleToggleOffline}
-                offlineBookIds={offlineBookIds}
-                readingProgress={readingProgress}
-                onSelectGradeFilter={handleSelectGradeFilter}
-                onSelectRegionFilter={handleSelectRegionFilter}
-                onSelectLanguageFilter={handleSelectLanguageFilter}
-                onNavigateToExplore={handleNavigateToExplore}
-                onNavigateToTeacherGuides={handleNavigateToTeacherGuides}
-                onNavigateToExamPrep={() => {
-                  setActiveTab('examprep');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                onNavigateToCommunity={() => {
-                  setActiveTab('community');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                isAdmin={isAdmin}
-                onEditBook={(b) => setEditingBook(b)}
-                onDeleteBook={handleDeleteBook}
-              />
-            )}
-
-            {activeTab === 'explore' && (
-              <BooksExplorePage
-                books={allBooks}
-                onOpenInteractive={handleOpenInteractive}
-                onOpenPdf={handleOpenPdf}
-                onToggleOffline={handleToggleOffline}
-                offlineBookIds={offlineBookIds}
-                readingProgress={readingProgress}
-                initialGrade={exploreInitialGrade}
-                initialBookType={exploreInitialBookType}
-                initialRegion={exploreInitialRegion}
-                initialLanguage={exploreInitialLanguage}
-                isAdmin={isAdmin}
-                onEditBook={(b) => setEditingBook(b)}
-                onDeleteBook={handleDeleteBook}
-              />
-            )}
-
-            {activeTab === 'examprep' && (
-              <ExamPracticeHub
-                onSaveQuizAttempt={handleSaveQuizAttempt}
-                pastAttempts={pastQuizAttempts}
-              />
-            )}
-
-            {activeTab === 'community' && (
-              <CommunityPostsPage
-                isAdmin={isAdmin}
-                onOpenAdminLogin={() => setIsLoginModalOpen(true)}
-                onSelectBook={(book) => {
-                  setSelectedBook(book);
-                  setActiveTab('home');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                onNavigateTab={(tab) => {
-                  setActiveTab(tab);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                allBooks={allBooks}
-              />
-            )}
-
-            {activeTab === 'saved' && (
-              <SavedBooksPage
-                books={allBooks}
-                onOpenInteractive={handleOpenInteractive}
-                onOpenPdf={handleOpenPdf}
-                onToggleOffline={handleToggleOffline}
-                offlineBookIds={offlineBookIds}
-                readingProgress={readingProgress}
-              />
-            )}
-
-            {activeTab === 'about' && <AboutCurriculumPage />}
-          </>
         )}
+
+        {activeTab === 'explore' && (
+          <BooksExplorePage
+            books={allBooks}
+            onOpenInteractive={handleOpenInteractive}
+            onOpenPdf={handleOpenPdf}
+            onToggleOffline={handleToggleOffline}
+            offlineBookIds={offlineBookIds}
+            readingProgress={readingProgress}
+            initialGrade={exploreInitialGrade}
+            initialBookType={exploreInitialBookType}
+            initialRegion={exploreInitialRegion}
+            initialLanguage={exploreInitialLanguage}
+            isAdmin={isAdmin}
+          />
+        )}
+
+        {activeTab === 'examprep' && (
+          <ExamPracticeHub
+            onSaveQuizAttempt={handleSaveQuizAttempt}
+            pastAttempts={pastQuizAttempts}
+          />
+        )}
+
+        {activeTab === 'community' && (
+          <CommunityPostsPage
+            isAdmin={isAdmin}
+            onOpenAdminLogin={() => setIsLoginModalOpen(true)}
+            onSelectBook={(book) => {
+              handleOpenPdf(book);
+            }}
+            onNavigateTab={(tab) => {
+              handleNavigateTab(tab);
+            }}
+            allBooks={allBooks}
+            targetPostId={targetPostId}
+          />
+        )}
+
+        {activeTab === 'saved' && (
+          <SavedBooksPage
+            books={allBooks}
+            onOpenInteractive={handleOpenInteractive}
+            onOpenPdf={handleOpenPdf}
+            onToggleOffline={handleToggleOffline}
+            offlineBookIds={offlineBookIds}
+            readingProgress={readingProgress}
+          />
+        )}
+
+        {activeTab === 'curriculum' && <AboutCurriculumPage />}
+        {activeTab === 'about' && <AboutPage />}
       </main>
 
       {/* Admin Login Modal */}
@@ -707,40 +746,12 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* Single Upload Book Modal */}
-      {isUploadModalOpen && (
-        <UploadBookModal
-          isOpen={isUploadModalOpen}
-          onClose={() => setIsUploadModalOpen(false)}
-          onBookUploaded={handleBookUploaded}
-        />
-      )}
-
-      {/* Fast Multi-PDF Batch Upload Modal */}
-      {isBatchModalOpen && (
-        <BatchUploadModal
-          isOpen={isBatchModalOpen}
-          onClose={() => setIsBatchModalOpen(false)}
-          onBatchUploaded={handleBatchBooksUploaded}
-        />
-      )}
-
       {/* Admin Broadcast Notification Modal */}
       {isBroadcastModalOpen && (
         <BroadcastNotificationModal
           isOpen={isBroadcastModalOpen}
           onClose={() => setIsBroadcastModalOpen(false)}
           allBooks={allBooks}
-        />
-      )}
-
-      {/* Edit Book Modal */}
-      {editingBook && (
-        <EditBookModal
-          isOpen={!!editingBook}
-          book={editingBook}
-          onClose={() => setEditingBook(null)}
-          onBookUpdated={handleBookUpdated}
         />
       )}
 
@@ -758,21 +769,78 @@ export const App: React.FC = () => {
       {/* PWA 1-Click Install Banner & Notification */}
       <PwaInstallPrompt />
 
+      {/* Real-time Push Notification Floating Banner with Sound Replay */}
+      <PushNotificationBanner
+        notification={activePushNotification}
+        onClose={() => setActivePushNotification(null)}
+        onNavigate={handleNotificationNavigation}
+      />
+
+      {/* Interactive Notification Details & Announcement Reader Modal */}
+      <NotificationDetailModal
+        notification={selectedNotificationDetail}
+        onClose={() => setSelectedNotificationDetail(null)}
+        onOpenBook={(book) => {
+          setSelectedNotificationDetail(null);
+          handleOpenPdf(book);
+        }}
+        onNavigateTab={(tab) => {
+          setSelectedNotificationDetail(null);
+          handleNavigateTab(tab);
+        }}
+        onOpenNoticeBoard={(postId) => {
+          setSelectedNotificationDetail(null);
+          if (postId) {
+            setTargetPostId(postId);
+          }
+          handleNavigateTab('community');
+        }}
+        allBooks={allBooks}
+      />
+
       {/* Legal Disclaimer, Privacy Policy & Terms Modal */}
       <DisclaimerModal
         isOpen={isDisclaimerOpen}
         onAgree={handleAgreeDisclaimer}
       />
 
-      {/* Mobile Bottom Navigation Bar (Grades 9-12 & EUEE Hub) */}
-      <MobileBottomNav
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        offlineCount={offlineBookIds.length}
+      {/* Mobile Bottom Navigation Bar (Grades 9-12 & EUEE Hub) - Only for Students */}
+      {!isAdmin && (
+        <MobileBottomNav
+          activeTab={activeTab}
+          setActiveTab={handleNavigateTab}
+          offlineCount={offlineBookIds.length}
+        />
+      )}
+
+      {/* Share App Modal (Circled Area in Mobile Drawer: Telegram, Facebook, WhatsApp, Copy Link & System Share) */}
+      <ShareAppModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
       />
 
-      {/* Footer - Rendered only in Curriculum ('about') tab per user specification */}
-      {activeTab === 'about' && <Footer />}
+      {/* Exit App Confirmation Modal (3-Tap Exit Prompt from Home) */}
+      <ExitConfirmModal
+        isOpen={isExitConfirmOpen}
+        onClose={() => {
+          setIsExitConfirmOpen(false);
+          exitTapCountRef.current = 0;
+        }}
+      />
+
+      {/* Android-style Exit Toast Notification Pill */}
+      {exitToastMessage && (
+        <div
+          role="status"
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[240] bg-slate-900/95 text-white px-4 py-2.5 rounded-full border border-slate-700/80 shadow-2xl flex items-center gap-2.5 backdrop-blur-md text-xs font-bold pointer-events-none animate-in fade-in slide-in-from-bottom-3 duration-200"
+          style={{
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(244, 63, 94, 0.3)',
+          }}
+        >
+          <div className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+          <span>{exitToastMessage}</span>
+        </div>
+      )}
     </div>
   );
 };

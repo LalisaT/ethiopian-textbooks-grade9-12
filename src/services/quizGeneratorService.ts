@@ -712,25 +712,46 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "phys_mechanics",
+      "id": "unit_1",
       "icon": "",
-      "nameOromo": "Boqonnaa 1: Meekaaniiksii & Humna",
-      "nameAmharic": "ምዕራፍ 1፡ ሜካኒክስና ጉልበት",
-      "nameEnglish": "Unit 1: Mechanics & Newton's Laws"
+      "nameOromo": "Boqonnaa 1: Termoodaayinaamiksii",
+      "nameAmharic": "ምዕራፍ 1፡ ቴርሞዳይናሚክስና የሙቀት ሞተሮች",
+      "nameEnglish": "Unit 1: Thermodynamics & Heat Engines"
     },
     {
-      "id": "phys_vectors",
+      "id": "unit_2",
       "icon": "",
-      "nameOromo": "Boqonnaa 2: Veektaroota",
-      "nameAmharic": "ምዕራፍ 2፡ ቬክተሮች",
-      "nameEnglish": "Unit 2: Two-Dimensional Vectors"
+      "nameOromo": "Boqonnaa 2: Sochii fi Veektaroota",
+      "nameAmharic": "ምዕራፍ 2፡ ባለሁለት አቅጣጫ እንቅስቃሴና ቬክተሮች",
+      "nameEnglish": "Unit 2: Two-Dimensional Motion & Vectors"
     },
     {
-      "id": "phys_electromagnetism",
+      "id": "unit_3",
       "icon": "",
-      "nameOromo": "Boqonnaa 3: Elektiroomaagneetizimii",
-      "nameAmharic": "ምዕራፍ 3፡ ኤሌክትሮማግኔቲዝም",
-      "nameEnglish": "Unit 3: Electromagnetism & Induction"
+      "nameOromo": "Boqonnaa 3: Elektiroomaagneetizimii & AC",
+      "nameAmharic": "ምዕራፍ 3፡ ኤሌክትሮማግኔቲዝም እና ኤሲ ጅረት",
+      "nameEnglish": "Unit 3: Electromagnetism & Alternating Current"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Ooptiiksii Dambalii & Leezerii",
+      "nameAmharic": "ምዕራፍ 4፡ የሞገድ ኦፕቲክስ እና ሌዘር ፊዚክስ",
+      "nameEnglish": "Unit 4: Wave Optics & Laser Applications"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Fiiziksii Kowaantamii",
+      "nameAmharic": "ምዕራፍ 5፡ የኳንተም ፊዚክስና ፎቶኤሌክትሪክ ውጤት",
+      "nameEnglish": "Unit 5: Quantum Physics & Photoelectric Effect"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Fiiziksii Niiwukilaraa",
+      "nameAmharic": "ምዕራፍ 6፡ የኒውክሌር ፊዚክስና ራዲዮአክቲቪቲ",
+      "nameEnglish": "Unit 6: Nuclear Physics & Radioactivity"
     }
   ],
   "chemistry": [
@@ -742,18 +763,46 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "chem_solutions",
+      "id": "unit_1",
       "icon": "",
       "nameOromo": "Boqonnaa 1: Soluushinoota & Asidoota",
-      "nameAmharic": "ምዕራፍ 1፡ መፍትሄዎችና አሲዶች",
+      "nameAmharic": "ምዕራፍ 1፡ መፍትሄዎችና አሲድ-ቤዝ ሚዛን",
       "nameEnglish": "Unit 1: Solutions & Acid-Base Equilibrium"
     },
     {
-      "id": "chem_bonding",
+      "id": "unit_2",
       "icon": "",
-      "nameOromo": "Boqonnaa 2: Hidhoo Keemikaalaa",
-      "nameAmharic": "ምዕራፍ 2፡ ኬሚካላዊ ትስስር",
-      "nameEnglish": "Unit 2: Chemical Bonding & Structure"
+      "nameOromo": "Boqonnaa 2: Termoodaayinaamiksii fi Elektirookeemistirii",
+      "nameAmharic": "ምዕራፍ 2፡ ኬሚካል ቴርሞዳይናሚክስና ኤሌክትሮኬሚስትሪ",
+      "nameEnglish": "Unit 2: Chemical Thermodynamics & Electrochemistry"
+    },
+    {
+      "id": "unit_3",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Keemistirii Indaastirii",
+      "nameAmharic": "ምዕራፍ 3፡ የኢንዱስትሪ ኬሚስትሪና ብረታብረት",
+      "nameEnglish": "Unit 3: Industrial Chemistry & Metallurgy"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Poolimaroota & Maakroomoolikiyuulii",
+      "nameAmharic": "ምዕራፍ 4፡ ፖሊመሮችና ማክሮሞለኪዩሎች",
+      "nameEnglish": "Unit 4: Polymers & Synthetic Macromolecules"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Keemistirii Naannoo",
+      "nameAmharic": "ምዕራፍ 5፡ የአካባቢ ኬሚስትሪና ብክለት ቁጥጥር",
+      "nameEnglish": "Unit 5: Environmental Chemistry & Pollution"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Kompaawundoota Ko'oordineeshiinii",
+      "nameAmharic": "ምዕራፍ 6፡ የኮኦርዲኔሽን ውህዶች",
+      "nameEnglish": "Unit 6: Coordination Chemistry & Transition Metals"
     }
   ],
   "biology": [
@@ -765,18 +814,46 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "bio_genetics",
+      "id": "unit_1",
       "icon": "",
-      "nameOromo": "Boqonnaa 1: Jeneetiiksii & Dhaala",
-      "nameAmharic": "ምዕራፍ 1፡ ጀነቲክስና ውርስ",
-      "nameEnglish": "Unit 1: Genetics & Inheritance"
+      "nameOromo": "Boqonnaa 1: Baayooteknooloojii fi DNA",
+      "nameAmharic": "ምዕራፍ 1፡ ባዮቴክኖሎጂና ሪኮምቢናንት ዲኤንኤ",
+      "nameEnglish": "Unit 1: Applications of Biotechnology"
     },
     {
-      "id": "bio_cells",
+      "id": "unit_2",
       "icon": "",
-      "nameOromo": "Boqonnaa 2: Seelii & Respiration",
-      "nameAmharic": "ምዕራፍ 2፡ ሴሉላር አተነፋፈስ",
-      "nameEnglish": "Unit 2: Cellular Respiration & Enzymes"
+      "nameOromo": "Boqonnaa 2: Baayoloojii Namaa: Sirna Narvii",
+      "nameAmharic": "ምዕራፍ 2፡ የሰው ስነ-ህይወት፡ ነርቭና ሆርሞኖች",
+      "nameEnglish": "Unit 2: Nervous & Endocrine Control Systems"
+    },
+    {
+      "id": "unit_3",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Jeneetiiksii fi Dhaala Molekiyuulaa",
+      "nameAmharic": "ምዕራፍ 3፡ ጀነቲክስና ሞለኪዩላር ውርስ",
+      "nameEnglish": "Unit 3: Genetics & Molecular Inheritance"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Eevolushinii fi Filannoo Uumamaa",
+      "nameAmharic": "ምዕራፍ 4፡ ኢቮሉሽንና የተፈጥሮ ምርጫ",
+      "nameEnglish": "Unit 4: Evolution & Natural Selection"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Ikolojii fi Kununsa Lubbu-qabeeyyii",
+      "nameAmharic": "ምዕራፍ 5፡ ስነ-ምህዳርና የብዝሃ-ህይወት ጥበቃ",
+      "nameEnglish": "Unit 5: Ecology & Biodiversity Conservation"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Maayikiroobayoloojii fi Nageenya",
+      "nameAmharic": "ምዕራፍ 6፡ ማይክሮባዮሎጂና የበሽታ መከላከያ",
+      "nameEnglish": "Unit 6: Microorganisms, Immunology & Disease"
     }
   ],
   "mathematics": [
@@ -788,32 +865,46 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "math_calculus",
+      "id": "unit_1",
       "icon": "",
-      "nameOromo": "Boqonnaa 1: Kaalkulasii (Derivatives)",
-      "nameAmharic": "ምዕራፍ 1፡ ካልኩለስና ዴሪቬቲቭ",
-      "nameEnglish": "Unit 1: Limits & Differential Calculus"
+      "nameOromo": "Boqonnaa 1: Hanga fi Itti-fufiinsa",
+      "nameAmharic": "ምዕራፍ 1፡ ወሰን እና ቀጣይነት (Limits & Continuity)",
+      "nameEnglish": "Unit 1: Limits & Continuity of Functions"
     },
     {
-      "id": "math_vectors",
+      "id": "unit_2",
       "icon": "",
-      "nameOromo": "Boqonnaa 2: Tarrisee & Veektaroota",
-      "nameAmharic": "ምዕራፍ 2፡ ቅደምተከተሎችና ቬክተሮች",
-      "nameEnglish": "Unit 2: Sequences, Series & Vectors"
+      "nameOromo": "Boqonnaa 2: Kaalkulasii (Derivatives)",
+      "nameAmharic": "ምዕራፍ 2፡ ካልኩለስና ዴሪቬቲቭ (Differential Calculus)",
+      "nameEnglish": "Unit 2: Differential Calculus & Derivatives"
     },
     {
-      "id": "math_matrices",
+      "id": "unit_3",
       "icon": "",
-      "nameOromo": "Boqonnaa 3: Maatiriksii & Diiterminaantii",
-      "nameAmharic": "ምዕራፍ 3፡ ማትሪክስና ዲተርሚናንት",
-      "nameEnglish": "Unit 3: Matrices & Determinants"
+      "nameOromo": "Boqonnaa 3: Hojiirra Oolmaa ዴሪቬቲቭ",
+      "nameAmharic": "ምዕራፍ 3፡ የዴሪቬቲቭ ተግባራዊ አጠቃቀም (Optimization)",
+      "nameEnglish": "Unit 3: Applications of Differentiation"
     },
     {
-      "id": "math_business",
+      "id": "unit_4",
       "icon": "",
-      "nameOromo": "Boqonnaa 4: Herrega Daldalaa & Dhala",
-      "nameAmharic": "ምዕራፍ 4፡ የንግድ ሒሳብና ወለድ",
-      "nameEnglish": "Unit 4: Business Math & Interest"
+      "nameOromo": "Boqonnaa 4: Kaalkulasii Integiraalaa",
+      "nameAmharic": "ምዕራፍ 4፡ ኢንቴግራይዝድ ካልኩለስ (Integral Calculus)",
+      "nameEnglish": "Unit 4: Integral Calculus & Antiderivatives"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Veektaroota fi Maatiriksii",
+      "nameAmharic": "ምዕራፍ 5፡ 3D ቬክተሮችና ማትሪክስ",
+      "nameEnglish": "Unit 5: 3D Coordinate Vectors & Matrices"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Qorannoo fi Piroobaabiliitii",
+      "nameAmharic": "ምዕራፍ 6፡ ፕሮባቢሊቲና ስታትስቲክስ ስርጭት",
+      "nameEnglish": "Unit 6: Mathematical Proofs & Probability"
     }
   ],
   "english": [
@@ -825,21 +916,21 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive English)"
     },
     {
-      "id": "eng_reading",
+      "id": "unit_1",
       "icon": "",
       "nameOromo": "Boqonnaa 1: Dubbisuu fi Hubannoo",
       "nameAmharic": "ምዕራፍ 1፡ ንባብና ግንዛቤ",
       "nameEnglish": "Unit 1: Reading Comprehension & Inferences"
     },
     {
-      "id": "eng_grammar",
+      "id": "unit_2",
       "icon": "",
       "nameOromo": "Boqonnaa 2: Caasluga (Grammar)",
       "nameAmharic": "ምዕራፍ 2፡ ሰዋሰውና ሥርዓተ-ነጥብ",
       "nameEnglish": "Unit 2: Conditionals & Passive Voice"
     },
     {
-      "id": "eng_vocab",
+      "id": "unit_3",
       "icon": "",
       "nameOromo": "Boqonnaa 3: Jechoota & Hiika",
       "nameAmharic": "ምዕራፍ 3፡ ቃላትና አገባብ",
@@ -855,25 +946,39 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive Citizenship)"
     },
     {
-      "id": "civ_constitution",
+      "id": "unit_1",
       "icon": "",
       "nameOromo": "Boqonnaa 1: Heera Mootummaa RDFI",
-      "nameAmharic": "ምዕራፍ 1፡ የኢፌዲሪ ህገ-መንግስት",
+      "nameAmharic": "ምዕራፍ 1፡ የኢፌዲሪ ህገ-መንግስት መርሆዎች",
       "nameEnglish": "Unit 1: FDRE Constitution Principles"
     },
     {
-      "id": "civ_rights",
+      "id": "unit_2",
       "icon": "",
       "nameOromo": "Boqonnaa 2: Mirgoota Namummaa & Diimokiraasii",
       "nameAmharic": "ምዕራፍ 2፡ ሰብአዊና ዲሞክራሲያዊ መብቶች",
       "nameEnglish": "Unit 2: Human & Democratic Rights"
     },
     {
-      "id": "civ_federalism",
+      "id": "unit_3",
       "icon": "",
       "nameOromo": "Boqonnaa 3: Caasaa Federaalawaa & Seera",
       "nameAmharic": "ምዕራፍ 3፡ ፌዴራላዊ መዋቅርና የህግ የበላይነት",
       "nameEnglish": "Unit 3: Federal Structure & Rule of Law"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Wal-qixxummaa fi Haqaa",
+      "nameAmharic": "ምዕራፍ 4፡ እኩልነትና ፍትህ",
+      "nameEnglish": "Unit 4: Equality & Social Justice"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Jaalala Biyyaa fi Ga'ee Lammummaa",
+      "nameAmharic": "ምዕራፍ 5፡ አገር ወዳድነትና የዜግነት ኃላፊነት",
+      "nameEnglish": "Unit 5: Patriotism & Civic Responsibility"
     }
   ],
   "economics": [
@@ -885,18 +990,46 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "econ_macro",
+      "id": "unit_1",
       "icon": "",
       "nameOromo": "Boqonnaa 1: Maakroo-Ikoonoomiksii & GDP",
       "nameAmharic": "ምዕራፍ 1፡ ማክሮ-ኢኮኖሚክስና ጂዲፒ",
-      "nameEnglish": "Unit 1: Macroeconomics, GDP & Inflation"
+      "nameEnglish": "Unit 1: Macroeconomics, GDP & National Accounts"
     },
     {
-      "id": "econ_micro",
+      "id": "unit_2",
       "icon": "",
-      "nameOromo": "Boqonnaa 2: Dhiyeessii fi Fedhii",
-      "nameAmharic": "ምዕራፍ 2፡ አቅርቦትና ፍላጎት",
-      "nameEnglish": "Unit 2: Supply, Demand & Elasticity"
+      "nameOromo": "Boqonnaa 2: Dhiyeessii fi Fedhii Waliigalaa",
+      "nameAmharic": "ምዕራፍ 2፡ አጠቃላይ አቅርቦትና ፍላጎት",
+      "nameEnglish": "Unit 2: Aggregate Demand & Aggregate Supply"
+    },
+    {
+      "id": "unit_3",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Imaammata Maallaqaa fi Baankii",
+      "nameAmharic": "ምዕራፍ 3፡ የገንዘብ ፖሊሲና የባንክ ስርዓት",
+      "nameEnglish": "Unit 3: Monetary Policy & Banking Systems"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Imaammata Fiskaalaa fi Baajata",
+      "nameAmharic": "ምዕራፍ 4፡ የፊስካል ፖሊሲና የመንግስት በጀት",
+      "nameEnglish": "Unit 4: Fiscal Policy & Government Budget"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Daldala Idil-Addunyaa fi Sharafa",
+      "nameAmharic": "ምዕራፍ 5፡ ዓለም አቀፍ ንግድና የውጭ ምንዛሪ",
+      "nameEnglish": "Unit 5: International Trade & Exchange Rates"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Guddina Dinagdee Itoophiyaa",
+      "nameAmharic": "ምዕራፍ 6፡ የኢትዮጵያ ኢኮኖሚ እድገትና ተግዳሮቶች",
+      "nameEnglish": "Unit 6: Economic Development in Ethiopia"
     }
   ],
   "geography": [
@@ -908,18 +1041,46 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "geo_ethiopia",
+      "id": "unit_1",
       "icon": "",
-      "nameOromo": "Boqonnaa 1: Ji'oograafii Itoophiyaa",
-      "nameAmharic": "ምዕራፍ 1፡ የኢትዮጵያ ጂኦግራፊ",
+      "nameOromo": "Boqonnaa 1: Ji'oograafii Fiizikaalaa Itoophiyaa",
+      "nameAmharic": "ምዕራፍ 1፡ የኢትዮጵያ ፊዚካል ጂኦግራፊ",
       "nameEnglish": "Unit 1: Physical Geography & Topography"
     },
     {
-      "id": "geo_gis",
+      "id": "unit_2",
       "icon": "",
-      "nameOromo": "Boqonnaa 2: Kaartaa fi GIS",
-      "nameAmharic": "ምዕራፍ 2፡ ካርታና የጂአይኤስ ቴክኖሎጂ",
+      "nameOromo": "Boqonnaa 2: Kaartaa, GIS fi Remote Sensing",
+      "nameAmharic": "ምዕራፍ 2፡ ካርታ፣ ጂአይኤስና የርቀት ዳሰሳ",
       "nameEnglish": "Unit 2: Cartography, GIS & Remote Sensing"
+    },
+    {
+      "id": "unit_3",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Sirna Bishaan fi Qabeenya Lafa",
+      "nameAmharic": "ምዕራፍ 3፡ የፍሳሽ ስርዓትና የውሃ ሀብቶች",
+      "nameEnglish": "Unit 3: Drainage Systems & Water Resources"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Qilleensa fi Naannoo Qonnaa",
+      "nameAmharic": "ምዕራፍ 4፡ የአየር ንብረትና አግሮ-ኢኮሎጂ",
+      "nameEnglish": "Unit 4: Climate Regions & Agro-Ecological Zones"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Baay'ina Uummataa fi Demograafii",
+      "nameAmharic": "ምዕራፍ 5፡ የህዝብ ቁጥር እድገትና ስነ-ህዝብ",
+      "nameEnglish": "Unit 5: Population Dynamics & Demographics"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Sochii Dinagdee fi Misooma Itti Fufiinsa",
+      "nameAmharic": "ምዕራፍ 6፡ የኢኮኖሚ እንቅስቃሴዎችና ዘላቂ ልማት",
+      "nameEnglish": "Unit 6: Economic Activities & Sustainability"
     }
   ],
   "history": [
@@ -931,11 +1092,53 @@ const SUBJECT_TOPICS_MAP: Record<string, QuizTopicOption[]> = {
       "nameEnglish": "All Units (Comprehensive EUEE)"
     },
     {
-      "id": "hist_ethiopia",
+      "id": "unit_1",
       "icon": "",
       "nameOromo": "Boqonnaa 1: Seenaa Itoophiyaa & Adwaa",
-      "nameAmharic": "ምዕራፍ 1፡ የኢትዮጵያ ታሪክና አድዋ",
-      "nameEnglish": "Unit 1: Modern Ethiopian History & Adwa"
+      "nameAmharic": "ምዕራፍ 1፡ የ 19ኛው ክ/ዘ ሀገር ምስረታና አድዋ",
+      "nameEnglish": "Unit 1: Modern Ethiopian History & Adwa (1896)"
+    },
+    {
+      "id": "unit_2",
+      "icon": "",
+      "nameOromo": "Boqonnaa 2: Saba fi Sablammii Itoophiyaa",
+      "nameAmharic": "ምዕራፍ 2፡ የኢትዮጵያ ህዝቦችና ማህበረሰቦች",
+      "nameEnglish": "Unit 2: Peoples & Society in 19th Century Ethiopia"
+    },
+    {
+      "id": "unit_3",
+      "icon": "",
+      "nameOromo": "Boqonnaa 3: Guddina Keessaa fi Ta'iinsota (1906–1941)",
+      "nameAmharic": "ምዕራፍ 3፡ የውስጥ እድገቶችና ሁነቶች (1906–1941)",
+      "nameEnglish": "Unit 3: Internal Developments & Events (1906–1941)"
+    },
+    {
+      "id": "unit_4",
+      "icon": "",
+      "nameOromo": "Boqonnaa 4: Waraana Addunyaa I fi II",
+      "nameAmharic": "ምዕራፍ 4፡ አንደኛውና ሁለተኛው የዓለም ጦርነት",
+      "nameEnglish": "Unit 4: Global Conflicts: WWI & WWII Dynamics"
+    },
+    {
+      "id": "unit_5",
+      "icon": "",
+      "nameOromo": "Boqonnaa 5: Itoophiyaa Bilisummaa Boodaa (1941–1974)",
+      "nameAmharic": "ምዕራፍ 5፡ ከድል በኋላ እስከ ንጉሳዊው ውድቀት (1941–1974)",
+      "nameEnglish": "Unit 5: Post-Liberation Imperial Era (1941–1974)"
+    },
+    {
+      "id": "unit_6",
+      "icon": "",
+      "nameOromo": "Boqonnaa 6: Sirna Dargii fi Jijjiirama (1974–1991)",
+      "nameAmharic": "ምዕራፍ 6፡ የደርግ ዘመንና ፖለቲካዊ ሽግግር (1974–1991)",
+      "nameEnglish": "Unit 6: The Derg Regime & Political Transition"
+    },
+    {
+      "id": "unit_7",
+      "icon": "",
+      "nameOromo": "Boqonnaa 7: Beekumsa Dhalootaa fi Dhaala Aadaa",
+      "nameAmharic": "ምዕራፍ 7፡ የሀገር በቀል እውቀትና ቅርሶች",
+      "nameEnglish": "Unit 7: Indigenous Knowledge Systems & Heritage"
     }
   ],
   "agriculture": [
@@ -1137,13 +1340,52 @@ export const QuizGeneratorService = {
    * Return specific topics available for this book subject
    */
   getAvailableTopics(subjectCategory?: SubjectCategory, book?: Book): QuizTopicOption[] {
-    const subject = subjectCategory || (book ? resolveSubjectCategory(book) : 'physics');
+    const allTopic: QuizTopicOption = {
+      id: 'all',
+      icon: '',
+      nameOromo: 'Boqonnaalee Hunda (Waliigala)',
+      nameAmharic: 'ሁሉንም ምዕራፎች (አጠቃላይ)',
+      nameEnglish: 'All Units (Comprehensive EUEE)'
+    };
 
+    const subject = subjectCategory || (book ? resolveSubjectCategory(book) : 'physics');
+    let subjectKey = subject;
     if (subject === 'mathematics_natural' || subject === 'mathematics_social') {
-      return SUBJECT_TOPICS_MAP['mathematics'] || SUBJECT_TOPICS_MAP['default'];
+      subjectKey = 'mathematics';
     }
 
-    return SUBJECT_TOPICS_MAP[subject] || SUBJECT_TOPICS_MAP['default'];
+    const predefinedList = SUBJECT_TOPICS_MAP[subjectKey] || SUBJECT_TOPICS_MAP['default'] || [];
+
+    // Priority 1: If book has comprehensive chapters defined covering totalUnits, use them!
+    if (book && book.chapters && book.chapters.length >= (book.totalUnits || 5)) {
+      const dynamicUnits: QuizTopicOption[] = book.chapters.map((ch) => ({
+        id: `unit_${ch.unitNumber}`,
+        icon: '',
+        nameOromo: `Boqonnaa ${ch.unitNumber}: ${ch.titleOromo || ch.title}`,
+        nameAmharic: `ምዕራፍ ${ch.unitNumber}፡ ${ch.titleAmharic || ch.title}`,
+        nameEnglish: `Unit ${ch.unitNumber}: ${ch.title}`
+      }));
+      return [allTopic, ...dynamicUnits];
+    }
+
+    // Priority 2: Use enriched SUBJECT_TOPICS_MAP which has all units (e.g. all 7 units for history, 6 for physics, etc.)
+    if (predefinedList.length > 2) {
+      return predefinedList;
+    }
+
+    // Fallback: If chapters exist, return them
+    if (book && book.chapters && book.chapters.length > 0) {
+      const dynamicUnits: QuizTopicOption[] = book.chapters.map((ch) => ({
+        id: `unit_${ch.unitNumber}`,
+        icon: '',
+        nameOromo: `Boqonnaa ${ch.unitNumber}: ${ch.titleOromo || ch.title}`,
+        nameAmharic: `ምዕራፍ ${ch.unitNumber}፡ ${ch.titleAmharic || ch.title}`,
+        nameEnglish: `Unit ${ch.unitNumber}: ${ch.title}`
+      }));
+      return [allTopic, ...dynamicUnits];
+    }
+
+    return predefinedList;
   },
 
   /**
@@ -1176,14 +1418,20 @@ export const QuizGeneratorService = {
 
     // 3. Apply topic filter if a specific topic was selected
     if (selectedTopicId !== 'all') {
+      const unitNum = selectedTopicId.startsWith('unit_')
+        ? parseInt(selectedTopicId.replace('unit_', ''), 10)
+        : parseInt(selectedTopicId, 10);
+
       const topicMatches = initialPool.filter((q) => {
+        if (!isNaN(unitNum) && q.unitNumber === unitNum) return true;
         const titleLower = (q.chapterTitle || '').toLowerCase();
         const qLower = (q.question || '').toLowerCase();
         const idLower = (q.id || '').toLowerCase();
+        const selLower = selectedTopicId.toLowerCase();
         return (
-          idLower.includes(selectedTopicId.toLowerCase()) ||
-          titleLower.includes(selectedTopicId.toLowerCase()) ||
-          qLower.includes(selectedTopicId.toLowerCase())
+          idLower.includes(selLower) ||
+          titleLower.includes(selLower) ||
+          qLower.includes(selLower)
         );
       });
       if (topicMatches.length > 0) {

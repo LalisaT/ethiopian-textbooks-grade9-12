@@ -30,4 +30,5 @@ export interface CommunityPost {
   linkType?: 'website' | 'telegram' | 'youtube' | 'drive' | 'portal' | 'download';
   imageUrl?: string;
   imageCaption?: string;
+  isDeleted?: boolean;
 }

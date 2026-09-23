@@ -379,8 +379,8 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       let doc: pdfjsLib.PDFDocumentProxy | null = null;
       let lastError: any = null;
 
-      // Tier 1: Authentic offline Blob from IndexedDB or props
-      if (pdfBlob && pdfBlob.size > 1000) {
+      // Tier 1: Authentic offline Blob from IndexedDB or props (> 100 KB to avoid dummy samples)
+      if (pdfBlob && pdfBlob.size > 100000) {
         try {
           const arrayBuffer = await pdfBlob.arrayBuffer();
           const loadingTask = pdfjsLib.getDocument({
@@ -394,25 +394,38 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         }
       }
 
+      // Safe URL helper avoiding double-encoding (%20 -> %2520)
+      const getSafeUrl = (rawUrl: string) => {
+        try {
+          return encodeURI(decodeURI(rawUrl));
+        } catch {
+          return encodeURI(rawUrl);
+        }
+      };
+
       // Tier 2: Target URL (ArrayBuffer fetch preferred on Android to avoid Range stream bug)
       const targetUrl = pdfUrl || book.pdfUrl;
       if (!doc && targetUrl) {
+        const encodedTargetUrl = getSafeUrl(targetUrl);
         // 2A: Direct fetch as ArrayBuffer (clean GET request, no Range headers, works 100% in Android WebView)
         try {
-          const resp = await fetch(targetUrl);
-          if (resp.ok) {
+          const resp = await fetch(encodedTargetUrl);
+          const contentType = resp.headers.get('content-type') || '';
+          if (resp.ok && !contentType.includes('text/html')) {
             const arrayBuffer = await resp.arrayBuffer();
-            const loadingTask = pdfjsLib.getDocument({
-              data: arrayBuffer,
-              isEvalSupported: false,
-            });
-            doc = await loadingTask.promise;
+            if (arrayBuffer.byteLength > 100000) {
+              const loadingTask = pdfjsLib.getDocument({
+                data: arrayBuffer,
+                isEvalSupported: false,
+              });
+              doc = await loadingTask.promise;
 
-            // Cache in IndexedDB for instant future opens
-            try {
-              const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-              await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-            } catch {}
+              // Cache authentic PDF in IndexedDB for instant future opens
+              try {
+                const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+              } catch {}
+            }
           }
         } catch (err) {
           console.warn('Direct fetch as ArrayBuffer failed:', err);
@@ -423,13 +436,16 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         if (!doc) {
           try {
             const loadingTask = pdfjsLib.getDocument({
-              url: targetUrl,
+              url: encodedTargetUrl,
               disableRange: true,
               disableStream: true,
               disableAutoFetch: false,
               isEvalSupported: false,
             });
-            doc = await loadingTask.promise;
+            const candidateDoc = await loadingTask.promise;
+            if (candidateDoc && candidateDoc.numPages > 3) {
+              doc = candidateDoc;
+            }
           } catch (err) {
             console.warn('PDF.js url loading failed:', err);
             lastError = err;
@@ -441,19 +457,22 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           const githubUrl = `${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`;
           try {
             const resp = await fetch(githubUrl);
-            if (resp.ok) {
+            const contentType = resp.headers.get('content-type') || '';
+            if (resp.ok && !contentType.includes('text/html')) {
               const arrayBuffer = await resp.arrayBuffer();
-              const loadingTask = pdfjsLib.getDocument({
-                data: arrayBuffer,
-                isEvalSupported: false,
-              });
-              doc = await loadingTask.promise;
-              // Cache in IndexedDB private storage for instant offline access
-              try {
-                const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-                StorageService.markBookOffline(book.id);
-              } catch {}
+              if (arrayBuffer.byteLength > 100000) {
+                const loadingTask = pdfjsLib.getDocument({
+                  data: arrayBuffer,
+                  isEvalSupported: false,
+                });
+                doc = await loadingTask.promise;
+                // Cache in IndexedDB private storage for instant offline access
+                try {
+                  const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                  await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+                  StorageService.markBookOffline(book.id);
+                } catch {}
+              }
             }
           } catch (err) {
             console.warn('GitHub Releases cloud fetch failed:', err);
@@ -466,13 +485,20 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       if (!doc) {
         try {
           const cached = await DbService.getPdfFile(book.id);
-          if (cached && cached.blob && cached.blob.size > 1000) {
-            const arrayBuffer = await cached.blob.arrayBuffer();
-            const loadingTask = pdfjsLib.getDocument({
-              data: arrayBuffer,
-              isEvalSupported: false,
-            });
-            doc = await loadingTask.promise;
+          if (cached && cached.blob) {
+            if (cached.blob.size > 100000) {
+              const arrayBuffer = await cached.blob.arrayBuffer();
+              const loadingTask = pdfjsLib.getDocument({
+                data: arrayBuffer,
+                isEvalSupported: false,
+              });
+              doc = await loadingTask.promise;
+            } else {
+              // Stale dummy sample detected; purge it so it doesn't block authentic PDF
+              try {
+                await DbService.deletePdfFile(book.id);
+              } catch {}
+            }
           }
         } catch (err) {
           console.warn('DbService cache read failed:', err);
@@ -480,9 +506,8 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         }
       }
 
-      // Tier 4: Guaranteed Official Curriculum Edition Generator
-      // Guarantees the student is NEVER blocked by a missing physical file.
-      // Generates the authentic textbook with Table of Contents, Chapters, and Study tips!
+      // Tier 4: Guaranteed Official Curriculum Edition Generator (Emergency UI Fallback)
+      // Generates the textbook syllabus when completely offline and file not cached
       if (!doc) {
         try {
           console.info(`Generating fallback curriculum textbook for ${book.title}...`);
@@ -492,10 +517,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             isEvalSupported: false,
           });
           doc = await loadingTask.promise;
-          try {
-            const blob = new Blob([sampleBytes as any], { type: 'application/pdf' });
-            await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-          } catch {}
+          // Note: Do NOT save dummy sample into IndexedDB so it never poisons the cache!
         } catch (err) {
           console.error('Curriculum generator fallback failed:', err);
           lastError = err;
@@ -536,6 +558,60 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   useEffect(() => {
     setNotes(StorageService.getNotes(book.id, currentPage));
   }, [book.id, currentPage]);
+
+  // Handle hardware / back button inside Reader: Close inner modals step-by-step
+  useEffect(() => {
+    const handleReaderBack = (e: any) => {
+      if (isQuizConfigOpen) {
+        setIsQuizConfigOpen(false);
+        e.detail?.setHandled();
+        return;
+      }
+      if (isQuizActive) {
+        setIsQuizActive(false);
+        e.detail?.setHandled();
+        return;
+      }
+      if (isVideoAdModalOpen) {
+        setIsVideoAdModalOpen(false);
+        e.detail?.setHandled();
+        return;
+      }
+      if (isNetworkModalOpen) {
+        setIsNetworkModalOpen(false);
+        e.detail?.setHandled();
+        return;
+      }
+      if (isSidebarOpen) {
+        setIsSidebarOpen(false);
+        e.detail?.setHandled();
+        return;
+      }
+      if (isNotesOpen) {
+        setIsNotesOpen(false);
+        e.detail?.setHandled();
+        return;
+      }
+      if (isSearchOpen) {
+        setIsSearchOpen(false);
+        e.detail?.setHandled();
+        return;
+      }
+    };
+
+    window.addEventListener('reader-back-requested', handleReaderBack);
+    return () => {
+      window.removeEventListener('reader-back-requested', handleReaderBack);
+    };
+  }, [
+    isQuizConfigOpen,
+    isQuizActive,
+    isVideoAdModalOpen,
+    isNetworkModalOpen,
+    isSidebarOpen,
+    isNotesOpen,
+    isSearchOpen,
+  ]);
 
   // Auto-hide floating Clean View capsules after 0.5s of inactivity
   const triggerOverlayActivity = () => {
@@ -1086,10 +1162,6 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         isEvalSupported: false,
       });
       const doc = await loadingTask.promise;
-      try {
-        const blob = new Blob([sampleBytes as any], { type: 'application/pdf' });
-        await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-      } catch {}
       setPdfDoc(doc);
       setTotalPages(doc.numPages);
       setCurrentPage(1);
@@ -1128,9 +1200,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         <div className="w-full space-y-2.5 pt-2">
           <button
             onClick={handleForceGenerateCurriculum}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-98 text-white rounded-xl text-xs font-black shadow-lg shadow-blue-950/40 transition-all"
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white rounded-xl text-xs font-black transition-all cursor-pointer"
           >
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-4 h-4 text-sky-400" />
             <span>Open Official Curriculum Edition</span>
           </button>
 
@@ -1312,9 +1384,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Sidebar / Jump drawer */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={`p-2 rounded-xl border transition-all active:scale-95 ${
+              className={`p-2 rounded-xl border transition-all active:scale-95 cursor-pointer ${
                 isSidebarOpen
-                  ? 'bg-blue-600 text-white border-blue-500'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-950 text-slate-300 border-slate-800'
               }`}
               title="Chapters & Page Jump"
@@ -1325,9 +1397,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Search */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className={`p-2 rounded-xl border transition-colors active:scale-95 ${
+              className={`p-2 rounded-xl border transition-colors active:scale-95 cursor-pointer ${
                 isSearchOpen
-                  ? 'bg-blue-600 text-white border-blue-500'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-950 text-slate-400 border-slate-800'
               }`}
               title="Search In Book"
@@ -1371,9 +1443,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Sidebar Drawer Toggle */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={`p-2 rounded-xl border transition-all ${
+              className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 isSidebarOpen
-                  ? 'bg-blue-600 text-white border-blue-500'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-950 text-slate-400 hover:text-white border-slate-800'
               }`}
               title="Page Thumbnails & Jump Drawer"
@@ -1439,9 +1511,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
               <button
                 onClick={() => setFitMode('page')}
-                className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1 cursor-pointer ${
                   fitMode === 'page'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'btn-luxury-active'
                     : 'text-slate-400 hover:text-white'
                 }`}
                 title="Fit Full Page in Viewport"
@@ -1452,9 +1524,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
               <button
                 onClick={() => setFitMode('width')}
-                className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1 cursor-pointer ${
                   fitMode === 'width'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'btn-luxury-active'
                     : 'text-slate-400 hover:text-white'
                 }`}
                 title="Fit Page to Width"
@@ -1523,9 +1595,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Search Toggle */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className={`p-2 rounded-xl border text-xs transition-colors ${
+              className={`p-2 rounded-xl border text-xs transition-colors cursor-pointer ${
                 isSearchOpen
-                  ? 'bg-blue-600 text-white border-blue-500'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-950 text-slate-400 hover:text-white border-slate-800'
               }`}
               title="Search Text in Book"
@@ -1595,7 +1667,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             {/* Download */}
             <button
               onClick={handleDownload}
-              className="p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-md active:scale-95"
+              className="p-2 btn-luxury-action luxury-pressable text-white rounded-xl shadow-md cursor-pointer"
               title="Download PDF Document"
             >
               <Download className="w-3.5 h-3.5" />
@@ -1614,12 +1686,12 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="Search words, terms, equations in this textbook..."
-            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <button
             onClick={handleSearch}
             disabled={isSearching}
-            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl flex items-center gap-1"
+            className="px-4 py-1.5 btn-luxury-action luxury-pressable text-white text-xs font-bold rounded-xl flex items-center gap-1 cursor-pointer"
           >
             {isSearching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <span>Search</span>}
           </button>
@@ -1665,9 +1737,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   onClick={() => {
                     scrollToPage(pageNum);
                   }}
-                  className={`p-2 rounded-xl text-xs font-bold text-center border transition-all ${
+                  className={`p-2 rounded-xl text-xs font-bold text-center border transition-all cursor-pointer ${
                     currentPage === pageNum
-                      ? 'bg-blue-600 text-white border-sky-400 shadow-md scale-105'
+                      ? 'btn-luxury-active scale-105'
                       : 'bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-600'
                   }`}
                 >
@@ -1822,7 +1894,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   e.stopPropagation();
                   setIsZenMode(false);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-black shadow-md active:scale-95 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1 btn-luxury-action luxury-pressable text-white rounded-full text-xs font-black shadow-md cursor-pointer transition-all"
                 title="Exit Clean View"
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -1918,24 +1990,34 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       </div>
 
       {/* Quiz Question Count Picker Modal */}
+      {/* Quiz Question Count Picker Modal */}
       {isQuizConfigOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-800 shadow-2xl text-center space-y-6 animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto shadow-md">
-              <Award className="w-8 h-8" />
-            </div>
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-slate-900 rounded-3xl p-5 sm:p-7 max-w-md w-full border border-slate-800 shadow-2xl space-y-4 sm:space-y-5 animate-in zoom-in-95 duration-200 my-auto max-h-[92vh] overflow-y-auto relative">
+            {/* Top Close Icon Button */}
+            <button
+              onClick={() => setIsQuizConfigOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition-colors z-10 cursor-pointer"
+              title="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
 
-            <div>
-              <h3 className="text-xl font-black text-white">
+            {/* Header */}
+            <div className="text-center space-y-1.5 pt-1">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto shadow-md">
+                <Award className="w-6 h-6 sm:w-7 sm:h-7" />
+              </div>
+              <h3 className="text-lg sm:text-xl font-black text-white">
                 {pickerLabels.modalTitle}
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 max-w-xs sm:max-w-sm mx-auto">
                 {pickerLabels.modalSubtitle}
               </p>
             </div>
 
             {isExtractingQuiz ? (
-              <div className="py-8 flex flex-col items-center justify-center space-y-3">
+              <div className="py-12 flex flex-col items-center justify-center space-y-3">
                 <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
                 <div className="text-xs font-bold text-amber-300">
                   {lang === 'om'
@@ -1946,20 +2028,26 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 text-left">
                 {/* Topic / Unit Selector */}
                 <div>
-                  <div className="text-xs font-extrabold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 justify-center">
-                    <Compass className="w-3.5 h-3.5 text-amber-400" />
-                    <span>
-                      {lang === 'om'
-                        ? 'Mata-duree / Boqonnaa Filadhu:'
-                        : lang === 'am'
-                        ? 'ርዕስ ወይም ምዕራፍ ይምረጡ:'
-                        : 'Select Topic / Chapter:'}
+                  <div className="text-xs font-extrabold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <Compass className="w-3.5 h-3.5 text-amber-400" />
+                      <span>
+                        {lang === 'om'
+                          ? 'Mata-duree / Boqonnaa Filadhu:'
+                          : lang === 'am'
+                          ? 'ርዕስ ወይም ምዕራፍ ይምረጡ:'
+                          : 'Select Topic / Chapter:'}
+                      </span>
+                    </span>
+                    <span className="text-[10px] text-slate-400 lowercase">
+                      ({QuizGeneratorService.getAvailableTopics(book.subject, book).length} options)
                     </span>
                   </div>
-                  <div className="grid grid-cols-1 gap-1.5 max-h-44 overflow-y-auto pr-1">
+
+                  <div className="grid grid-cols-1 gap-1.5 max-h-36 overflow-y-auto pr-1">
                     {QuizGeneratorService.getAvailableTopics(book.subject, book).map((t) => {
                       const isSelected = selectedQuizTopic === t.id;
                       const topicName = lang === 'om' ? t.nameOromo : lang === 'am' ? t.nameAmharic : t.nameEnglish;
@@ -1968,7 +2056,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                           key={t.id}
                           type="button"
                           onClick={() => setSelectedQuizTopic(t.id)}
-                          className={`p-2.5 rounded-xl border text-left text-xs font-bold flex items-center gap-2.5 transition-all ${
+                          className={`p-2.5 rounded-xl border text-left text-xs font-bold flex items-center gap-2.5 transition-all cursor-pointer ${
                             isSelected
                               ? 'bg-blue-950/80 border-sky-400 text-sky-300 ring-2 ring-blue-500/40 shadow-sm'
                               : 'bg-slate-800/80 border-slate-700/80 text-slate-300 hover:bg-slate-700 hover:text-white'
@@ -1987,72 +2075,83 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
                   </div>
                 </div>
 
+                {/* Question Count Selection */}
                 <div className="space-y-2 pt-2 border-t border-slate-800">
                   <div className="text-xs font-extrabold text-slate-300 uppercase tracking-wider mb-1">
-                    {lang === 'om' ? 'Baay’ina Gaaffilee Filadhu:' : lang === 'am' ? 'የጥያቄዎች ብዛት:' : 'Select Question Count:'}
+                    {lang === 'om' ? 'Baay’ina Gaaffilee Filadhu:' : lang === 'am' ? 'የጥያቄዎች ብዛት:' : 'Select Question Count & Start Exam:'}
                   </div>
 
-                  <button
-                    onClick={() => handleStartDynamicQuiz(25)}
-                    className="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
-                  >
-                    <div>
-                      <div className="font-extrabold text-sm text-white">{pickerLabels.q25}</div>
-                      <div className="text-[11px] text-slate-400">{pickerLabels.q25desc}</div>
-                    </div>
-                    <span className="px-3 py-1 bg-blue-500/20 text-sky-300 border border-blue-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
-                      25 Qs
-                    </span>
-                  </button>
+                  <div className="grid grid-cols-1 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleStartDynamicQuiz(25)}
+                      className="w-full p-2.5 sm:p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 hover:border-sky-500/50 flex items-center justify-between text-left transition-all active:scale-[0.99] cursor-pointer"
+                    >
+                      <div>
+                        <div className="font-extrabold text-xs sm:text-sm text-white">{pickerLabels.q25}</div>
+                        <div className="text-[10px] sm:text-[11px] text-slate-400">{pickerLabels.q25desc}</div>
+                      </div>
+                      <span className="px-2.5 py-1 bg-blue-500/20 text-sky-300 border border-blue-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
+                        25 Qs
+                      </span>
+                    </button>
 
-                  <button
-                    onClick={() => handleStartDynamicQuiz(50)}
-                    className="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
-                  >
-                    <div>
-                      <div className="font-extrabold text-sm text-white">{pickerLabels.q50}</div>
-                      <div className="text-[11px] text-slate-400">{pickerLabels.q50desc}</div>
-                    </div>
-                    <span className="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
-                      50 Qs
-                    </span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => handleStartDynamicQuiz(50)}
+                      className="w-full p-2.5 sm:p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 hover:border-amber-500/50 flex items-center justify-between text-left transition-all active:scale-[0.99] cursor-pointer"
+                    >
+                      <div>
+                        <div className="font-extrabold text-xs sm:text-sm text-white">{pickerLabels.q50}</div>
+                        <div className="text-[10px] sm:text-[11px] text-slate-400">{pickerLabels.q50desc}</div>
+                      </div>
+                      <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
+                        50 Qs
+                      </span>
+                    </button>
 
-                  <button
-                    onClick={() => handleStartDynamicQuiz(100)}
-                    className="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
-                  >
-                    <div>
-                      <div className="font-extrabold text-sm text-white">{pickerLabels.q100}</div>
-                      <div className="text-[11px] text-slate-400">{pickerLabels.q100desc}</div>
-                    </div>
-                    <span className="px-3 py-1 bg-sky-500/20 text-sky-300 border border-sky-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
-                      100 Qs
-                    </span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => handleStartDynamicQuiz(100)}
+                      className="w-full p-2.5 sm:p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 hover:border-sky-500/50 flex items-center justify-between text-left transition-all active:scale-[0.99] cursor-pointer"
+                    >
+                      <div>
+                        <div className="font-extrabold text-xs sm:text-sm text-white">{pickerLabels.q100}</div>
+                        <div className="text-[10px] sm:text-[11px] text-slate-400">{pickerLabels.q100desc}</div>
+                      </div>
+                      <span className="px-2.5 py-1 bg-sky-500/20 text-sky-300 border border-sky-500/30 rounded-xl text-xs font-bold shrink-0 ml-2">
+                        100 Qs
+                      </span>
+                    </button>
 
+                    <button
+                      type="button"
+                      onClick={() => handleStartDynamicQuiz(200)}
+                      className="w-full p-2.5 sm:p-3 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-amber-950/40 hover:from-purple-900/50 hover:to-amber-900/50 border border-purple-500/40 flex items-center justify-between text-left transition-all active:scale-[0.99] cursor-pointer"
+                    >
+                      <div>
+                        <div className="font-extrabold text-xs sm:text-sm text-purple-200">{pickerLabels.q200}</div>
+                        <div className="text-[10px] sm:text-[11px] text-slate-300">{pickerLabels.q200desc}</div>
+                      </div>
+                      <span className="px-2.5 py-1 bg-purple-500 text-slate-950 font-black rounded-xl text-xs shrink-0 ml-2 shadow-sm">
+                        200 Qs
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Cancel / Dismiss Button */}
+                <div className="pt-2">
                   <button
-                    onClick={() => handleStartDynamicQuiz(200)}
-                    className="w-full p-3 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-amber-950/40 hover:from-purple-900/50 hover:to-amber-900/50 border border-purple-500/40 flex items-center justify-between text-left transition-all hover:scale-[1.01]"
+                    type="button"
+                    onClick={() => setIsQuizConfigOpen(false)}
+                    className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-extrabold transition-colors cursor-pointer"
                   >
-                    <div>
-                      <div className="font-extrabold text-sm text-purple-200">{pickerLabels.q200}</div>
-                      <div className="text-[11px] text-slate-300">{pickerLabels.q200desc}</div>
-                    </div>
-                    <span className="px-3 py-1 bg-purple-500 text-slate-950 font-black rounded-xl text-xs shrink-0 ml-2 shadow-sm">
-                      200 Qs
-                    </span>
+                    {pickerLabels.cancel}
                   </button>
                 </div>
               </div>
             )}
-
-            <button
-              onClick={() => setIsQuizConfigOpen(false)}
-              className="text-xs text-slate-400 hover:text-white font-bold"
-            >
-              {pickerLabels.cancel}
-            </button>
           </div>
         </div>
       )}

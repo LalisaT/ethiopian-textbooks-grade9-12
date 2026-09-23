@@ -201,10 +201,10 @@ export const DownloadSourcesPage: React.FC = () => {
                 href={src.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 shadow-blue-600/25"
+                className="mt-6 w-full py-3 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Download on {src.name.split(' ')[0]}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <ExternalLink className="w-3.5 h-3.5 text-sky-400" />
               </a>
             </div>
           ))}
@@ -259,10 +259,10 @@ export const DownloadSourcesPage: React.FC = () => {
                 href={src.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md flex items-center justify-center gap-2"
+                className="mt-6 w-full py-3 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Visit {src.name.split(' ')[0]} Portal</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <ExternalLink className="w-3.5 h-3.5 text-sky-400" />
               </a>
             </div>
           ))}

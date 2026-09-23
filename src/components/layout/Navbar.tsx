@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone, GraduationCap, Send } from 'lucide-react';
+import { BookOpen, Award, Bookmark, Info, Menu, X, Compass, Shield, UploadCloud, Megaphone, GraduationCap, Send, Share2, ChevronLeft } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { LanguageSelector } from '../common/LanguageSelector';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -10,16 +10,21 @@ import { NotificationService, AppNotification } from '../../services/notificatio
 import { BrandLogo } from '../common/BrandLogo';
 
 interface NavbarProps {
-  activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about';
-  setActiveTab: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about') => void;
+  activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum';
+  setActiveTab: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum') => void;
   onNavigateToTeacherGuides?: () => void;
   theme: 'light' | 'dark' | 'sepia';
   setTheme: (theme: 'light' | 'dark' | 'sepia') => void;
   offlineCount: number;
   isAdmin: boolean;
   onToggleAdmin: () => void;
-  onOpenUploadModal: () => void;
+  onOpenUploadModal?: () => void;
   onNavigateNotification?: (notification: AppNotification) => void;
+  onOpenShareModal?: () => void;
+  canGoBack?: boolean;
+  onBackStep?: () => void;
+  isMobileMenuOpen?: boolean;
+  setIsMobileMenuOpen?: (open: boolean) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -31,11 +36,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   offlineCount,
   isAdmin,
   onToggleAdmin,
-  onOpenUploadModal,
   onNavigateNotification,
+  onOpenShareModal,
+  canGoBack = false,
+  onBackStep,
+  isMobileMenuOpen,
+  setIsMobileMenuOpen,
 }) => {
   const { t } = useTranslation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [internalMenuOpen, setInternalMenuOpen] = useState(false);
+  const mobileMenuOpen = isMobileMenuOpen !== undefined ? isMobileMenuOpen : internalMenuOpen;
+  const setMobileMenuOpen = setIsMobileMenuOpen || setInternalMenuOpen;
 
   const navItems = [
     { id: 'home' as const, label: t('home'), icon: BookOpen },
@@ -48,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       icon: Bookmark,
       badge: offlineCount > 0 ? offlineCount : undefined,
     },
-    { id: 'about' as const, label: t('aboutCurriculum'), icon: Info },
+    { id: 'curriculum' as const, label: t('aboutCurriculum'), icon: Info },
   ];
 
   const handleNavClick = (id: string) => {
@@ -70,20 +81,33 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Brand Logo & Name */}
-          <div
-            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0 min-w-0"
-            onClick={() => setActiveTab('home')}
-          >
-            <BrandLogo size="md" />
-            <div className="min-w-0">
-              <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base lg:text-lg tracking-tight leading-tight block truncate">
-                Ethiopian Textbooks
-              </span>
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
-                <span className="text-blue-600 dark:text-sky-400 font-black">Grades 9–12</span>
-                <span className="text-slate-300 dark:text-slate-600">•</span>
-                <span className="truncate">EUEE &amp; Guides</span>
+          {/* Brand Logo & Name + Mobile Back Button */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
+            {onBackStep && (
+              <button
+                onClick={onBackStep}
+                className="md:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-all flex items-center justify-center cursor-pointer shadow-sm active:scale-95 shrink-0 border border-slate-200 dark:border-slate-700/60"
+                title={activeTab === 'home' ? 'Exit App (<)' : 'Back (<)'}
+                aria-label={activeTab === 'home' ? 'Exit App' : 'Go Back'}
+              >
+                <ChevronLeft className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+              </button>
+            )}
+
+            <div
+              className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0 min-w-0"
+              onClick={() => setActiveTab('home')}
+            >
+              <BrandLogo size="md" />
+              <div className="min-w-0">
+                <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base lg:text-lg tracking-tight leading-tight block truncate">
+                  Ethiopian Textbooks
+                </span>
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
+                  <span className="text-blue-600 dark:text-sky-400 font-black">Grades 9–12</span>
+                  <span className="text-slate-300 dark:text-slate-600">•</span>
+                  <span className="truncate">EUEE &amp; Guides</span>
+                </div>
               </div>
             </div>
           </div>
@@ -106,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600 dark:text-sky-400' : ''}`} />
                   <span>{item.label}</span>
                   {item.badge !== undefined && (
-                    <span className="ml-1 px-1.5 py-0.2 bg-blue-600 text-white text-xs rounded-full font-bold">
+                    <span className="ml-1 px-1.5 py-0.2 bg-slate-800 text-sky-400 border border-sky-500/30 text-xs rounded-full font-bold">
                       {item.badge}
                     </span>
                   )}
@@ -117,17 +141,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Controls: Language, Notifications & Theme */}
           <div className="flex items-center gap-2 shrink-0">
-            {isAdmin && (
-              <button
-                onClick={onToggleAdmin}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30 transition-all active:scale-95"
-                title="Admin Studio Active - Click to Exit"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                <span>Studio Active</span>
-              </button>
-            )}
-
             {/* Join Telegram Channel Quick Action Button */}
             <a
               href="https://t.me/Ethiopianstudentbooks"
@@ -148,10 +161,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Mobile menu hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center active:scale-95 shadow-xs focus:outline-none"
+                className={`md:hidden w-9 h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer focus:outline-none ${
+                  mobileMenuOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
+                }`}
                 title="Menu"
               >
-                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                {mobileMenuOpen ? <X className="w-4 h-4 text-sky-300" /> : <Menu className="w-4 h-4 text-slate-300" />}
               </button>
             </div>
           </div>
@@ -204,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all ${
                         isActive
-                          ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/30'
+                          ? 'btn-luxury-active font-black'
                           : 'text-slate-300 hover:bg-slate-900/90 hover:text-white'
                       }`}
                     >
@@ -213,7 +228,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span>{item.label}</span>
                       </div>
                       {item.badge !== undefined && (
-                        <span className="px-2 py-0.5 bg-blue-700 text-white text-[10px] font-black rounded-full">
+                        <span className="px-2 py-0.5 bg-slate-800 text-sky-400 border border-sky-500/30 text-[10px] font-black rounded-full">
                           {item.badge}
                         </span>
                       )}
@@ -235,6 +250,32 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <Shield className="w-4 h-4" />
                       <span>Exit Admin Studio</span>
                     </div>
+                  </button>
+                </div>
+              )}
+
+              {/* Share App Action (Mobile Drawer Circled Area) */}
+              {onOpenShareModal && (
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenShareModal();
+                    }}
+                    className="w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-sky-600/25 via-indigo-600/20 to-blue-600/25 border border-sky-500/35 hover:border-sky-400/60 shadow-lg shadow-sky-950/40 transition-all hover:scale-[1.01] active:scale-95 group cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-sky-500/20 flex items-center justify-center text-sky-400 group-hover:bg-sky-500 group-hover:text-white transition-all shadow-inner">
+                        <Share2 className="w-4 h-4" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-black text-white text-xs">Share App</div>
+                        <div className="text-[10px] text-sky-300 font-medium">Telegram, Facebook, Link</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold group-hover:bg-sky-500/30 transition-colors">
+                      Invite
+                    </span>
                   </button>
                 </div>
               )}

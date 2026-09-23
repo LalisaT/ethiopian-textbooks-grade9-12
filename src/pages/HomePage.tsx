@@ -139,7 +139,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         {/* Filter Bar: Interactive Grade & Category Filter Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1">
+        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1.5 px-0.5 scroll-smooth touch-pan-x">
           {[
             { id: 'all' as const, label: 'For You' },
             { id: 'g12' as const, label: 'Grade 12 (EUEE)' },
@@ -162,10 +162,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                   else if (chip.id === 'g9') onSelectGradeFilter(9);
                   else if (chip.id === 'tg' && onNavigateToTeacherGuides) onNavigateToTeacherGuides();
                 }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-xs ${
+                className={`shrink-0 px-4 py-2 rounded-2xl text-xs font-black whitespace-nowrap luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
                   isSelected
-                    ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/25 ring-2 ring-sky-400/40'
-                    : 'bg-slate-900/90 text-slate-300 border border-slate-800 hover:border-slate-700 hover:text-white'
+                    ? 'btn-luxury-active'
+                    : 'btn-luxury-idle'
                 }`}
               >
                 {chip.label}
@@ -221,7 +221,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="relative z-10 space-y-3.5 sm:space-y-4">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 text-sky-300 border border-blue-500/30 text-[11px] font-black backdrop-blur-md">
                 <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-                <span>National High School Curriculum • 2026 Edition</span>
+                <span>National High School Curriculum • New Edition</span>
               </div>
 
               <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">

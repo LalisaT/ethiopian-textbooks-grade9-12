@@ -6,14 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npx -y firebase-tools deploy --only hosting"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.1",
+    "@capacitor/app": "^8.1.1",
     "@capacitor/cli": "^8.5.1",
     "@capacitor/core": "^8.5.1",
+    "@capacitor/share": "^8.0.2",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
+    "firebase": "^12.19.0",
     "lucide-react": "^1.16.0",
     "pdfjs-dist": "^3.11.174",
     "react": "^19.0.0",

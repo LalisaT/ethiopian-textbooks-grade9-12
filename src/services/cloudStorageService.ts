@@ -130,13 +130,15 @@ export const CloudStorageService = {
         for (const url of candidateUrls) {
           try {
             const resp = await fetch(url);
-            if (resp.ok) {
+            const contentType = resp.headers.get('content-type') || '';
+            if (resp.ok && !contentType.includes('text/html')) {
               const fetchedBlob = await resp.blob();
-              if (fetchedBlob.size > 1000) {
+              if (fetchedBlob.size > 100000) {
                 blob = fetchedBlob;
                 try {
                   // Save strictly to app-private IndexedDB sandbox (hidden from external file managers)
                   await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+                  StorageService.markBookOffline(book.id);
                 } catch (dbQuotaErr) {
                   console.warn('IndexedDB private caching warning:', dbQuotaErr);
                 }
@@ -149,19 +151,13 @@ export const CloudStorageService = {
         }
 
         // Fallback: If device is completely offline or files not yet uploaded to release,
-        // dynamically generate authentic curriculum syllabus edition
+        // dynamically generate preview bytes without poisoning private IndexedDB cache
         if (!blob) {
           const pdfBytes = await this.generateSampleBookPdfBytes(book);
-          blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-          try {
-            await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-          } catch {}
+          const fallbackBlob = new Blob([pdfBytes as any], { type: 'application/pdf' });
+          if (onProgress) onProgress(100);
+          return { success: false, blob: fallbackBlob };
         }
-      }
-
-      // Mark book as offline in localStorage
-      if (blob) {
-        StorageService.markBookOffline(book.id);
       }
 
       if (onProgress) onProgress(100);

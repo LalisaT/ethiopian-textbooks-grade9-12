@@ -44,8 +44,19 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
       }
     };
 
+    const handleSync = () => refreshNotifs();
+
+    window.addEventListener('notifications-changed', handleSync);
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('focus', handleSync);
     document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      window.removeEventListener('notifications-changed', handleSync);
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('focus', handleSync);
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
   }, []);
 
   const handleRequestPermission = async () => {
@@ -84,14 +95,12 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           setIsOpen(!isOpen);
           refreshNotifs();
         }}
-        className={`relative w-9 h-9 rounded-xl border transition-all flex items-center justify-center active:scale-95 shadow-xs ${
-          isOpen
-            ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 border-blue-300 dark:border-blue-800'
-            : 'text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 bg-slate-100 dark:bg-slate-800 border-slate-200/80 dark:border-slate-700/80'
+        className={`relative w-9 h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer ${
+          isOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
         }`}
         title="App & Study Notifications"
       >
-        <Bell className="w-4 h-4" />
+        <Bell className={`w-4 h-4 ${isOpen ? 'text-sky-300' : 'text-slate-300'}`} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
@@ -120,6 +129,16 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
             </div>
 
             <div className="flex items-center gap-1">
+              <button
+                onClick={() => {
+                  NotificationService.playSound();
+                  NotificationService.vibrate();
+                }}
+                className="p-1 text-xs text-slate-500 hover:text-amber-500 transition-colors"
+                title="Test notification chime sound"
+              >
+                <Volume2 className="w-3.5 h-3.5" />
+              </button>
               {notifications.length > 0 && (
                 <>
                   <button

@@ -51,22 +51,21 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
     try {
       setIsLoadingPdf(true);
 
-      // 1. Check if an authentic offline PDF (> 500 KB) is in IndexedDB
+      // 1. Check if an authentic offline PDF (> 100 KB) is in IndexedDB
       const record = await DbService.getPdfFile(book.id);
-      if (record && record.blob && record.blob.size > 500000) {
+      if (record && record.blob && record.blob.size > 100000) {
         setUploadedPdfBlob(record.blob);
         setPdfUrl(null);
         setIsLoadingPdf(false);
         return;
       }
 
-      // If IndexedDB has a stale dummy sample (<= 500 KB) and a real book.pdfUrl exists:
-      // Remove the stale dummy record so the real textbook is shown
-      if (record && record.blob && record.blob.size <= 500000 && book.pdfUrl) {
+      // If IndexedDB has a stale dummy sample (<= 100 KB), remove it so the real textbook is loaded
+      if (record && record.blob && record.blob.size <= 100000) {
         await DbService.deletePdfFile(book.id);
       }
 
-      // 2. Direct streaming via PDF.js HTTP range requests (loads page 1 in 100ms, even for 180MB books)
+      // 2. Direct streaming via PDF.js HTTP requests (loads page 1 in 100ms)
       if (book.pdfUrl) {
         setPdfUrl(book.pdfUrl);
         setUploadedPdfBlob(null);

@@ -1,3 +1,15 @@
+import { db, sanitizeForFirestore } from './firebaseConfig';
+import {
+  collection,
+  doc,
+  setDoc,
+  deleteDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  limit,
+} from 'firebase/firestore';
+
 export interface AppNotification {
   id: string;
   title: string;
@@ -8,6 +20,13 @@ export interface AppNotification {
   actionUrl?: string;
   category?: string;
   grade?: string;
+  imageUrl?: string;
+  imageCaption?: string;
+  attachedBookId?: string;
+  attachedBookTitle?: string;
+  linkUrl?: string;
+  linkTitle?: string;
+  postId?: string;
 }
 
 const STORAGE_KEY = 'ethio_app_notifications';
@@ -38,63 +57,188 @@ const DEFAULT_NOTIFICATIONS: AppNotification[] = [
     date: new Date(Date.now() - 3600000 * 2).toISOString(),
     read: false,
     type: 'exam_alert',
+    actionUrl: 'tab:examprep',
   },
 ];
 
+let sharedAudioCtx: AudioContext | null = null;
+let sharedAudioElement: HTMLAudioElement | null = null;
+let isAudioUnlocked = false;
+
 /**
- * Play a crystal-clear, pleasant notification chime sound using Web Audio API
+ * Get or initialize shared AudioContext safely
  */
-function playChimeSound() {
+function getSharedAudioContext(): AudioContext | null {
+  if (typeof window === 'undefined') return null;
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContextClass) return;
+    if (!sharedAudioCtx) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContextClass) {
+        sharedAudioCtx = new AudioContextClass();
+      }
+    }
+    if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume().catch(() => {});
+    }
+    return sharedAudioCtx;
+  } catch {
+    return null;
+  }
+}
 
-    const ctx = new AudioContextClass();
+/**
+ * Get or initialize HTML5 audio element with fallback
+ */
+function getSharedAudioElement(): HTMLAudioElement | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    if (!sharedAudioElement) {
+      sharedAudioElement = new Audio('/sounds/notification-chime.wav');
+      sharedAudioElement.preload = 'auto';
+      sharedAudioElement.volume = 0.9;
+    }
+    return sharedAudioElement;
+  } catch {
+    return null;
+  }
+}
 
-    // 1st Tone (D5 - 587.33 Hz)
+/**
+ * Global unlocker for mobile and browser autoplay policies
+ */
+function unlockAudioEngine() {
+  if (isAudioUnlocked) return;
+  isAudioUnlocked = true;
+
+  try {
+    const ctx = getSharedAudioContext();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+  } catch {}
+
+  try {
+    const audio = getSharedAudioElement();
+    if (audio) {
+      audio.load();
+    }
+  } catch {}
+
+  // Remove listeners after first interaction
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('click', unlockAudioEngine);
+    window.removeEventListener('touchstart', unlockAudioEngine);
+    window.removeEventListener('keydown', unlockAudioEngine);
+    window.removeEventListener('pointerdown', unlockAudioEngine);
+  }
+}
+
+// Auto-register unlock listeners
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', unlockAudioEngine, { passive: true, once: true });
+  window.addEventListener('touchstart', unlockAudioEngine, { passive: true, once: true });
+  window.addEventListener('keydown', unlockAudioEngine, { passive: true, once: true });
+  window.addEventListener('pointerdown', unlockAudioEngine, { passive: true, once: true });
+}
+
+/**
+ * Play synthesized Web Audio push notification chime (Apple / Telegram style dual-bell)
+ */
+function playWebAudioChime() {
+  const ctx = getSharedAudioContext();
+  if (!ctx) return false;
+
+  try {
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+
+    const now = ctx.currentTime;
+
+    // 1st Bell Tone: G#5 (830.61 Hz) - Crisp attack with bell decay
     const osc1 = ctx.createOscillator();
     const gain1 = ctx.createGain();
     osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(587.33, ctx.currentTime);
-    gain1.gain.setValueAtTime(0.2, ctx.currentTime);
-    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc1.frequency.setValueAtTime(830.61, now);
+    gain1.gain.setValueAtTime(0.001, now);
+    gain1.gain.linearRampToValueAtTime(0.45, now + 0.006);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
     osc1.connect(gain1);
     gain1.connect(ctx.destination);
-    osc1.start(ctx.currentTime);
-    osc1.stop(ctx.currentTime + 0.35);
+    osc1.start(now);
+    osc1.stop(now + 0.45);
 
-    // 2nd Tone (A5 - 880 Hz) - slightly higher after 100ms
+    // 2nd Bell Tone: C#6 (1108.73 Hz) - Enters at 85ms for the iconic "Ding-Dong" chime
     const osc2 = ctx.createOscillator();
     const gain2 = ctx.createGain();
     osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
-    gain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.1);
-    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+    osc2.frequency.setValueAtTime(1108.73, now + 0.085);
+    gain2.gain.setValueAtTime(0.001, now + 0.085);
+    gain2.gain.linearRampToValueAtTime(0.5, now + 0.092);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
     osc2.connect(gain2);
     gain2.connect(ctx.destination);
-    osc2.start(ctx.currentTime + 0.1);
-    osc2.stop(ctx.currentTime + 0.55);
+    osc2.start(now + 0.085);
+    osc2.stop(now + 0.7);
 
-    // 3rd Harmonic Tone (D6 - 1174.66 Hz) for rich bell shimmer
+    // 3rd Overtone Harmonic: G#6 (1661.22 Hz) - Glassy bell shimmer
     const osc3 = ctx.createOscillator();
     const gain3 = ctx.createGain();
     osc3.type = 'triangle';
-    osc3.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.18);
-    gain3.gain.setValueAtTime(0.15, ctx.currentTime + 0.18);
-    gain3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
+    osc3.frequency.setValueAtTime(1661.22, now + 0.09);
+    gain3.gain.setValueAtTime(0.001, now + 0.09);
+    gain3.gain.linearRampToValueAtTime(0.2, now + 0.098);
+    gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
     osc3.connect(gain3);
     gain3.connect(ctx.destination);
-    osc3.start(ctx.currentTime + 0.18);
-    osc3.stop(ctx.currentTime + 0.7);
+    osc3.start(now + 0.09);
+    osc3.stop(now + 0.55);
+
+    return true;
   } catch (e) {
-    console.warn('Audio chime warning:', e);
+    console.warn('Web Audio chime warning:', e);
+    return false;
+  }
+}
+
+/**
+ * Play a crystal-clear, pleasant notification chime sound across all devices
+ */
+export function playChimeSound() {
+  unlockAudioEngine();
+
+  // Primary: Try HTML5 audio file first (cleanest acoustic recording)
+  let played = false;
+  try {
+    const audio = getSharedAudioElement();
+    if (audio) {
+      audio.currentTime = 0;
+      const promise = audio.play();
+      if (promise !== undefined) {
+        promise
+          .then(() => {
+            played = true;
+          })
+          .catch(() => {
+            // If browser blocked HTML5 audio, fallback to Web Audio API
+            playWebAudioChime();
+          });
+      }
+    }
+  } catch {
+    // Fallback immediately
+  }
+
+  // Also trigger Web Audio chime if audio element was not immediately successful
+  if (!played) {
+    playWebAudioChime();
   }
 }
 
 /**
  * Trigger phone vibration
  */
-function vibratePhone() {
+export function vibratePhone() {
   if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
     try {
       navigator.vibrate([200, 100, 200]);
@@ -192,13 +336,32 @@ export const NotificationService = {
         return DEFAULT_NOTIFICATIONS;
       }
       const parsed: AppNotification[] = JSON.parse(data);
-      // Clean out test notifications
-      const cleaned = parsed.filter(
-        (n) => !n.title.toLowerCase().includes('test notification')
-      );
-      if (cleaned.length !== parsed.length) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
-      }
+      let deletedPostIds: string[] = [];
+      try {
+        deletedPostIds = JSON.parse(localStorage.getItem('ethio_community_deleted_posts') || '[]');
+      } catch {}
+
+      // Clean out test notifications, deleted post notifications, and ensure exam alerts route to examprep
+      const cleaned = parsed
+        .filter((n) => {
+          if (!n || !n.title) return false;
+          if (n.title.toLowerCase().includes('test notification')) return false;
+          if (n.title.toLowerCase().includes('test 1') || n.body?.toLowerCase().includes('teat 1')) return false;
+          if (n.postId && deletedPostIds.includes(n.postId)) return false;
+          if (n.id && deletedPostIds.some((delId) => n.id.includes(delId))) return false;
+          return true;
+        })
+        .map((n) => {
+          if (
+            n.id === 'notif-exam-prep' ||
+            n.type === 'exam_alert' ||
+            /exam|matric|esslce|euee|simulation|quiz|question/i.test(`${n.title} ${n.body}`)
+          ) {
+            return { ...n, actionUrl: 'tab:examprep' };
+          }
+          return n;
+        });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
       return cleaned.length > 0 ? cleaned : DEFAULT_NOTIFICATIONS;
     } catch {
       return DEFAULT_NOTIFICATIONS;
@@ -212,11 +375,12 @@ export const NotificationService = {
     type: AppNotification['type'] = 'admin_broadcast',
     actionUrl?: string,
     category?: string,
-    grade?: string
+    grade?: string,
+    extra?: Partial<AppNotification>
   ): AppNotification {
     const list = this.getNotifications();
     const newNotif: AppNotification = {
-      id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      id: extra?.id || `notif-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       title,
       body,
       date: new Date().toISOString(),
@@ -225,10 +389,23 @@ export const NotificationService = {
       actionUrl,
       category,
       grade,
+      ...extra,
     };
 
-    const updated = [newNotif, ...list.slice(0, 49)];
+    // If an item with this ID already exists, replace it, else prepend
+    const existingIndex = list.findIndex((n) => n.id === newNotif.id);
+    let updated: AppNotification[];
+    if (existingIndex !== -1) {
+      updated = [...list];
+      updated[existingIndex] = { ...updated[existingIndex], ...newNotif };
+    } else {
+      updated = [newNotif, ...list.slice(0, 49)];
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notifications-changed'));
+    }
 
     // Dispatch phone system popup with sound & vibration
     this.sendSystemNotification(title, body);
@@ -236,17 +413,198 @@ export const NotificationService = {
     return newNotif;
   },
 
-  // Admin Broadcast Alert Method
+  // Admin Broadcast Alert Method (Writes to Firestore for instant delivery to all students)
   broadcastAdminAlert(
     title: string,
     message: string,
     category: string = 'General Announcement',
     grade: string = 'All Grades',
-    actionUrl: string = 'tab:community'
+    actionUrl: string = 'tab:community',
+    extra?: Partial<AppNotification>
   ): AppNotification {
-    const fullTitle = title;
-    const body = `${message} (Target: ${grade} • Category: ${category})`;
-    return this.addNotification(fullTitle, body, 'admin_broadcast', actionUrl, category, grade);
+    const fullTitle = title.trim();
+    const body = message.trim();
+    const notif = this.addNotification(fullTitle, body, 'admin_broadcast', actionUrl, category, grade, extra);
+
+    // Sync to Cloud Firestore broadcast collection safely
+    try {
+      setDoc(doc(db, 'broadcast_notifications', notif.id), sanitizeForFirestore(notif), { merge: true }).catch((err) => {
+        console.warn('Firestore broadcast notification warning:', err);
+      });
+    } catch (err) {
+      console.warn('Firestore setDoc failed for notification:', err);
+    }
+
+    return notif;
+  },
+
+  // Synchronize a Community Post / Announcement to Notifications
+  syncPostNotification(
+    post: {
+      id: string;
+      title: string;
+      content: string;
+      category?: string;
+      grade?: string;
+      actionUrl?: string;
+      imageUrl?: string;
+      imageCaption?: string;
+      attachedBookId?: string;
+      attachedBookTitle?: string;
+      linkUrl?: string;
+      linkTitle?: string;
+      linkType?: string;
+    },
+    shouldBroadcast: boolean = false
+  ): AppNotification {
+    const notifId = `notif-post-${post.id}`;
+    const destination = post.attachedBookId
+      ? `book:${post.attachedBookId}`
+      : post.actionUrl || `tab:community#${post.id}`;
+    const extra: Partial<AppNotification> = {
+      id: notifId,
+      postId: post.id,
+      imageUrl: post.imageUrl || '',
+      attachedBookId: post.attachedBookId || '',
+      attachedBookTitle: post.attachedBookTitle || '',
+      linkUrl: post.linkUrl || '',
+      linkTitle: post.linkTitle || '',
+    };
+
+    const notif = this.addNotification(
+      post.title,
+      post.content,
+      'admin_broadcast',
+      destination,
+      post.category || 'Official Announcement',
+      post.grade || 'All Grades',
+      extra
+    );
+
+    // Always sync official post notification to Firestore broadcast_notifications
+    try {
+      setDoc(doc(db, 'broadcast_notifications', notif.id), sanitizeForFirestore(notif), { merge: true }).catch((err) => {
+        console.warn('Firestore syncPostNotification warning:', err);
+      });
+    } catch (err) {
+      console.warn('Firestore setDoc failed for syncPostNotification:', err);
+    }
+
+    // If live broadcast requested, play sound & vibrate on sender device as well
+    if (shouldBroadcast) {
+      this.playSound();
+      this.vibrate();
+      this.sendSystemNotification(notif.title, notif.body);
+    }
+
+    return notif;
+  },
+
+  // Listen for live broadcast alerts sent by Admin from anywhere in real-time
+  subscribeToBroadcastNotifications(onNewAlert?: (notif: AppNotification) => void): () => void {
+    try {
+      let isInitialLoad = true;
+      const q = query(collection(db, 'broadcast_notifications'), orderBy('date', 'desc'), limit(30));
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          let listChanged = false;
+          const currentList = this.getNotifications();
+          const notifMap = new Map<string, AppNotification>();
+          currentList.forEach((n) => notifMap.set(n.id, n));
+
+          snapshot.docChanges().forEach((change) => {
+            const remoteNotif = change.doc.data() as AppNotification;
+            if (!remoteNotif || !remoteNotif.title || change.doc.id.startsWith('test_')) return;
+
+            if (change.type === 'added') {
+              const alreadyExists = notifMap.has(remoteNotif.id);
+              notifMap.set(remoteNotif.id, {
+                ...remoteNotif,
+                read: alreadyExists ? (notifMap.get(remoteNotif.id)?.read ?? false) : false,
+              });
+              listChanged = true;
+
+              // Play push chime sound, vibrate, and notify if it's a live incoming broadcast
+              // or created within the last 3 minutes
+              const notifTime = new Date(remoteNotif.date).getTime();
+              const isRecent = !isNaN(notifTime) && Date.now() - notifTime < 1000 * 60 * 3;
+
+              if (!alreadyExists && (!isInitialLoad || isRecent)) {
+                playChimeSound();
+                vibratePhone();
+                this.sendSystemNotification(remoteNotif.title, remoteNotif.body);
+                if (onNewAlert) onNewAlert(remoteNotif);
+              }
+            } else if (change.type === 'modified') {
+              // Notification was edited by Admin - update it live in real-time!
+              const prevRead = notifMap.get(remoteNotif.id)?.read ?? false;
+              notifMap.set(remoteNotif.id, {
+                ...remoteNotif,
+                read: prevRead,
+              });
+              listChanged = true;
+
+              // Trigger alert callback if modified recently
+              const notifTime = new Date(remoteNotif.date).getTime();
+              const isRecent = !isNaN(notifTime) && Date.now() - notifTime < 1000 * 60 * 3;
+              if (isRecent && onNewAlert) {
+                playChimeSound();
+                vibratePhone();
+                onNewAlert(remoteNotif);
+              }
+            } else if (change.type === 'removed') {
+              notifMap.delete(change.doc.id);
+              for (const [id, notif] of notifMap.entries()) {
+                if (notif.postId === change.doc.id || id === `notif-post-${change.doc.id}`) {
+                  notifMap.delete(id);
+                }
+              }
+              listChanged = true;
+            }
+          });
+
+          // Purge any broadcast notifications whose post was deleted from Firestore
+          const firestoreNotifIds = new Set(snapshot.docs.map((d) => d.id));
+          let deletedPostIds: string[] = [];
+          try {
+            deletedPostIds = JSON.parse(localStorage.getItem('ethio_community_deleted_posts') || '[]');
+          } catch {}
+
+          for (const [id, notif] of notifMap.entries()) {
+            if (notif.type === 'admin_broadcast' && !id.startsWith('notif-welcome') && !id.startsWith('notif-exam-prep')) {
+              const shouldPurge =
+                !firestoreNotifIds.has(id) ||
+                (notif.postId && deletedPostIds.includes(notif.postId)) ||
+                (notif.title && (notif.title.toLowerCase().includes('test 1') || notif.title.toLowerCase().includes('test notification')));
+              if (shouldPurge) {
+                notifMap.delete(id);
+                listChanged = true;
+              }
+            }
+          }
+
+          if (listChanged) {
+            const updated = Array.from(notifMap.values()).sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('notifications-changed'));
+            }
+          }
+
+          isInitialLoad = false;
+        },
+        (err) => {
+          console.warn('Broadcast notification listener notice:', err);
+        }
+      );
+      return unsubscribe;
+    } catch (e) {
+      console.warn('Error subscribing to broadcast notifications:', e);
+      return () => {};
+    }
   },
 
   // Auto-Broadcast on Single Book Upload
@@ -287,17 +645,26 @@ export const NotificationService = {
   markAllAsRead(): void {
     const list = this.getNotifications().map((n) => ({ ...n, read: true }));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notifications-changed'));
+    }
   },
 
   // Mark single notification as read
   markAsRead(id: string): void {
     const list = this.getNotifications().map((n) => (n.id === id ? { ...n, read: true } : n));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notifications-changed'));
+    }
   },
 
   // Clear all notifications
   clearAll(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notifications-changed'));
+    }
   },
 
   // Get unread notification count

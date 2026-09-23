@@ -10,8 +10,8 @@ export const Footer: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 sm:pb-8 space-y-5 text-center flex flex-col items-center">
         {/* Centered Brand Icon & Title Card */}
         <div className="flex flex-col items-center text-center gap-3 w-full">
-          {/* Centered Icon with Glowing Luxury Border */}
-          <div className="relative p-1 rounded-2xl bg-gradient-to-tr from-blue-600/40 via-indigo-600/30 to-sky-500/40 shadow-xl ring-1 ring-blue-500/30 shrink-0 mx-auto">
+          {/* Centered Icon with Glowing Luxury Border & Animation */}
+          <div className="relative p-1 rounded-2xl bg-gradient-to-tr from-blue-600/40 via-indigo-600/30 to-sky-500/40 ring-1 ring-blue-500/30 shrink-0 mx-auto luxury-brand-icon-anim cursor-pointer">
             <div className="w-14 h-14 rounded-[14px] overflow-hidden bg-slate-950 shadow-inner">
               <img
                 src="/brand/app-icon.jpg"
@@ -25,9 +25,6 @@ export const Footer: React.FC = () => {
             <h3 className="text-base sm:text-lg font-black text-white tracking-tight leading-snug">
               Ethiopian Grade 9–12 Textbooks &amp; Teacher Guides
             </h3>
-            <p className="text-xs text-cyan-400 font-bold tracking-wide mt-0.5">
-              Official Ministry of Education (MOE) Educational Framework
-            </p>
           </div>
         </div>
 

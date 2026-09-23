@@ -155,9 +155,9 @@ export const BooksExplorePage: React.FC<BooksExplorePageProps> = ({
           {(selectedGrade !== 'all' || selectedStream !== 'all' || selectedSubject !== 'all' || searchQuery) && (
             <button
               onClick={handleResetFilters}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 rounded-xl hover:bg-rose-100 transition-colors active:scale-95"
+              className="group flex items-center gap-1.5 px-3 py-1.5 text-xs font-black btn-luxury-reset rounded-xl luxury-pressable luxury-sheen-sweep cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-3.5 h-3.5 transition-transform duration-500 ease-out group-hover:rotate-180 group-active:rotate-180" />
               <span>Clear</span>
             </button>
           )}

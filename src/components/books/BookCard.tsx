@@ -102,37 +102,6 @@ export const BookCard: React.FC<BookCardProps> = ({
 
   return (
     <div className="group relative bg-white dark:bg-slate-900/95 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-slate-800/90 hover:border-blue-500/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between active:scale-[0.99]">
-      {/* Admin Action Buttons */}
-      {isAdmin && (
-        <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1 bg-black/80 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-lg">
-          {onEditBook && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEditBook(book);
-              }}
-              className="p-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-transform active:scale-90"
-              title="Edit / Customize this book"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-            </button>
-          )}
-          {onDeleteBook && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (window.confirm(`Delete "${book.title}"?`)) {
-                  onDeleteBook(book.id);
-                }
-              }}
-              className="p-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold transition-transform active:scale-90"
-              title="Delete this book"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
-      )}
 
       <div>
         {/* Book Cover Container (Aspect Ratio 3:4) */}
@@ -178,7 +147,7 @@ export const BookCard: React.FC<BookCardProps> = ({
             ) : null}
 
             {isOffline && (
-              <span className="p-1 bg-blue-600 text-white rounded-lg shadow-md" title="Saved Offline">
+              <span className="p-1 bg-slate-900/90 text-sky-400 border border-sky-500/50 rounded-lg shadow-md" title="Saved Offline">
                 <Check className="w-2.5 h-2.5 stroke-[3]" />
               </span>
             )}
@@ -224,9 +193,9 @@ export const BookCard: React.FC<BookCardProps> = ({
         <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={handleOpenReader}
-            className="flex-1 py-1.5 sm:py-2 px-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-black transition-all shadow-md shadow-blue-600/25 flex items-center justify-center gap-1 sm:gap-1.5"
+            className="flex-1 py-1.5 sm:py-2 px-2 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-black flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer"
           >
-            <BookOpen className="w-3.5 h-3.5 shrink-0" />
+            <BookOpen className="w-3.5 h-3.5 shrink-0 text-sky-400" />
             <span>Read</span>
           </button>
 

@@ -195,7 +195,7 @@ export const InteractiveChapterReader: React.FC<InteractiveChapterReaderProps> =
           <button
             onClick={onResyncPdfNotes}
             disabled={isSyncingPdfNotes}
-            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-colors flex items-center gap-1.5 shadow-sm active:scale-95"
+            className="px-3 py-1.5 rounded-xl btn-luxury-action luxury-pressable text-white font-bold flex items-center gap-1.5 cursor-pointer"
             title="Clean and re-extract text directly from PDF"
           >
             {isSyncingPdfNotes ? (
@@ -285,10 +285,10 @@ export const InteractiveChapterReader: React.FC<InteractiveChapterReaderProps> =
         <button
           onClick={onNextChapter}
           disabled={!hasNext}
-          className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-30 transition-colors shadow-md flex items-center gap-1.5"
+          className="px-5 py-2.5 rounded-xl btn-luxury-action luxury-pressable text-white disabled:opacity-30 flex items-center gap-1.5 cursor-pointer"
         >
           <span>Next Unit</span>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 text-sky-400" />
         </button>
       </div>
     </div>

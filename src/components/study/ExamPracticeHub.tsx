@@ -64,7 +64,6 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
   const [selectedStream, setSelectedStream] = useState<'all' | 'natural_science' | 'social_science'>('all');
   const [selectedSubject, setSelectedSubject] = useState<SubjectCategory | 'all'>('all');
   const [selectedLanguageFilter, setSelectedLanguageFilter] = useState<string>('all');
-  const [selectedSourceGrade, setSelectedSourceGrade] = useState<number | 'all'>('all');
   const [activeQuizQuestions, setActiveQuizQuestions] = useState<QuizQuestion[] | null>(null);
   const [quizModalTitle, setQuizModalTitle] = useState('');
   const [activeExamLanguage, setActiveExamLanguage] = useState<string>('en');
@@ -117,13 +116,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
       return;
     }
 
-    let filteredQuestions = [...questions];
-    if (selectedSourceGrade !== 'all') {
-      const sourceFiltered = questions.filter(q => q.sourceGrade === selectedSourceGrade);
-      if (sourceFiltered.length > 0) {
-        filteredQuestions = sourceFiltered;
-      }
-    }
+    const filteredQuestions = [...questions];
     setSelectedExamForConfig({
       title,
       questions: filteredQuestions,
@@ -245,12 +238,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
               <span>Grade 12 EUEE • Ethiopian University Entrance Examination Hub</span>
             </div>
 
-            {isAdmin && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500 text-slate-950 rounded-full text-xs font-black shadow-md">
-                <Shield className="w-3.5 h-3.5" />
-                <span>Admin Edit Mode Active</span>
-              </span>
-            )}
+
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
@@ -277,10 +265,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedStream('all')}
-                className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-2xl text-xs font-black transition-all flex items-center gap-1.5 luxury-pressable luxury-sheen-sweep cursor-pointer ${
                   selectedStream === 'all'
-                    ? 'bg-amber-400 text-slate-950 shadow-lg ring-2 ring-amber-300'
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                    ? 'btn-luxury-active ring-1 ring-sky-400/40'
+                    : 'btn-luxury-idle'
                 }`}
               >
                 <Compass className="w-3.5 h-3.5" />
@@ -288,10 +276,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
               </button>
               <button
                 onClick={() => setSelectedStream('natural_science')}
-                className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-2xl text-xs font-black transition-all flex items-center gap-1.5 luxury-pressable luxury-sheen-sweep cursor-pointer ${
                   selectedStream === 'natural_science'
-                    ? 'bg-cyan-500 text-slate-950 shadow-lg ring-2 ring-cyan-300'
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                    ? 'btn-luxury-active ring-1 ring-sky-400/40'
+                    : 'btn-luxury-idle'
                 }`}
               >
                 <Atom className="w-3.5 h-3.5" />
@@ -299,10 +287,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
               </button>
               <button
                 onClick={() => setSelectedStream('social_science')}
-                className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-2xl text-xs font-black transition-all flex items-center gap-1.5 luxury-pressable luxury-sheen-sweep cursor-pointer ${
                   selectedStream === 'social_science'
-                    ? 'bg-rose-500 text-white shadow-lg ring-2 ring-rose-300'
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                    ? 'btn-luxury-active ring-1 ring-sky-400/40'
+                    : 'btn-luxury-idle'
                 }`}
               >
                 <TrendingUp className="w-3.5 h-3.5" />
@@ -400,6 +388,9 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           >
             <Layers className="w-4 h-4" />
             <span>{t('flashcards')}</span>
+            <span className="px-1.5 py-0.5 bg-sky-500/20 text-sky-400 text-[10px] font-extrabold rounded-full font-mono border border-sky-500/30">
+              {FLASHCARDS_LIST.length}+
+            </span>
             {activeTab === 'flashcards' && (
               <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
             )}
@@ -421,81 +412,26 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
           </button>
         </div>
 
-        {/* Admin Action Buttons */}
-        {isAdmin && (
-          <div className="flex items-center gap-2 pb-2">
-            {activeTab === 'exams' && (
-              <button
-                onClick={() => {
-                  setEditingExamPack(null);
-                  setIsExamEditorOpen(true);
-                }}
-                className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-md active:scale-95 transition-all"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add EUEE Model Exam</span>
-              </button>
-            )}
-
-            {activeTab === 'past_papers' && (
-              <button
-                onClick={() => setIsPastPaperUploadOpen(true)}
-                className="px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-black flex items-center gap-1.5 shadow-md active:scale-95 transition-all"
-              >
-                <UploadCloud className="w-3.5 h-3.5" />
-                <span>Upload Past Exam Paper (PDF)</span>
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Tab 1: EUEE Model Examination Tests */}
       {activeTab === 'exams' && (
         <div className="space-y-4">
-          {/* Syllabus Source Grade Filter Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
-              Filter Questions by High School Curriculum Grade:
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {[
-                { id: 'all', label: 'All High School (9–12)' },
-                { id: 12, label: 'Grade 12 Units' },
-                { id: 11, label: 'Grade 11 Units' },
-                { id: 10, label: 'Grade 10 Units' },
-                { id: 9, label: 'Grade 9 Units' },
-              ].map(sg => (
-                <button
-                  key={String(sg.id)}
-                  onClick={() => setSelectedSourceGrade(sg.id as any)}
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
-                    selectedSourceGrade === sg.id
-                      ? 'bg-slate-900 text-white dark:bg-blue-600 dark:text-white shadow-sm'
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
-                  }`}
-                >
-                  {sg.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Academic Curriculum Subjects */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 Curriculum Subject:
               </div>
             </div>
 
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth touch-pan-x">
               <button
                 onClick={() => setSelectedSubject('all')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-black whitespace-nowrap luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
                   selectedSubject === 'all'
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                    ? 'btn-luxury-active ring-1 ring-sky-400/40'
+                    : 'btn-luxury-idle'
                 }`}
               >
                 All Subjects
@@ -504,10 +440,10 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                 <button
                   key={s.id}
                   onClick={() => setSelectedSubject(s.id as SubjectCategory)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-black whitespace-nowrap luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
                     selectedSubject === s.id
-                      ? 'bg-blue-600 text-white shadow-sm'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                      ? 'btn-luxury-active ring-1 ring-sky-400/40'
+                      : 'btn-luxury-idle'
                   }`}
                 >
                   {s.name}
@@ -543,29 +479,7 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs text-amber-500 font-bold font-mono">EUEE</span>
-                        {isAdmin && (
-                          <div className="flex items-center gap-1 ml-2">
-                            <button
-                              onClick={() => {
-                                setEditingExamPack(pack);
-                                setIsExamEditorOpen(true);
-                              }}
-                              className="p-1 rounded-lg text-amber-500 hover:bg-amber-500/20 transition-colors"
-                              title="Edit Exam Pack"
-                            >
-                              <Edit3 className="w-3.5 h-3.5" />
-                            </button>
-                            {pack.isCustom && (
-                              <button
-                                onClick={() => handleDeleteExamPack(pack.id)}
-                                className="p-1 rounded-lg text-rose-500 hover:bg-rose-500/20 transition-colors"
-                                title="Delete Exam Pack"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                          </div>
-                        )}
+
                       </div>
                     </div>
 
@@ -591,9 +505,9 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                   <button
                     onClick={() => handleStartExam(packTitle, pack.questions, pack.language, pack.subject, pack.stream)}
                     disabled={pack.questions.length === 0}
-                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full py-3 btn-luxury-action disabled:opacity-40 text-white font-extrabold text-xs rounded-2xl transition-all shadow-md luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Award className="w-4 h-4" />
+                    <Award className="w-4 h-4 text-amber-300" />
                     <span>{t('startPractice')}</span>
                   </button>
                 </div>
@@ -665,9 +579,9 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
                         handleStartExam(paper.title, fallbackQ, paper.language, paper.subject, paper.stream);
                       }
                     }}
-                    className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                    className="flex-1 py-2.5 btn-luxury-action text-white font-extrabold text-xs rounded-xl shadow-md luxury-pressable luxury-sheen-sweep transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <Award className="w-3.5 h-3.5" />
+                    <Award className="w-3.5 h-3.5 text-amber-300" />
                     <span>Practice Paper</span>
                   </button>
 
@@ -768,39 +682,6 @@ export const ExamPracticeHub: React.FC<ExamPracticeHubProps> = ({
         />
       )}
 
-      {/* Admin Modals */}
-      {isAdmin && isExamEditorOpen && (
-        <AdminExamEditorModal
-          isOpen={isExamEditorOpen}
-          onClose={() => setIsExamEditorOpen(false)}
-          onSave={handleSaveExamPack}
-          editingPack={editingExamPack}
-          currentGrade={selectedGrade}
-          currentSubject={selectedSubject === 'all' ? 'physics' : selectedSubject}
-        />
-      )}
-
-      {isAdmin && isPastPaperUploadOpen && (
-        <AdminUploadPastPaperModal
-          isOpen={isPastPaperUploadOpen}
-          onClose={() => setIsPastPaperUploadOpen(false)}
-          onSave={handleSavePastPaper}
-          currentGrade={selectedGrade}
-        />
-      )}
-
-      {isAdmin && isCategoryManagerOpen && (
-        <AdminCategoryManagerModal
-          isOpen={isCategoryManagerOpen}
-          onClose={() => {
-            setIsCategoryManagerOpen(false);
-            loadData();
-          }}
-          onCategoriesUpdated={() => {
-            loadData();
-          }}
-        />
-      )}
 
       {/* AdMob Rewarded Video Modal: Required to Access Questions */}
       <RewardedVideoAdModal

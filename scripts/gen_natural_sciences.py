@@ -1,0 +1,188 @@
+# -*- coding: utf-8 -*-
+"""
+Natural Sciences Flashcards Generator (Physics, Chemistry, Biology)
+Grades 9, 10, 11, 12
+"""
+
+def generate_natural_sciences(add):
+    # =========================================================================
+    # 🔬 PHYSICS (GRADES 9-12)
+    # =========================================================================
+    # Grade 9 Physics
+    add(9, "physics", 1, "What is the SI base unit for thermodynamic temperature?", "Kelvin (K). Absolute zero is 0 K or -273.15 °C.", "definition")
+    add(9, "physics", 1, "Define precision vs accuracy in scientific measurements.", "Accuracy refers to how close a measured value is to the true value. Precision refers to the closeness of agreement among repeated measurements.", "concept")
+    add(9, "physics", 1, "What are the 7 SI base quantities and their units?", "Length (m), Mass (kg), Time (s), Electric current (A), Temperature (K), Amount of substance (mol), Luminous intensity (cd).", "definition")
+    add(9, "physics", 2, "What is the formula for average velocity?", "v_avg = Δx / Δt = (x_f - x_i) / (t_f - t_i), measured in m/s.", "formula")
+    add(9, "physics", 2, "State the three kinematic equations for uniform acceleration.", "1. v = u + at\n2. s = ut + (1/2)at²\n3. v² = u² + 2as", "formula")
+    add(9, "physics", 2, "What does the slope of a velocity-time graph represent?", "The slope of a velocity-time graph represents instantaneous acceleration (a = dv/dt).", "concept")
+    add(9, "physics", 2, "What does the area under a velocity-time graph represent?", "The area under a velocity-time graph represents the total displacement (Δx).", "concept")
+    add(9, "physics", 3, "State Newton's First Law of Motion (Law of Inertia).", "An object will remain at rest or in uniform motion in a straight line unless acted upon by a net external force.", "concept")
+    add(9, "physics", 3, "State Newton's Second Law of Motion formula.", "F_net = m * a\nwhere F is net force in Newtons (N), m is mass in kg, and a is acceleration in m/s².", "formula")
+    add(9, "physics", 3, "State Newton's Third Law of Motion.", "For every action, there is an equal and opposite reaction (F_AB = -F_BA). Forces always occur in matched action-reaction pairs acting on different bodies.", "concept")
+    add(9, "physics", 3, "What is the formula for frictional force?", "f = μ * N\nwhere μ is the coefficient of friction and N is the normal force. (μ_s > μ_k)", "formula")
+    add(9, "physics", 4, "Define Work in physics and its formula.", "Work is done when a force causes displacement.\nW = F * d * cos(θ) (Joules, J = N·m).", "formula")
+    add(9, "physics", 4, "State the Kinetic Energy formula.", "KE = (1/2) * m * v² (Joules, J).", "formula")
+    add(9, "physics", 4, "State the Gravitational Potential Energy formula near Earth's surface.", "PE = m * g * h\nwhere m = mass (kg), g ≈ 9.8 m/s² (or 10 m/s²), h = height (m).", "formula")
+    add(9, "physics", 4, "State the Principle of Conservation of Mechanical Energy.", "In an isolated system with only conservative forces: Total Mechanical Energy E = KE + PE = constant.", "concept")
+    add(9, "physics", 4, "Define Power and its formula.", "Power is the rate of doing work or transferring energy.\nP = W / Δt = F * v (Watts, W = J/s).", "formula")
+    add(9, "physics", 5, "What are the formulas for Mechanical Advantage (MA) and Velocity Ratio (VR)?", "MA = Load / Effort = L / E\nVR = Distance moved by effort / Distance moved by load = d_e / d_L", "formula")
+    add(9, "physics", 5, "What is the Efficiency (η) of a simple machine?", "Efficiency η = (Work output / Work input) * 100% = (MA / VR) * 100%.", "formula")
+    add(9, "physics", 6, "What is the difference between Heat and Temperature?", "Temperature is a measure of the average kinetic energy of the molecules. Heat is the thermal energy transferred between bodies due to a temperature difference.", "definition")
+    add(9, "physics", 6, "State the Specific Heat Capacity formula.", "Q = m * c * ΔT\nwhere Q = heat energy (J), m = mass (kg), c = specific heat capacity (J/kg·°C), ΔT = temperature change.", "formula")
+
+    # Grade 10 Physics
+    add(10, "physics", 1, "State the formula for centripetal acceleration in uniform circular motion.", "a_c = v² / r = ω² * r\nwhere v = tangential speed, r = radius, ω = angular speed.", "formula")
+    add(10, "physics", 1, "State the formula for centripetal force.", "F_c = m * v² / r = m * ω² * r (directed towards the center of curvature).", "formula")
+    add(10, "physics", 2, "State Newton's Law of Universal Gravitation.", "F = G * (m1 * m2) / r²\nwhere G = 6.674 × 10⁻¹¹ N·m²/kg².", "formula")
+    add(10, "physics", 2, "State Kepler's Third Law of Planetary Motion.", "T² ∝ r³ (The square of the orbital period is proportional to the cube of the semi-major axis of orbit).", "concept")
+    add(10, "physics", 3, "State Hooke's Law for an elastic material.", "F = -k * x\nwhere k is the spring stiffness constant (N/m) and x is extension.", "formula")
+    add(10, "physics", 3, "Define Stress, Strain, and Young's Modulus.", "Stress σ = F / A (N/m² or Pa)\nStrain ε = ΔL / L_0 (dimensionless)\nYoung's Modulus Y = Stress / Strain = (F * L_0) / (A * ΔL).", "formula")
+    add(10, "physics", 3, "State Pascal's Principle and its hydraulic application.", "Pressure applied to an enclosed fluid is transmitted undiminished to every portion of the fluid and walls.\nF1 / A1 = F2 / A2.", "concept")
+    add(10, "physics", 3, "State Archimedes' Principle of Buoyancy.", "A body submerged in a fluid experiences an upward buoyant force equal to the weight of fluid displaced.\nF_b = ρ_fluid * V_submerged * g.", "concept")
+    add(10, "physics", 4, "What is the formula for the period of a simple pendulum?", "T = 2π * √(L / g)\n(Independent of mass of the bob and small amplitude).", "formula")
+    add(10, "physics", 4, "State the universal wave equation.", "v = f * λ\nwhere v = wave speed (m/s), f = frequency (Hz), λ = wavelength (m).", "formula")
+    add(10, "physics", 4, "What is the speed of sound in air at 0 °C and its temperature dependence?", "v ≈ 331 m/s at 0 °C, increasing by ~0.6 m/s per °C increase: v ≈ 331 + 0.6 * T(°C).", "concept")
+    add(10, "physics", 5, "State the Mirror Equation and Thin Lens Equation.", "1/f = 1/d_o + 1/d_i\nwhere f = focal length, d_o = object distance, d_i = image distance.", "formula")
+    add(10, "physics", 5, "What is the formula for linear magnification in optics?", "m = h_i / h_o = -d_i / d_o\n(Positive m: upright/virtual, Negative m: inverted/real).", "formula")
+
+    # Grade 11 Physics
+    add(11, "physics", 1, "What is the scalar (dot) product of two vectors?", "A · B = |A| * |B| * cos(θ) = A_x * B_x + A_y * B_y + A_z * B_z\n(Result is a scalar; zero if vectors are perpendicular).", "formula")
+    add(11, "physics", 1, "What is the vector (cross) product magnitude of two vectors?", "|A × B| = |A| * |B| * sin(θ)\nDirection given by the right-hand rule. Equal to the area of the parallelogram formed by A and B.", "formula")
+    add(11, "physics", 2, "In projectile motion, what is the maximum height formula?", "H = (v_0 * sin θ)² / (2g)", "formula")
+    add(11, "physics", 2, "In projectile motion, what is the horizontal range formula over level ground?", "R = (v_0² * sin(2θ)) / g\n(Maximum range occurs at launching angle θ = 45°).", "formula")
+    add(11, "physics", 2, "What is the total flight time formula for a projectile over level ground?", "T = (2 * v_0 * sin θ) / g", "formula")
+    add(11, "physics", 3, "State the Impulse-Momentum Theorem.", "Impulse J = F_avg * Δt = Δp = m * v_f - m * v_i (kg·m/s or N·s).", "formula")
+    add(11, "physics", 3, "What is the Law of Conservation of Linear Momentum?", "In an isolated system (no external net force): Total Initial Momentum = Total Final Momentum (Σ p_i = Σ p_f).", "concept")
+    add(11, "physics", 3, "Distinguish between elastic and perfectly inelastic collisions.", "Elastic collision: Both momentum and kinetic energy are conserved. Perfectly inelastic collision: Momentum is conserved, kinetic energy is lost, and colliding bodies stick together.", "definition")
+    add(11, "physics", 4, "State the Work-Energy Theorem.", "The net work done on an object equals the change in its kinetic energy:\nW_net = ΔKE = (1/2)mv_f² - (1/2)mv_i².", "concept")
+    add(11, "physics", 5, "State the formula for Torque.", "τ = r * F * sin(θ) = I * α\nwhere r = lever arm, F = applied force, I = moment of inertia, α = angular acceleration.", "formula")
+    add(11, "physics", 5, "What is the rotational kinetic energy formula?", "KE_rot = (1/2) * I * ω²\nwhere I = moment of inertia (kg·m²), ω = angular velocity (rad/s).", "formula")
+    add(11, "physics", 5, "State the Law of Conservation of Angular Momentum.", "When net external torque is zero: L = I * ω = constant.", "concept")
+    add(11, "physics", 6, "What are the two conditions for static equilibrium of a rigid body?", "1. Net force must be zero: Σ F = 0 (Translational equilibrium)\n2. Net torque about any pivot must be zero: Σ τ = 0 (Rotational equilibrium).", "concept")
+    add(11, "physics", 7, "State the Equation of Continuity for incompressible fluid flow.", "A1 * v1 = A2 * v2 = Volume flow rate Q (m³/s) = constant.", "formula")
+    add(11, "physics", 7, "State Bernoulli's Equation for ideal fluid flow.", "P + (1/2) * ρ * v² + ρ * g * h = constant along a streamline.", "formula")
+    add(11, "physics", 7, "What is Torricelli's Law for efflux speed through an orifice?", "v = √(2 * g * h)\nwhere h is depth below the liquid surface.", "formula")
+
+    # Grade 12 Physics
+    add(12, "physics", 1, "What is the Zeroth Law of Thermodynamics?", "If two bodies A and B are each in thermal equilibrium with a third body C, then A and B are in thermal equilibrium with each other.", "concept")
+    add(12, "physics", 1, "What is the work done during an isobaric (constant pressure) gas expansion?", "W = P * ΔV = P * (V_f - V_i)", "formula")
+    add(12, "physics", 1, "What is an adiabatic process and its equation?", "A process where no heat enters or leaves the system (Q = 0).\nΔU = -W; P * V^γ = constant, where γ = C_p / C_v.", "definition")
+    add(12, "physics", 1, "State the Kelvin-Planck statement of the Second Law of Thermodynamics.", "It is impossible for any heat engine to operate in a cycle and absorb heat from a single reservoir and convert all of it into work without rejecting some heat.", "concept")
+    add(12, "physics", 1, "Define Entropy change for a reversible isothermal process.", "ΔS = Q_rev / T (Joules per Kelvin, J/K). The entropy of the universe never decreases in any natural process.", "definition")
+    add(12, "physics", 2, "State Coulomb's Law of Electrostatics.", "F = k_e * (|q1 * q2|) / r²\nwhere k_e = 1 / (4πε_0) ≈ 8.99 × 10⁹ N·m²/C².", "formula")
+    add(12, "physics", 2, "What is the Electric Field formula due to a point charge?", "E = F / q_0 = k_e * q / r² (N/C or V/m, directed radially outward from positive charges).", "formula")
+    add(12, "physics", 2, "State Gauss's Law in electrostatics.", "Electric flux Φ_E = ∮ E · dA = Q_enclosed / ε_0.", "concept")
+    add(12, "physics", 2, "What is the capacitance of a parallel-plate capacitor with dielectric?", "C = κ * ε_0 * (A / d)\nwhere κ is dielectric constant, A is plate area, d is separation.", "formula")
+    add(12, "physics", 2, "What is the energy stored in a charged capacitor?", "U = (1/2) * Q * V = (1/2) * C * V² = Q² / (2C) (Joules).", "formula")
+    add(12, "physics", 3, "What is the formula relating electric current to drift velocity?", "I = n * q * A * v_d\nwhere n = carrier density, q = charge, A = cross-sectional area, v_d = drift velocity.", "formula")
+    add(12, "physics", 3, "State Kirchhoff's Current Law (KCL) and Voltage Law (KVL).", "KCL (Junction rule): Σ I_in = Σ I_out (Conservation of charge).\nKVL (Loop rule): Σ ΔV = 0 around any closed loop (Conservation of energy).", "concept")
+    add(12, "physics", 3, "State the balanced condition for a Wheatstone Bridge.", "R1 / R2 = R3 / R4 (Current through galvanometer is zero).", "formula")
+    add(12, "physics", 4, "State the magnetic force on a moving charge (Lorentz force component).", "F_B = q * (v × B) = q * v * B * sin(θ) (Newtons, N; directed by right-hand rule).", "formula")
+    add(12, "physics", 4, "State Faraday's Law of Electromagnetic Induction.", "ε = -N * (dΦ_B / dt)\nwhere ε = induced EMF (V), N = turns, Φ_B = magnetic flux (B * A * cos θ). Negative sign is Lenz's law.", "formula")
+    add(12, "physics", 4, "State Lenz's Law.", "The direction of induced current is always such that its magnetic field opposes the change in magnetic flux that produced it.", "concept")
+    add(12, "physics", 5, "What are the impedance (Z) and resonant frequency (f_0) in an RLC series circuit?", "Z = √(R² + (X_L - X_C)²)\nf_0 = 1 / (2π * √(L * C))", "formula")
+    add(12, "physics", 6, "State Einstein's Photoelectric Effect equation.", "hf = Φ + KE_max = hf_0 + (1/2)m*v_max²\nwhere h = Planck constant, f = frequency, Φ = work function, f_0 = threshold frequency.", "formula")
+    add(12, "physics", 6, "What is the Bohr formula for energy levels of hydrogen atom?", "E_n = -13.6 eV / n²\n(n = 1 is ground state, -13.6 eV).", "formula")
+    add(12, "physics", 6, "State the Radioactive Decay Law and Half-life relation.", "N(t) = N_0 * e^(-λt)\nT_1/2 = ln(2) / λ ≈ 0.693 / λ", "formula")
+    add(12, "physics", 6, "What is Einstein's mass-energy equivalence equation?", "E = Δm * c²\nwhere c = 3.0 × 10⁸ m/s, explaining nuclear binding energy and mass defect.", "formula")
+
+    # =========================================================================
+    # 🧪 CHEMISTRY (GRADES 9-12)
+    # =========================================================================
+    # Grade 9 Chemistry
+    add(9, "chemistry", 1, "State the Law of Conservation of Mass (Lavoisier).", "In a chemical reaction, mass is neither created nor destroyed; total mass of reactants equals total mass of products.", "concept")
+    add(9, "chemistry", 1, "State the Law of Definite Proportions (Proust).", "A given chemical compound always contains its component elements in fixed, definite proportion by mass.", "concept")
+    add(9, "chemistry", 2, "Define atomic number (Z) and mass number (A).", "Atomic number Z = number of protons in nucleus. Mass number A = protons + neutrons. Isotopes have the same Z but different A.", "definition")
+    add(9, "chemistry", 2, "What did Rutherford's Alpha Scattering Experiment discover?", "The existence of a tiny, dense, positively charged nucleus in the center of the atom with electrons orbiting in mostly empty space.", "concept")
+    add(9, "chemistry", 3, "State the Modern Periodic Law (Moseley).", "The physical and chemical properties of elements are periodic functions of their atomic numbers.", "concept")
+    add(9, "chemistry", 3, "How do atomic radius and ionization energy trend across the periodic table?", "Atomic radius decreases across a period (left to right) and increases down a group. Ionization energy increases across a period and decreases down a group.", "concept")
+    add(9, "chemistry", 4, "Define Ionic vs Covalent bonding.", "Ionic bond: Complete transfer of electrons from metal to nonmetal forming cations and anions. Covalent bond: Sharing of electron pairs between nonmetal atoms.", "definition")
+    add(9, "chemistry", 4, "What is electronegativity and how does it determine bond polarity?", "Electronegativity is the ability of an atom in a molecule to attract shared electrons.\nΔEN > 1.7: mostly ionic; 0.4–1.7: polar covalent; < 0.4: nonpolar covalent.", "concept")
+    add(9, "chemistry", 5, "What is Avogadro's Number and the Mole concept?", "1 mole = 6.022 × 10²³ particles (atoms, molecules, ions). Molar mass (g/mol) = mass of 1 mole of substance.", "definition")
+    add(9, "chemistry", 5, "What is the molar volume of an ideal gas at STP (0 °C, 1 atm)?", "V_m = 22.4 L/mol (or 22.4 dm³/mol). At room temperature (25 °C, 1 atm), V_m ≈ 24.0 L/mol.", "formula")
+    add(9, "chemistry", 5, "State the Ideal Gas Law.", "P * V = n * R * T\nwhere R = 0.0821 L·atm/(mol·K) = 8.314 J/(mol·K).", "formula")
+
+    # Grade 10 Chemistry
+    add(10, "chemistry", 1, "Define Exothermic and Endothermic reactions.", "Exothermic: Heat is released to surroundings, ΔH < 0, products have lower energy than reactants. Endothermic: Heat is absorbed from surroundings, ΔH > 0.", "definition")
+    add(10, "chemistry", 2, "Classify Oxides with examples.", "Acidic oxides: Non-metal oxides (SO₂, CO₂) forming acids in water. Basic oxides: Metal oxides (Na₂O, CaO) forming bases. Amphoteric: React with both acids and bases (Al₂O₃, ZnO). Neutral: CO, NO, N₂O.", "concept")
+    add(10, "chemistry", 2, "Define an Arrhenius acid and base.", "Arrhenius acid: A substance that produces H⁺ (or H₃O⁺) ions in aqueous solution. Arrhenius base: A substance that produces OH⁻ ions in aqueous solution.", "definition")
+    add(10, "chemistry", 2, "What is the chemical equation for the industrial Haber Process?", "N₂(g) + 3H₂(g) ⇌ 2NH₃(g) (ΔH = -92 kJ/mol)\nConditions: 450 °C, 200 atm, finely divided iron catalyst.", "concept")
+    add(10, "chemistry", 2, "What is the Contact Process used for and its key catalyst?", "Manufacture of sulfuric acid (H₂SO₄). Key reaction: 2SO₂ + O₂ ⇌ 2SO₃ using Vanadium(V) oxide (V₂O₅) catalyst at ~450 °C.", "concept")
+    add(10, "chemistry", 3, "State Faraday's First Law of Electrolysis.", "Mass of substance deposited or liberated at an electrode is directly proportional to quantity of electricity (charge) passed:\nm = Z * Q = Z * I * t\nwhere Z = electrochemical equivalent.", "formula")
+    add(10, "chemistry", 3, "State Faraday's Second Law of Electrolysis.", "When the same quantity of electricity passes through different electrolytes, the masses of substances deposited are proportional to their chemical equivalent weights.", "concept")
+    add(10, "chemistry", 4, "What are the general formulas for Alkanes, Alkenes, and Alkynes?", "Alkanes (saturated): C_n H_{2n+2}\nAlkenes (double bond): C_n H_{2n}\nAlkynes (triple bond): C_n H_{2n-2}", "formula")
+    add(10, "chemistry", 4, "State Markovnikov's Rule in alkene addition reactions.", "When an asymmetrical reagent (HX) adds to an asymmetrical alkene, hydrogen attaches to the carbon with more hydrogen atoms ('the rich get richer').", "concept")
+
+    # Grade 11 Chemistry
+    add(11, "chemistry", 1, "What are the four Quantum Numbers and their significance?", "1. Principal (n): energy level/shell (1, 2, 3...)\n2. Angular momentum (l): subshell shape (0=s, 1=p, 2=d, 3=f)\n3. Magnetic (m_l): orbital orientation (-l to +l)\n4. Spin (m_s): electron spin (+1/2, -1/2).", "definition")
+    add(11, "chemistry", 1, "State the Pauli Exclusion Principle and Hund's Rule.", "Pauli Exclusion: No two electrons in an atom can have the same set of four quantum numbers. Hund's Rule: Orbitals of equal energy are each occupied by one electron with parallel spins before any is doubly occupied.", "concept")
+    add(11, "chemistry", 2, "What is VSEPR theory and the geometry of methane (CH₄), ammonia (NH₃), and water (H₂O)?", "All have 4 electron pairs (sp³): CH₄ is Tetrahedral (109.5°), NH₃ is Trigonal pyramidal (107°), H₂O is Bent (104.5°). Lone pairs exert greater repulsion.", "concept")
+    add(11, "chemistry", 2, "What is Hydrogen Bonding and which elements form it?", "An unusually strong dipole-dipole attraction between hydrogen bonded to highly electronegative, small atoms: Nitrogen (N), Oxygen (O), or Fluorine (F).", "definition")
+    add(11, "chemistry", 3, "State the Rate Law equation for a reaction aA + bB -> products.", "Rate = k * [A]^m * [B]^n\nwhere k = rate constant, m and n = orders of reaction (determined experimentally, not from stoichiometric coefficients).", "formula")
+    add(11, "chemistry", 3, "State the Arrhenius Equation for temperature dependence of reaction rates.", "k = A * e^(-E_a / (RT))\nwhere E_a = activation energy (J/mol), R = 8.314 J/mol·K, T = temperature (K), A = frequency factor.", "formula")
+    add(11, "chemistry", 4, "State the relationship between K_p and K_c for gas-phase equilibrium.", "K_p = K_c * (RT)^(Δn_g)\nwhere Δn_g = (moles of gaseous products) - (moles of gaseous reactants).", "formula")
+    add(11, "chemistry", 4, "State Le Chatelier's Principle.", "If a dynamic equilibrium is disturbed by changing conditions (temperature, pressure, concentration), the position of equilibrium shifts in a direction that counteracts the change.", "concept")
+    add(11, "chemistry", 5, "What are the functional groups of Alcohol, Aldehyde, Ketone, Carboxylic Acid, and Ester?", "Alcohol: -OH\nAldehyde: -CHO (terminal)\nKetone: -C(=O)- (internal)\nCarboxylic acid: -COOH\nEster: -COOR", "definition")
+    add(11, "chemistry", 5, "What is Tollens' reagent test and what does it distinguish?", "Tollens' reagent [Ag(NH₃)₂]⁺ tests for aldehydes. Aldehydes reduce Ag⁺ to metallic silver (silver mirror), while ketones do not react.", "concept")
+
+    # Grade 12 Chemistry
+    add(12, "chemistry", 1, "State the Brønsted-Lowry and Lewis acid-base definitions.", "Brønsted-Lowry: Acid is a proton (H⁺) donor; Base is a proton acceptor. Lewis: Acid is an electron pair acceptor; Base is an electron pair donor.", "definition")
+    add(12, "chemistry", 1, "What is the autoionization constant of water (K_w) and the pH relation at 25 °C?", "K_w = [H₃O⁺][OH⁻] = 1.0 × 10⁻¹⁴\npH = -log[H⁺], pOH = -log[OH⁻]\npH + pOH = 14.0", "formula")
+    add(12, "chemistry", 1, "State the Henderson-Hasselbalch equation for an acid buffer.", "pH = pK_a + log([Conjugate Base] / [Weak Acid]) = pK_a + log([A⁻] / [HA])", "formula")
+    add(12, "chemistry", 1, "What is the Common Ion Effect?", "The suppression of the ionization of a weak electrolyte by the addition of a strong electrolyte containing a common ion.", "concept")
+    add(12, "chemistry", 1, "What is the condition for precipitation based on Q_sp and K_sp?", "If Q_sp > K_sp: Supersaturated, precipitation occurs.\nIf Q_sp = K_sp: Saturated at equilibrium.\nIf Q_sp < K_sp: Unsaturated, no precipitation.", "concept")
+    add(12, "chemistry", 2, "How is standard cell potential (E°_cell) calculated from reduction potentials?", "E°_cell = E°_cathode - E°_anode\n(Spontaneous reaction if E°_cell > 0).", "formula")
+    add(12, "chemistry", 2, "State the Nernst Equation at 298 K (25 °C).", "E_cell = E°_cell - (0.0592 / n) * log(Q)\nwhere n = moles of electrons transferred, Q = reaction quotient.", "formula")
+    add(12, "chemistry", 2, "Relate standard Gibbs free energy (ΔG°) to E°_cell and equilibrium constant K.", "ΔG° = -n * F * E°_cell = -R * T * ln(K)\nwhere F = Faraday's constant ≈ 96,485 C/mol.", "formula")
+    add(12, "chemistry", 3, "State Hess's Law of Constant Heat Summation.", "The total enthalpy change for a chemical reaction is independent of the pathway or number of steps taken, depending only on the initial and final states.", "concept")
+    add(12, "chemistry", 3, "State the Gibbs Free Energy equation and criteria for spontaneity.", "ΔG = ΔH - T * ΔS\n• ΔG < 0: Spontaneous\n• ΔG = 0: Equilibrium\n• ΔG > 0: Non-spontaneous (endergonic).", "formula")
+    add(12, "chemistry", 4, "Distinguish between addition and condensation polymerization.", "Addition polymerization: Monomers with double bonds join without eliminating small molecules (e.g., polyethylene). Condensation: Monomers with two functional groups join with elimination of small molecules like H₂O (e.g., Nylon-6,6, Dacron).", "definition")
+
+    # =========================================================================
+    # 🧬 BIOLOGY (GRADES 9-12)
+    # =========================================================================
+    # Grade 9 Biology
+    add(9, "biology", 1, "Define Magnification vs Resolving Power of a microscope.", "Magnification is the ratio of image size to actual object size. Resolving power (resolution) is the ability to distinguish two separate adjacent points as distinct.", "definition")
+    add(9, "biology", 1, "Compare Prokaryotic and Eukaryotic cells.", "Prokaryotes (bacteria): Lack membrane-bound nucleus and organelles, circular DNA in nucleoid, 70S ribosomes. Eukaryotes (plants, animals): True nucleus with nuclear membrane, membrane-bound organelles, linear chromosomes, 80S ribosomes.", "concept")
+    add(9, "biology", 1, "State the function of Mitochondria.", "The 'powerhouse of the cell': Site of aerobic cellular respiration, generating adenosine triphosphate (ATP) through Krebs cycle and oxidative phosphorylation.", "concept")
+    add(9, "biology", 1, "Describe the Fluid Mosaic Model of the cell membrane (Singer & Nicolson).", "Phospholipid bilayer with hydrophilic heads facing outwards and hydrophobic fatty acid tails inwards, with embedded integral and peripheral proteins moving fluidly.", "concept")
+    add(9, "biology", 2, "Define Osmosis and distinguish Hypotonic, Isotonic, and Hypertonic solutions.", "Osmosis is net diffusion of water molecules across a selectively permeable membrane down its water potential gradient. Hypotonic: Cell swells (turgid in plants, lysis in animals). Hypertonic: Cell shrinks (plasmolysis/crenation).", "definition")
+    add(9, "biology", 3, "Name the main digestive enzymes and their substrate and products.", "Amylase (salivary/pancreatic): Starch -> Maltose.\nPepsin (stomach): Proteins -> Peptides.\nLipase (pancreas): Lipids -> Fatty acids + Glycerol.\nTrypsin: Peptides -> Amino acids.", "concept")
+    add(9, "biology", 3, "Describe double circulation in mammals.", "Blood passes through the heart twice in one complete circuit:\n1. Pulmonary circulation: Heart -> Lungs -> Heart.\n2. Systemic circulation: Heart -> Body tissues -> Heart.", "concept")
+    add(9, "biology", 4, "What pathogen causes Malaria and what is its transmission vector?", "Pathogen: Plasmodium species (P. falciparum most fatal).\nVector: Female Anopheles mosquito.", "date_fact")
+    add(9, "biology", 5, "What is the 10% Ecological Efficiency Rule (Lindeman)?", "Only about 10% of the energy stored as biomass in one trophic level is transferred to the next higher level; 90% is lost as heat, respiration, and waste.", "concept")
+
+    # Grade 10 Biology
+    add(10, "biology", 1, "What microorganisms are involved in traditional Ethiopian fermentation?", "Injera: Yeast (Saccharomyces) and lactic acid bacteria.\nTella: Gesho (Rhamnus prinoides) and barley yeast.\nTej: Natural honey yeasts.", "concept")
+    add(10, "biology", 2, "State Mendel's Law of Segregation (First Law).", "The two alleles for each gene segregate during gamete formation (meiosis), so that each gamete carries only one allele for each gene.", "concept")
+    add(10, "biology", 2, "State Mendel's Law of Independent Assortment (Second Law).", "Alleles of two or more different genes assort independently of each other during gamete formation, applicable to genes on non-homologous chromosomes.", "concept")
+    add(10, "biology", 2, "What phenotypic ratio is expected in a Mendelian dihybrid cross (AaBb x AaBb)?", "9 : 3 : 3 : 1 (9 dominant for both, 3 dominant-recessive, 3 recessive-dominant, 1 recessive for both).", "formula")
+    add(10, "biology", 3, "Describe the structure of a Motor Neuron.", "Dendrites (receive impulses) -> Cell body / Soma (nucleus) -> Axon (conducts impulses away, insulated by myelin sheath with Nodes of Ranvier) -> Axon terminals (synapse).", "definition")
+    add(10, "biology", 3, "What are the components of a Reflex Arc?", "Receptor -> Sensory (afferent) neuron -> Interneuron (in spinal cord gray matter) -> Motor (efferent) neuron -> Effector (muscle or gland).", "concept")
+    add(10, "biology", 3, "What hormones regulate blood glucose levels in humans?", "Insulin (secreted by beta-cells of Islets of Langerhans, lowers glucose by promoting glycogen synthesis) and Glucagon (secreted by alpha-cells, raises glucose by glycogenolysis).", "concept")
+    add(10, "biology", 4, "Name four endemic mammal species of Ethiopia.", "1. Walia Ibex (Capra walie, Simien Mountains)\n2. Ethiopian Wolf (Canis simensis, Bale Mountains)\n3. Gelada Baboon (Theropithecus gelada)\n4. Mountain Nyala (Tragelaphus buxtoni).", "date_fact")
+
+    # Grade 11 Biology
+    add(11, "biology", 1, "What are the monomers and linkages of Carbohydrates, Proteins, and Nucleic acids?", "Carbohydrates: Monosaccharides linked by Glycosidic bonds.\nProteins: Amino acids linked by Peptide bonds.\nNucleic acids: Nucleotides linked by Phosphodiester bonds.", "definition")
+    add(11, "biology", 1, "Describe the four levels of protein structure.", "1. Primary: Linear amino acid sequence.\n2. Secondary: α-helix and β-pleated sheets stabilized by hydrogen bonds.\n3. Tertiary: 3D folding driven by R-group interactions (disulfide, ionic, hydrophobic).\n4. Quaternary: Association of two or more polypeptide chains (e.g., hemoglobin with 4 subunits).", "concept")
+    add(11, "biology", 2, "Explain the Induced Fit Model of enzyme action (Koshland).", "The substrate induces a conformational change in the enzyme's active site, enabling tight binding and lowering the activation energy.", "concept")
+    add(11, "biology", 2, "Distinguish Competitive vs Non-competitive Enzyme Inhibition.", "Competitive: Inhibitor resembles substrate and binds active site (reversible by increasing [substrate], same V_max, higher K_m). Non-competitive: Binds allosteric site altering active site shape (lowers V_max, unchanged K_m).", "concept")
+    add(11, "biology", 3, "What are the 4 stages of Aerobic Cellular Respiration and their cellular locations?", "1. Glycolysis (Cytoplasm)\n2. Link reaction / Pyruvate oxidation (Mitochondrial matrix)\n3. Krebs / Citric Acid Cycle (Mitochondrial matrix)\n4. Oxidative Phosphorylation & Electron Transport Chain (Inner mitochondrial membrane / cristae).", "concept")
+    add(11, "biology", 3, "What is the net yield of ATP, NADH, and FADH₂ per glucose molecule in aerobic respiration?", "Net ATP: ~30 to 32 ATP.\nGlycolysis: 2 ATP + 2 NADH.\nLink reaction: 2 NADH.\nKrebs cycle: 2 ATP + 6 NADH + 2 FADH₂.", "formula")
+    add(11, "biology", 4, "What happens during the Light-Dependent reactions of Photosynthesis?", "In thylakoid membranes: Chlorophyll absorbs photons, photolysis of water releases O₂ + protons + electrons; electron transport drives ATP synthesis (photophosphorylation) and produces NADPH.", "concept")
+    add(11, "biology", 4, "What is RuBisCO and its role in the Calvin Cycle?", "Ribulose-1,5-bisphosphate carboxylase-oxygenase: The primary enzyme catalyzing carbon fixation, joining CO₂ with 5-carbon RuBP to form 3-phosphoglycerate (3-PGA).", "definition")
+    add(11, "biology", 4, "How do C₄ and CAM plants minimize Photorespiration?", "C₄ plants (e.g., maize, sorghum) spatially separate carbon fixation (mesophyll cells using PEP carboxylase) and Calvin cycle (bundle sheath cells). CAM plants (e.g., pineapple) temporally separate them by opening stomata at night.", "concept")
+
+    # Grade 12 Biology
+    add(12, "biology", 1, "State Chargaff's Rules for DNA base composition.", "In double-stranded DNA: % Adenine (A) = % Thymine (T) and % Guanine (G) = % Cytosine (C). Ratio of purines (A+G) to pyrimidines (T+C) is 1:1.", "concept")
+    add(12, "biology", 1, "What are the functions of Helicase, DNA Polymerase, and Ligase in DNA replication?", "Helicase: Unwinds and separates the double helix.\nDNA Polymerase: Synthesizes complementary DNA strand in 5' to 3' direction.\nDNA Ligase: Seals nicks in the sugar-phosphate backbone, joining Okazaki fragments.", "definition")
+    add(12, "biology", 1, "What is the Central Dogma of Molecular Biology?", "DNA -> (Transcription by RNA Polymerase) -> mRNA -> (Translation by Ribosomes) -> Protein. (Reverse transcription: RNA -> DNA by retroviruses).", "concept")
+    add(12, "biology", 1, "What are the Start codon and Stop codons in the genetic code?", "Start codon: AUG (codes for Methionine).\nStop codons: UAA, UAG, UGA (do not code for amino acids; signal termination).", "date_fact")
+    add(12, "biology", 2, "Distinguish Homologous vs Analogous structures with examples.", "Homologous: Similar anatomical structure due to common evolutionary ancestry, different function (e.g., human arm, bat wing, whale flipper - Divergent evolution). Analogous: Similar function, different evolutionary origin (e.g., bird wing and butterfly wing - Convergent evolution).", "definition")
+    add(12, "biology", 2, "State the Hardy-Weinberg Equilibrium equation and conditions.", "p² + 2pq + q² = 1 and p + q = 1\n(p = frequency of dominant allele, q = recessive allele). Conditions: 1. Large population, 2. Random mating, 3. No mutation, 4. No migration (gene flow), 5. No natural selection.", "formula")
+    add(12, "biology", 3, "What hormones trigger Ovulation in the human ovarian cycle?", "A mid-cycle surge in Luteinizing Hormone (LH), triggered by peak Estrogen levels from the mature Graafian follicle on approximately Day 14.", "concept")
+    add(12, "biology", 3, "What are the three primary embryonic germ layers and their adult derivatives?", "1. Ectoderm: Skin epidermis, nervous system (brain, spinal cord).\n2. Mesoderm: Muscles, skeleton, circulatory, excretory systems.\n3. Endoderm: Inner lining of digestive and respiratory tracts, liver, pancreas.", "definition")
+    add(12, "biology", 4, "Define Carrying Capacity (K) in population ecology.", "The maximum population size of a species that a given environment can sustainably support without degrading the habitat.", "definition")
+    add(12, "biology", 4, "Distinguish Innate behavior from Learned behavior with examples.", "Innate: Genetically programmed, present at birth, instinctive (e.g., spider web spinning, suckling reflex, bird migration). Learned: Acquired or modified through environmental experience (e.g., habituation, Pavlovian conditioning, trial-and-error).", "concept")
+
+    print("Natural Sciences generated successfully.")

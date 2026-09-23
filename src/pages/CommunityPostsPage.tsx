@@ -9,6 +9,7 @@ import {
   Heart,
   MessageSquare,
   Pin,
+  Bell,
   Sparkles,
   ShieldCheck,
   Search,
@@ -41,6 +42,8 @@ import {
   Lightbulb,
   Landmark,
   GraduationCap,
+  Calendar,
+  ArrowUpRight,
 } from 'lucide-react';
 
 interface CommunityPostsPageProps {
@@ -49,6 +52,7 @@ interface CommunityPostsPageProps {
   onSelectBook?: (book: Book) => void;
   onNavigateTab?: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about') => void;
   allBooks?: Book[];
+  targetPostId?: string | null;
 }
 
 export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
@@ -57,6 +61,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
   onSelectBook,
   onNavigateTab,
   allBooks = [],
+  targetPostId,
 }) => {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,12 +73,15 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
   // New Post Form State (Admin Only)
   const [authorName, setAuthorName] = useState('Admin @lalion');
+  const [authorRole, setAuthorRole] = useState<'admin' | 'teacher' | 'student'>('admin');
+  const [isOfficial, setIsOfficial] = useState(true);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState<CommunityPost['category']>('Exam Announcement');
   const [grade, setGrade] = useState('All Grades (9-12)');
   const [subject, setSubject] = useState('All Subjects');
   const [isPinned, setIsPinned] = useState(true);
+  const [sendPushNotification, setSendPushNotification] = useState(true);
   const [attachedBookId, setAttachedBookId] = useState<string>('');
   const [actionUrl, setActionUrl] = useState<string>('');
   const [linkUrl, setLinkUrl] = useState<string>('');
@@ -120,7 +128,36 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
   useEffect(() => {
     refreshPosts();
+    // Real-time Firestore Live Sync across all student & admin devices
+    const unsubscribe = PostService.subscribeToPosts((updatedPosts) => {
+      setPosts(updatedPosts);
+    });
+
+    const handlePostsChanged = () => {
+      refreshPosts();
+    };
+    window.addEventListener('posts-changed', handlePostsChanged);
+    window.addEventListener('storage', handlePostsChanged);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('posts-changed', handlePostsChanged);
+      window.removeEventListener('storage', handlePostsChanged);
+    };
   }, []);
+
+  // Smooth scroll and focus on target post when navigated from a notification
+  useEffect(() => {
+    if (targetPostId) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`post-${targetPostId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [targetPostId, posts]);
 
   // Web Speech Audio Synthesizer for Read Aloud
   const handleReadAloud = (post: CommunityPost) => {
@@ -192,7 +229,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setContent(
         'The latest Ministry of Education official textbooks are now available for offline reading and chapter unit practice!'
       );
-      setActionUrl('tab:explore');
+      setActionUrl('');
       setLinkUrl('https://t.me/ethio_students_grade9_12');
       setLinkTitle('Join Telegram Student Channel');
       setLinkType('telegram');
@@ -206,7 +243,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
       setContent(
         '1. Review high-yield formulas from Grades 9-12.\n2. Work through the 25-50 practice quiz questions under timed conditions.\n3. Analyze step-by-step solutions for past entrance questions.'
       );
-      setActionUrl('tab:examprep');
+      setActionUrl('');
       setLinkUrl('https://youtube.com');
       setLinkTitle('Watch Study Tips Video');
       setLinkType('youtube');
@@ -244,45 +281,55 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
     }
 
     if (editingPost) {
-      // Edit existing post
-      PostService.editPost(editingPost.id, {
-        title: title.trim(),
-        content: content.trim(),
-        category,
-        grade,
-        subject: subject.trim() || 'General',
-        pinned: isPinned,
-        attachedBookId: attachedBookId || undefined,
-        attachedBookTitle: targetAttachedBookTitle,
-        actionUrl: actionUrl || undefined,
-        linkUrl: linkUrl.trim() || undefined,
-        linkTitle: linkTitle.trim() || undefined,
-        linkType: linkType || undefined,
-        imageUrl: imageUrl.trim() || undefined,
-        imageCaption: imageCaption.trim() || undefined,
-      });
+      // Edit existing post with real-time broadcast option
+      const updated = PostService.editPost(
+        editingPost.id,
+        {
+          author: authorName.trim() || 'Admin @lalion',
+          authorRole: authorRole || 'admin',
+          isOfficial: isOfficial,
+          title: title.trim(),
+          content: content.trim(),
+          category,
+          grade,
+          subject: subject.trim() || 'General',
+          pinned: isPinned,
+          attachedBookId: attachedBookId || '',
+          attachedBookTitle: targetAttachedBookTitle || '',
+          actionUrl: actionUrl || '',
+          linkUrl: linkUrl.trim() || '',
+          linkTitle: linkTitle.trim() || '',
+          linkType: linkType || 'website',
+          imageUrl: imageUrl.trim() || '',
+          imageCaption: imageCaption.trim() || '',
+        },
+        sendPushNotification
+      );
+      setPosts(updated);
       setEditingPost(null);
     } else {
-      // Create new post
+      // Create new post & broadcast notification
       PostService.createPost({
         author: authorName.trim() || 'Admin @lalion',
-        authorRole: 'admin',
+        authorRole: authorRole || 'admin',
         title: title.trim(),
         content: content.trim(),
         category,
         grade,
         subject: subject.trim() || 'General',
-        isOfficial: true,
+        isOfficial: isOfficial,
         pinned: isPinned,
-        attachedBookId: attachedBookId || undefined,
-        attachedBookTitle: targetAttachedBookTitle,
-        actionUrl: actionUrl || undefined,
-        linkUrl: linkUrl.trim() || undefined,
-        linkTitle: linkTitle.trim() || undefined,
-        linkType: linkType || undefined,
-        imageUrl: imageUrl.trim() || undefined,
-        imageCaption: imageCaption.trim() || undefined,
+        attachedBookId: attachedBookId || '',
+        attachedBookTitle: targetAttachedBookTitle || '',
+        actionUrl: actionUrl || '',
+        linkUrl: linkUrl.trim() || '',
+        linkTitle: linkTitle.trim() || '',
+        linkType: linkType || 'website',
+        imageUrl: imageUrl.trim() || '',
+        imageCaption: imageCaption.trim() || '',
+        sendPush: sendPushNotification,
       });
+      setPosts(PostService.getPosts());
     }
 
     setTitle('');
@@ -294,6 +341,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
     setLinkUrl('');
     setLinkTitle('');
     setLinkType('website');
+    setSendPushNotification(true);
     setIsCreateModalOpen(false);
     refreshPosts();
   };
@@ -301,6 +349,8 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
   const handleOpenEditModal = (post: CommunityPost) => {
     setEditingPost(post);
     setAuthorName(post.author);
+    setAuthorRole(post.authorRole || 'admin');
+    setIsOfficial(post.isOfficial !== false);
     setTitle(post.title);
     setContent(post.content);
     setCategory(post.category);
@@ -314,6 +364,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
     setLinkType(post.linkType || 'website');
     setImageUrl(post.imageUrl || '');
     setImageCaption(post.imageCaption || '');
+    setSendPushNotification(false);
     setIsCreateModalOpen(true);
   };
 
@@ -368,27 +419,59 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
-      {/* Hero Header */}
-      <div className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950 text-white p-8 sm:p-10 border border-slate-800 shadow-2xl overflow-hidden">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-300">
+      {/* Luxury Hero Header */}
+      <div className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900/95 to-slate-950 text-white p-7 sm:p-10 border border-slate-800 shadow-2xl overflow-hidden group">
+        {/* Luxury top flowing light runner */}
+        <div className="luxury-flow-line h-[2px] absolute top-0 left-0 right-0 opacity-90" />
+
+        {/* Ambient atmospheric backlight orbs */}
+        <div className="absolute top-0 right-0 -mt-16 -mr-16 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
+        <div className="absolute bottom-0 left-1/4 -mb-16 w-80 h-80 bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold">
-              <Megaphone className="w-4 h-4" />
-              <span>Student Notice Board & Alerts Hub</span>
+          <div className="space-y-3.5">
+            {/* Pulsing Beacon Eyebrow */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/15 via-amber-400/10 to-transparent border border-amber-500/30 text-amber-300 text-xs font-bold shadow-[0_0_15px_rgba(245,158,11,0.15)]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+              <Megaphone className="w-3.5 h-3.5 text-amber-400" />
+              <span>{isAdmin ? 'Executive Notice Studio & Broadcast Deck' : 'Official Student Bulletin & Exam Alerts Hub'}</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+
+            {/* Main Headline */}
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-amber-200 leading-tight">
               Official Announcements & Study Notices
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Stay updated with Ministry of Education alerts, Grade 12 EUEE schedules, curriculum updates, and discussion tips for Grades 9-12.
+
+            {/* Subtitle */}
+            <p className="text-xs sm:text-sm text-slate-300/90 max-w-2xl leading-relaxed">
+              {isAdmin
+                ? 'Create, pin, manage, and broadcast official Ministry alerts, EUEE matric schedules, and curriculum updates for Grades 9-12.'
+                : 'Stay updated with Ministry of Education alerts, Grade 12 EUEE matric schedules, curriculum updates, and discussion tips for Grades 9-12.'}
             </p>
+
+            {/* Quick Live Metadata Badges */}
+            <div className="flex flex-wrap items-center gap-2.5 pt-1">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/80 border border-slate-700/80 text-[11px] font-bold text-sky-300 shadow-sm">
+                <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
+                <span>Verified MOE & EAES Feed</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/80 border border-slate-700/80 text-[11px] font-bold text-emerald-300 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Real-Time Cloud Broadcast</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900/80 border border-slate-700/80 text-[11px] font-bold text-amber-300 shadow-sm">
+                <Award className="w-3.5 h-3.5 text-amber-400" />
+                <span>{posts.length} Active Bulletins</span>
+              </span>
+            </div>
           </div>
 
           {/* Admin Create / Broadcast Action */}
-          <div>
+          <div className="shrink-0">
             {isAdmin ? (
               <button
                 onClick={() => {
@@ -397,36 +480,32 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   setContent('');
                   setIsCreateModalOpen(true);
                 }}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-2xl shadow-xl shadow-amber-500/20 transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm shrink-0"
+                className="btn-luxury-active luxury-pressable luxury-sheen-sweep w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-amber-200 font-black rounded-2xl shadow-xl shadow-amber-500/25 transition-all text-xs sm:text-sm cursor-pointer"
               >
-                <PlusCircle className="w-5 h-5" />
+                <PlusCircle className="w-5 h-5 text-amber-400" />
                 <span>+ Post Announcement</span>
               </button>
-            ) : (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 font-bold">
-                <ShieldCheck className="w-4 h-4 text-sky-400" />
-                <span>Verified Admin Feed</span>
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
 
-      {/* Category Pills & Quick Filter Buttons */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
+      {/* Luxury Filter & Search Control Deck */}
+      <div className="luxury-control-deck rounded-3xl p-4 sm:p-5 space-y-4 shadow-xl border border-slate-200 dark:border-slate-800/80">
+        {/* Category Pills Navigation */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           <button
             onClick={() => {
               setSelectedCategory('all');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            className={`luxury-pressable luxury-sheen-sweep px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
               selectedCategory === 'all' && !showOnlyBookmarked
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'btn-luxury-active font-black'
+                : 'btn-luxury-idle'
             }`}
           >
-            <Megaphone className="w-3.5 h-3.5" />
+            <Megaphone className="w-3.5 h-3.5 text-amber-400" />
             <span>All Notices ({posts.length})</span>
           </button>
 
@@ -435,13 +514,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('Exam Announcement');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            className={`luxury-pressable luxury-sheen-sweep px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
               selectedCategory === 'Exam Announcement' && !showOnlyBookmarked
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'btn-luxury-active font-black'
+                : 'btn-luxury-idle'
             }`}
           >
-            <Award className="w-3.5 h-3.5" />
+            <Award className="w-3.5 h-3.5 text-amber-400" />
             <span>Exam Alerts</span>
           </button>
 
@@ -450,13 +529,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('Curriculum Update');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            className={`luxury-pressable luxury-sheen-sweep px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
               selectedCategory === 'Curriculum Update' && !showOnlyBookmarked
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'btn-luxury-active font-black'
+                : 'btn-luxury-idle text-slate-300'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
             <span>Curriculum Updates</span>
           </button>
 
@@ -465,13 +544,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('Study Tip');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            className={`luxury-pressable luxury-sheen-sweep px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
               selectedCategory === 'Study Tip' && !showOnlyBookmarked
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'btn-luxury-active font-black'
+                : 'btn-luxury-idle text-slate-300'
             }`}
           >
-            <Lightbulb className="w-3.5 h-3.5" />
+            <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
             <span>Study Tips</span>
           </button>
 
@@ -480,56 +559,27 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               setSelectedCategory('General Notice');
               setShowOnlyBookmarked(false);
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            className={`luxury-pressable luxury-sheen-sweep px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
               selectedCategory === 'General Notice' && !showOnlyBookmarked
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'btn-luxury-active font-black'
+                : 'btn-luxury-idle text-slate-300'
             }`}
           >
-            <Landmark className="w-3.5 h-3.5" />
+            <Landmark className="w-3.5 h-3.5 text-amber-400" />
             <span>Ministry Notices</span>
           </button>
 
           <button
             onClick={() => setShowOnlyBookmarked(!showOnlyBookmarked)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            className={`luxury-pressable luxury-sheen-sweep px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
               showOnlyBookmarked
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'btn-luxury-active font-black'
+                : 'btn-luxury-idle'
             }`}
           >
-            <Bookmark className={`w-3.5 h-3.5 ${showOnlyBookmarked ? 'fill-current' : ''}`} />
+            <Bookmark className={`w-3.5 h-3.5 ${showOnlyBookmarked ? 'fill-current text-amber-400' : 'text-slate-400'}`} />
             <span>Saved Bookmarks</span>
           </button>
-        </div>
-
-        {/* Search & Grade Filter Bar */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3 shadow-sm flex flex-col sm:flex-row items-center gap-3">
-          <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search announcements by keyword, topic, or subject..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            {/* Grade Filter */}
-            <select
-              value={selectedGrade}
-              onChange={(e) => setSelectedGrade(e.target.value)}
-              className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none font-bold"
-            >
-              <option value="all">All Grades (9-12)</option>
-              <option value="Grade 12">Grade 12 (EUEE / Matric)</option>
-              <option value="Grade 11">Grade 11</option>
-              <option value="Grade 10">Grade 10</option>
-              <option value="Grade 9">Grade 9</option>
-            </select>
-          </div>
         </div>
       </div>
 
@@ -549,48 +599,74 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
           filteredPosts.map((post) => (
             <div
               key={post.id}
-              className={`bg-white dark:bg-slate-900 rounded-3xl border p-5 sm:p-6 shadow-md transition-all space-y-4 ${
-                post.pinned
-                  ? 'border-amber-400 dark:border-amber-500/60 ring-1 ring-amber-400/20 bg-gradient-to-b from-amber-50/20 via-transparent to-transparent dark:from-amber-950/15'
-                  : 'border-slate-200 dark:border-slate-800'
+              id={`post-${post.id}`}
+              className={`relative rounded-3xl p-6 sm:p-7 transition-all duration-300 space-y-4 group overflow-hidden ${
+                targetPostId === post.id
+                  ? 'bg-slate-900/98 ring-4 ring-amber-400 dark:ring-amber-500 shadow-[0_0_50px_rgba(245,158,11,0.35)] border-2 border-amber-400 scale-[1.01]'
+                  : post.pinned
+                  ? 'bg-gradient-to-b from-slate-900/95 via-slate-900/98 to-slate-950 border border-amber-500/40 shadow-[0_8px_32px_-8px_rgba(245,158,11,0.18)] hover:shadow-[0_16px_48px_-8px_rgba(245,158,11,0.25)] hover:-translate-y-0.5'
+                  : 'bg-gradient-to-b from-slate-900/90 via-slate-900/95 to-slate-950 border border-slate-800/90 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.4)] hover:border-slate-700 hover:shadow-[0_12px_36px_-6px_rgba(0,0,0,0.5)] hover:-translate-y-0.5'
               }`}
             >
-              {/* Top Eyebrow Badges & Controls */}
+              {/* Luxury hairline light runner on top edge for pinned posts */}
+              {post.pinned && (
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-90 pointer-events-none" />
+              )}
+
+              {/* Ambient corner flare */}
+              {post.pinned && (
+                <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+              )}
+
+              {/* Top Eyebrow Badges & Admin Controls */}
               <div className="flex items-center justify-between gap-2 pb-0.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold border border-slate-200/80 dark:border-slate-700/80 flex items-center gap-1.5 shadow-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></span>
+                  {/* Category Pill with unified luxury styling */}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-slate-900/90 border border-amber-500/30 text-amber-300 shadow-xs">
+                    {post.category === 'Exam Announcement' ? (
+                      <Award className="w-3.5 h-3.5 text-amber-400" />
+                    ) : post.category === 'Curriculum Update' ? (
+                      <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                    ) : post.category === 'Study Tip' ? (
+                      <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+                    ) : (
+                      <Landmark className="w-3.5 h-3.5 text-amber-400" />
+                    )}
                     <span>{post.category}</span>
                   </span>
 
+                  {/* Pinned Golden Seal - Icon Only */}
                   {post.pinned && (
-                    <span className="px-2.5 py-1 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 rounded-full text-[11px] font-black border border-amber-300/90 dark:border-amber-800/90 flex items-center gap-1 shadow-xs" title="Pinned Announcement">
-                      <Pin className="w-3 h-3 fill-current text-amber-600 dark:text-amber-400" />
-                      <span>Pinned</span>
+                    <span
+                      className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-amber-400/20 via-yellow-400/25 to-amber-500/20 border border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.25)] text-amber-300"
+                      title="Pinned Announcement"
+                    >
+                      <Pin className="w-3.5 h-3.5 fill-current text-amber-400" />
                     </span>
                   )}
                 </div>
 
+                {/* Admin quick controls */}
                 {isAdmin && (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 bg-slate-900/80 border border-slate-700/60 rounded-xl p-0.5 shadow-sm">
                     <button
                       onClick={() => handleTogglePin(post.id)}
-                      className="p-1.5 text-slate-400 hover:text-amber-500 rounded-lg transition-colors"
-                      title={post.pinned ? 'Unpin' : 'Pin to top'}
+                      className="p-1.5 text-slate-400 hover:text-amber-400 rounded-lg transition-colors cursor-pointer"
+                      title={post.pinned ? 'Unpin announcement' : 'Pin to top'}
                     >
-                      <Pin className={`w-3.5 h-3.5 ${post.pinned ? 'fill-current text-amber-500' : ''}`} />
+                      <Pin className={`w-3.5 h-3.5 ${post.pinned ? 'fill-current text-amber-400' : ''}`} />
                     </button>
                     <button
                       onClick={() => handleOpenEditModal(post)}
-                      className="p-1.5 text-slate-400 hover:text-sky-400 rounded-lg transition-colors"
-                      title="Edit post"
+                      className="p-1.5 text-slate-400 hover:text-sky-400 rounded-lg transition-colors cursor-pointer"
+                      title="Edit announcement"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeletePost(post.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
-                      title="Delete post"
+                      className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg transition-colors cursor-pointer"
+                      title="Delete announcement"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -599,58 +675,73 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               </div>
 
               {/* Author Profile Row */}
-              <div className="flex items-start gap-3.5 pt-0.5">
-                <div
-                  className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm shrink-0 mt-0.5 ${
-                    post.authorRole === 'admin'
-                      ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-slate-950'
-                      : post.authorRole === 'teacher'
-                      ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white'
-                      : 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white'
-                  }`}
-                >
-                  {post.authorRole === 'admin' ? (
-                    <ShieldCheck className="w-5 h-5" />
-                  ) : (
-                    <User className="w-5 h-5" />
-                  )}
+              <div className="flex items-start gap-3.5 pt-1">
+                {/* Luxury Squircle Avatar with Metallic Rim */}
+                <div className="relative shrink-0">
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400/80 via-amber-500/40 to-slate-800 p-[1.5px] shadow-md shadow-amber-500/10">
+                    <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                      {post.authorRole === 'admin' ? (
+                        <ShieldCheck className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                      ) : post.authorRole === 'teacher' ? (
+                        <Award className="w-5 h-5 text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
+                      ) : (
+                        <User className="w-5 h-5 text-slate-300" />
+                      )}
+                    </div>
+                  </div>
                 </div>
 
+                {/* Author Info & Structured Metadata Row */}
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
+                    <span className="font-black text-base sm:text-lg text-white tracking-tight leading-tight">
                       {post.author}
                     </span>
                     {post.isOfficial && (
-                      <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 rounded-full text-[10px] font-black border border-amber-300 dark:border-amber-800 shrink-0 inline-flex items-center gap-1 shadow-xs">
-                        <ShieldCheck className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-                        Official
+                      <span
+                        className="inline-flex items-center justify-center text-amber-400"
+                        title="Official Verified Channel"
+                      >
+                        <CheckCircle className="w-4 h-4 text-amber-400 fill-amber-400/20 drop-shadow-[0_0_6px_rgba(245,158,11,0.4)]" />
                       </span>
                     )}
                   </div>
 
-                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1 leading-relaxed">
-                    <span>{new Date(post.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                    <span className="text-slate-300 dark:text-slate-700">•</span>
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">{post.grade}</span>
+                  {/* Clean Luxury Metadata Chips Row (Unified Obsidian Glass) */}
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
+                    {/* Date Chip */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300 shadow-xs">
+                      <Calendar className="w-3 h-3 text-slate-400" />
+                      <span>{new Date(post.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                    </span>
+
+                    {/* Grade Chip */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300 shadow-xs">
+                      <GraduationCap className="w-3 h-3 text-slate-400" />
+                      <span>{post.grade}</span>
+                    </span>
+
+                    {/* Subject Chip */}
                     {post.subject && (
-                      <>
-                        <span className="text-slate-300 dark:text-slate-700">•</span>
-                        <span className="font-semibold text-emerald-600 dark:text-sky-400">{post.subject}</span>
-                      </>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300 shadow-xs">
+                        <BookOpen className="w-3 h-3 text-slate-400" />
+                        <span>{post.subject}</span>
+                      </span>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Title & Body Content */}
-              <div className="space-y-2">
-                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug">
+              <div className="space-y-3 pt-1">
+                <h3 className="text-lg sm:text-2xl font-black text-white tracking-tight leading-snug group-hover:text-amber-200 transition-colors">
                   {post.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
-                  {post.content}
-                </p>
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800/80 shadow-inner">
+                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal whitespace-pre-line">
+                    {post.content}
+                  </p>
+                </div>
               </div>
 
               {/* Attached Picture / Photo Banner */}
@@ -663,31 +754,31 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         caption: post.imageCaption || post.title,
                       })
                     }
-                    className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 cursor-pointer shadow-sm hover:shadow-md transition-all"
+                    className="group/img relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 bg-slate-950 cursor-pointer shadow-lg hover:shadow-2xl transition-all"
                   >
                     <div className="aspect-[16/9] sm:aspect-[21/9] max-h-80 w-full overflow-hidden">
                       <img
                         src={post.imageUrl}
                         alt={post.imageCaption || post.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
                     </div>
 
                     {/* Hover Zoom Overlay Banner */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3 sm:p-4 text-white">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity flex items-end justify-between p-3 sm:p-4 text-white">
                       <span className="text-xs font-bold truncate max-w-[80%]">
                         {post.imageCaption || 'Click to view full image'}
                       </span>
-                      <div className="p-1.5 rounded-xl bg-black/60 backdrop-blur-xs text-white">
+                      <div className="p-2 rounded-xl bg-black/70 backdrop-blur-xs text-white">
                         <ZoomIn className="w-4 h-4" />
                       </div>
                     </div>
 
                     {/* Persistent Caption Tag if present */}
                     {post.imageCaption && (
-                      <div className="px-4 py-2 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                        <ImageIcon className="w-3.5 h-3.5 text-amber-500" />
+                      <div className="px-4 py-2.5 bg-slate-900/90 border-t border-slate-800 text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                        <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
                         <span>{post.imageCaption}</span>
                       </div>
                     )}
@@ -695,24 +786,10 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 </div>
               )}
 
-              {/* Attached Resource / Action Link / External URL Buttons */}
+              {/* Attached Resource / Action Link / External URL Buttons (Where user circled) */}
               {(post.attachedBookId || post.actionUrl || post.linkUrl) && (
-                <div className="pt-2 flex flex-wrap items-center gap-2.5">
-                  {post.attachedBookId && (
-                    <button
-                      onClick={() => {
-                        const book = allBooks.find((b) => b.id === post.attachedBookId);
-                        if (book && onSelectBook) {
-                          onSelectBook(book);
-                        }
-                      }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-300 border border-blue-200 dark:border-blue-800 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors shadow-sm active:scale-95"
-                    >
-                      <BookOpen className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
-                      <span>Open Attached Textbook: {post.attachedBookTitle || 'View Textbook'} &rarr;</span>
-                    </button>
-                  )}
-
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  {/* Practice Exam / Destination Button */}
                   {!post.attachedBookId && post.actionUrl && (
                     <button
                       onClick={() => {
@@ -724,112 +801,97 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                           onNavigateTab('saved');
                         }
                       }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold hover:bg-amber-100 dark:hover:bg-amber-900 transition-colors shadow-sm active:scale-95"
+                      className="btn-luxury-active luxury-pressable luxury-sheen-sweep inline-flex items-center justify-between gap-3 px-5 py-3 rounded-2xl text-xs sm:text-sm font-black text-amber-200 cursor-pointer shadow-lg shadow-amber-500/15 group/btn"
                     >
-                      <Award className="w-4 h-4 text-amber-500" />
-                      <span>Launch Associated Practice / Portal &rarr;</span>
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-sm">
+                          <Award className="w-4 h-4" />
+                        </div>
+                        <span>
+                          {post.actionUrl === 'tab:explore'
+                            ? 'Explore Digital Textbooks'
+                            : post.actionUrl === 'tab:saved'
+                            ? 'View Saved Textbooks'
+                            : 'Launch Associated Practice & Mock Exams'}
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-4 h-4 text-amber-400 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                     </button>
                   )}
 
+                  {/* Attached Book Button */}
+                  {post.attachedBookId && (
+                    <button
+                      onClick={() => {
+                        const book = allBooks.find((b) => b.id === post.attachedBookId);
+                        if (book && onSelectBook) {
+                          onSelectBook(book);
+                        }
+                      }}
+                      className="btn-luxury-action luxury-pressable luxury-sheen-sweep inline-flex items-center justify-between gap-3 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold text-slate-200 cursor-pointer group/book"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-sm font-black text-xs">
+                          G{allBooks.find((b) => b.id === post.attachedBookId)?.grade || '12'}
+                        </div>
+                        <div className="text-left">
+                          <div className="text-[10px] uppercase font-black text-amber-400 tracking-wider">Official Curriculum Textbook</div>
+                          <div className="font-bold text-white text-xs">{post.attachedBookTitle || 'Open Attached Book'}</div>
+                        </div>
+                      </div>
+                      <BookOpen className="w-4 h-4 text-amber-400 group-hover/book:translate-x-0.5 transition-transform" />
+                    </button>
+                  )}
+
+                  {/* External Resource URL Button */}
                   {post.linkUrl && (
                     <a
                       href={post.linkUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 border ${
-                        post.linkType === 'download'
-                          ? 'bg-blue-600 hover:bg-blue-500 text-white border-blue-500 shadow-md shadow-blue-500/20'
-                          : post.linkType === 'telegram'
-                          ? 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800 hover:bg-sky-100 dark:hover:bg-sky-900'
-                          : post.linkType === 'youtube'
-                          ? 'bg-rose-50 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 hover:bg-rose-100 dark:hover:bg-rose-900'
-                          : post.linkType === 'drive'
-                          ? 'bg-amber-50 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900'
-                          : 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900'
-                      }`}
+                      className="btn-luxury-action luxury-pressable luxury-sheen-sweep inline-flex items-center justify-between gap-3 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold text-slate-200 hover:text-amber-200 cursor-pointer group/link"
                     >
-                      {post.linkType === 'download' ? (
-                        <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
-                          <Download className="w-3.5 h-3.5 text-white" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-sm">
+                          {post.linkType === 'telegram' ? (
+                            <Send className="w-4 h-4 text-amber-400" />
+                          ) : post.linkType === 'youtube' ? (
+                            <PlayCircle className="w-4 h-4 text-rose-400" />
+                          ) : post.linkType === 'download' ? (
+                            <Download className="w-4 h-4 text-amber-400" />
+                          ) : (
+                            <Globe className="w-4 h-4 text-amber-400" />
+                          )}
                         </div>
-                      ) : post.linkType === 'telegram' ? (
-                        <Send className="w-4 h-4 text-sky-500" />
-                      ) : post.linkType === 'youtube' ? (
-                        <PlayCircle className="w-4 h-4 text-rose-500" />
-                      ) : post.linkType === 'drive' ? (
-                        <FileText className="w-4 h-4 text-amber-500" />
-                      ) : (
-                        <Globe className="w-4 h-4 text-indigo-500" />
-                      )}
-                      <span>{post.linkTitle || (post.linkType === 'download' ? 'Download Resource File' : 'Open Official Link')}</span>
-                      {post.linkType === 'download' ? <Download className="w-3.5 h-3.5 text-white/90" /> : <ExternalLink className="w-3.5 h-3.5 opacity-70" />}
+                        <span>{post.linkTitle || (post.linkType === 'download' ? 'Download Resource File' : 'Official Portal Link')}</span>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-amber-400 group-hover/link:translate-x-0.5 transition-transform" />
                     </a>
                   )}
                 </div>
               )}
 
-              {/* Post Interactive Buttons Bar */}
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+              {/* Post Action Buttons Bar (Clean Executive Deck) */}
+              <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  {/* Like Button */}
-                  <button
-                    onClick={() => handleToggleLike(post.id)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 ${
-                      post.likedByMe
-                        ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 shadow-sm'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-rose-500 hover:bg-slate-200 dark:hover:bg-slate-700'
-                    }`}
-                    title="Like Post"
-                  >
-                    <Heart
-                      className={`w-4 h-4 ${
-                        post.likedByMe ? 'fill-current text-rose-500' : ''
-                      }`}
-                    />
-                    <span>{post.likes}</span>
-                  </button>
-
-                  {/* Comment / Reply Button */}
-                  <button
-                    onClick={() =>
-                      setExpandedComments({
-                        ...expandedComments,
-                        [post.id]: !expandedComments[post.id],
-                      })
-                    }
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                      expandedComments[post.id]
-                        ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
-                        : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}
-                    title="View & Post Comments"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    <span>
-                      {post.comments.length > 0
-                        ? `${post.comments.length} Comments`
-                        : 'Comments'}
-                    </span>
-                  </button>
-
                   {/* Read Aloud (Audio) Button */}
                   <button
                     onClick={() => handleReadAloud(post)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                    className={`luxury-pressable luxury-sheen-sweep flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                       speakingPostId === post.id
-                        ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 border border-blue-300 dark:border-blue-800 animate-pulse'
-                        : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        ? 'border-amber-400 bg-amber-500/20 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.25)] animate-pulse font-black'
+                        : 'btn-luxury-idle hover:text-amber-300'
                     }`}
                     title={speakingPostId === post.id ? 'Stop audio' : 'Listen to announcement (Read Aloud)'}
                   >
                     {speakingPostId === post.id ? (
                       <>
-                        <VolumeX className="w-4 h-4 text-rose-500" />
+                        <VolumeX className="w-4 h-4 text-amber-400" />
                         <span>Stop Audio</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
+                        <Volume2 className="w-4 h-4 text-amber-400" />
                         <span className="hidden sm:inline">Listen</span>
                       </>
                     )}
@@ -840,94 +902,36 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   {/* Bookmark Button */}
                   <button
                     onClick={() => handleToggleBookmark(post.id)}
-                    className={`p-2 rounded-xl text-xs font-bold transition-all active:scale-95 ${
+                    className={`luxury-pressable luxury-sheen-sweep p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                       post.isBookmarked
-                        ? 'bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-800'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-amber-500'
+                        ? 'bg-amber-500/20 border border-amber-400/50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.25)]'
+                        : 'btn-luxury-idle hover:text-amber-400'
                     }`}
                     title={post.isBookmarked ? 'Remove Bookmark' : 'Bookmark Announcement'}
                   >
-                    <Bookmark className={`w-4 h-4 ${post.isBookmarked ? 'fill-current text-amber-500' : ''}`} />
+                    <Bookmark className={`w-4 h-4 ${post.isBookmarked ? 'fill-current text-amber-400' : ''}`} />
                   </button>
 
                   {/* Share / Copy Link Button */}
                   <button
                     onClick={() => handleShare(post)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors active:scale-95"
+                    className="btn-luxury-idle luxury-pressable luxury-sheen-sweep flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold cursor-pointer"
                     title="Share announcement"
                   >
                     {copiedPostId === post.id ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-sky-400" />
-                        <span className="text-emerald-600 dark:text-sky-400 font-black">Copied!</span>
+                        <Check className="w-4 h-4 text-amber-400" />
+                        <span className="text-amber-300 font-black">Copied!</span>
                       </>
                     ) : (
                       <>
-                        <Share2 className="w-3.5 h-3.5" />
+                        <Share2 className="w-4 h-4 text-slate-300" />
                         <span className="hidden sm:inline">Share</span>
                       </>
                     )}
                   </button>
                 </div>
               </div>
-
-              {/* Expandable Comments Section */}
-              {expandedComments[post.id] && (
-                <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-4 animate-in fade-in duration-200">
-                  {/* Existing comments */}
-                  {post.comments.length > 0 && (
-                    <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-                      {post.comments.map((c) => (
-                        <div
-                          key={c.id}
-                          className="p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800/60 space-y-1 text-xs"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-extrabold text-slate-900 dark:text-white">
-                              {c.author}
-                            </span>
-                            <span className="text-[10px] text-slate-400">
-                              {new Date(c.date).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </span>
-                          </div>
-                          <p className="text-slate-600 dark:text-slate-300">
-                            {c.content}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Add comment form */}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={commentInputs[post.id] || ''}
-                      onChange={(e) =>
-                        setCommentInputs({
-                          ...commentInputs,
-                          [post.id]: e.target.value,
-                        })
-                      }
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleAddComment(post.id);
-                      }}
-                      placeholder="Write a comment or question..."
-                      className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    />
-                    <button
-                      onClick={() => handleAddComment(post.id)}
-                      className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center gap-1"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                      <span>Post</span>
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           ))
         )}
@@ -935,19 +939,23 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
       {/* Create / Edit Post Modal (Admin Only) */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col my-auto text-slate-900 dark:text-slate-100">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-slate-950/95 backdrop-blur-2xl rounded-3xl max-w-xl w-full border border-slate-800 shadow-[0_25px_70px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col my-auto text-slate-100 relative group">
+            {/* Top luxury flow line */}
+            <div className="luxury-flow-line h-[2px] absolute top-0 left-0 right-0 opacity-90 z-20" />
+            <div className="absolute top-0 right-0 -mt-12 -mr-12 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
             {/* Header */}
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/80">
+            <div className="p-5 sm:p-6 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/90 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shadow-md">
-                  <Megaphone className="w-5 h-5" />
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-lg shadow-amber-500/25 shrink-0">
+                  <Megaphone className="w-5 h-5 text-slate-950" />
                 </div>
                 <div>
-                  <h3 className="font-black text-base sm:text-lg">
+                  <h3 className="font-black text-base sm:text-lg text-white">
                     {editingPost ? 'Edit Announcement' : 'Publish New Announcement'}
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     Official announcements are broadcasted to all students with push notification alerts & sound chimes.
                   </p>
                 </div>
@@ -957,59 +965,59 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   setIsCreateModalOpen(false);
                   setEditingPost(null);
                 }}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Quick Template Presets */}
-            <div className="p-4 bg-amber-50/50 dark:bg-amber-950/20 border-b border-amber-100 dark:border-amber-900/40 space-y-2">
-              <span className="text-[11px] font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                Quick Preset Templates:
+            <div className="p-4 bg-slate-900/60 border-b border-slate-800/80 space-y-2">
+              <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Quick Preset Templates:</span>
               </span>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('exam')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
+                  className="btn-luxury-idle luxury-pressable luxury-sheen-sweep px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Award className="w-3 h-3 text-amber-500" />
+                  <Award className="w-3.5 h-3.5 text-amber-400" />
                   <span>Ministry Exam Alert</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('book')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
+                  className="btn-luxury-idle luxury-pressable luxury-sheen-sweep px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <BookOpen className="w-3 h-3 text-sky-400" />
+                  <BookOpen className="w-3.5 h-3.5 text-sky-400" />
                   <span>New Textbook Notice</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('tip')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
+                  className="btn-luxury-idle luxury-pressable luxury-sheen-sweep px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Lightbulb className="w-3 h-3 text-amber-500" />
+                  <Lightbulb className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Weekly Study Tip</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPresetTemplate('moe')}
-                  className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1"
+                  className="btn-luxury-idle luxury-pressable luxury-sheen-sweep px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Landmark className="w-3 h-3 text-cyan-500" />
+                  <Landmark className="w-3.5 h-3.5 text-indigo-400" />
                   <span>MOE Notice</span>
                 </button>
               </div>
             </div>
 
             {/* ACTION BUTTONS TOOLBAR FIRST */}
-            <div className="p-4 bg-amber-500/10 dark:bg-amber-950/20 border-b border-amber-500/20 space-y-3">
+            <div className="p-4 bg-slate-900/90 border-b border-slate-800/80 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                   <span>Attach Media & Resources:</span>
                 </span>
                 <span className="text-[10px] text-slate-400 font-bold">Select to customize</span>
@@ -1019,76 +1027,43 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveModalTab('photo')}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-black transition-all ${
+                  className={`luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                     activeModalTab === 'photo'
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md scale-[1.02]'
-                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                      ? 'btn-luxury-active font-black'
+                      : 'btn-luxury-idle'
                   }`}
                 >
-                  <ImageIcon className="w-4 h-4" />
+                  <ImageIcon className="w-4 h-4 text-amber-400" />
                   <span>Picture</span>
-                  {imageUrl && <span className="w-2 h-2 rounded-full bg-sky-400 ml-1"></span>}
+                  {imageUrl && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveModalTab('link')}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-black transition-all ${
+                  className={`luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                     activeModalTab === 'link'
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md scale-[1.02]'
-                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                      ? 'btn-luxury-active font-black'
+                      : 'btn-luxury-idle'
                   }`}
                 >
-                  <LinkIcon className="w-4 h-4" />
+                  <LinkIcon className="w-4 h-4 text-sky-400" />
                   <span>Link</span>
-                  {linkUrl && <span className="w-2 h-2 rounded-full bg-sky-400 ml-1"></span>}
+                  {linkUrl && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveModalTab('book')}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-black transition-all ${
+                  className={`luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                     activeModalTab === 'book'
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md scale-[1.02]'
-                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                      ? 'btn-luxury-active font-black'
+                      : 'btn-luxury-idle'
                   }`}
                 >
-                  <BookOpen className="w-4 h-4" />
+                  <BookOpen className="w-4 h-4 text-sky-400" />
                   <span>Book</span>
-                  {attachedBookId && <span className="w-2 h-2 rounded-full bg-sky-400 ml-1"></span>}
-                </button>
-              </div>
-
-              {/* Template Presets Chips */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[10px] text-slate-400 font-bold">Presets:</span>
-                <button
-                  type="button"
-                  onClick={() => applyPresetTemplate('exam')}
-                  className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
-                >
-                  Exam Alert
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyPresetTemplate('book')}
-                  className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
-                >
-                  Book Notice
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyPresetTemplate('tip')}
-                  className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
-                >
-                  Study Tip
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyPresetTemplate('moe')}
-                  className="px-2 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 rounded-lg text-[10px] font-bold transition-colors"
-                >
-                  MOE Notice
+                  {attachedBookId && <span className="w-2 h-2 rounded-full bg-emerald-400 ml-1"></span>}
                 </button>
               </div>
             </div>
@@ -1114,13 +1089,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     className="hidden"
                   />
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex items-center justify-center gap-2 py-2 px-3 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-amber-600 dark:text-amber-300 rounded-xl text-xs font-bold transition-all shadow-xs"
+                      className="btn-luxury-action luxury-pressable luxury-sheen-sweep flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold text-amber-300 cursor-pointer shadow-sm"
                     >
-                      <Upload className="w-3.5 h-3.5" />
+                      <Upload className="w-3.5 h-3.5 text-amber-400" />
                       <span>Upload from Device / Phone</span>
                     </button>
 
@@ -1129,7 +1104,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       value={imageUrl.startsWith('data:') ? '' : imageUrl}
                       onChange={(e) => setImageUrl(e.target.value)}
                       placeholder="Or paste Image URL..."
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 shadow-inner"
                     />
                   </div>
 
@@ -1142,7 +1117,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setImageUrl('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80');
                         setImageCaption('Ministry Examination Preparation');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-amber-600 dark:text-amber-300 border border-slate-200 dark:border-slate-700 font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2.5 py-1 rounded-lg text-[10px] text-amber-300 font-bold cursor-pointer"
                     >
                       Exam Session
                     </button>
@@ -1152,7 +1127,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setImageUrl('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
                         setImageCaption('Ethiopian Curriculum Textbooks');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-blue-600 dark:text-sky-300 border border-slate-200 dark:border-slate-700 font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2.5 py-1 rounded-lg text-[10px] text-sky-300 font-bold cursor-pointer"
                     >
                       Textbooks Library
                     </button>
@@ -1162,7 +1137,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setImageUrl('https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80');
                         setImageCaption('Science & Laboratory Experiment');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-sky-600 dark:text-sky-300 border border-slate-200 dark:border-slate-700 font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2.5 py-1 rounded-lg text-[10px] text-emerald-300 font-bold cursor-pointer"
                     >
                       Science Lab
                     </button>
@@ -1172,7 +1147,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setImageUrl('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80');
                         setImageCaption('Student Study Group');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-[10px] text-purple-600 dark:text-purple-300 border border-slate-200 dark:border-slate-700 font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2.5 py-1 rounded-lg text-[10px] text-purple-300 font-bold cursor-pointer"
                     >
                       Student Group
                     </button>
@@ -1180,8 +1155,8 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
                   {/* Live Picture Preview Card */}
                   {imageUrl && (
-                    <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/60 p-2 space-y-2">
-                      <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-100 dark:bg-black/40">
+                    <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/60 p-2.5 space-y-2">
+                      <div className="relative aspect-video rounded-xl overflow-hidden bg-black/60 border border-slate-800">
                         <img
                           src={imageUrl}
                           alt="Attachment preview"
@@ -1193,7 +1168,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                             setImageUrl('');
                             setImageCaption('');
                           }}
-                          className="absolute top-2 right-2 p-1.5 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white transition-all shadow-md active:scale-95"
+                          className="absolute top-2 right-2 p-1.5 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white transition-all shadow-md active:scale-95 cursor-pointer"
                           title="Remove Photo"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -1204,7 +1179,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         value={imageCaption}
                         onChange={(e) => setImageCaption(e.target.value)}
                         placeholder="Add image caption / description (optional)..."
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
                       />
                     </div>
                   )}
@@ -1213,10 +1188,10 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
               {/* 🔗 LINK ATTACHMENT SECTION */}
               {activeModalTab === 'link' && (
-                <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 animate-in fade-in-50 duration-200">
+                <div className="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-3 animate-in fade-in-50 duration-200">
                   <div className="flex items-center justify-between">
-                    <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <LinkIcon className="w-3.5 h-3.5 text-amber-500" />
+                    <label className="font-bold text-slate-300 flex items-center gap-1.5">
+                      <LinkIcon className="w-3.5 h-3.5 text-amber-400" />
                       <span>Attach Web / Resource Link Button:</span>
                     </label>
                     <span className="text-[10px] text-slate-400">Opens in new tab</span>
@@ -1229,7 +1204,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         value={linkUrl}
                         onChange={(e) => setLinkUrl(e.target.value)}
                         placeholder="https://t.me/... or https://moe.gov.et"
-                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40"
                       />
                     </div>
 
@@ -1237,7 +1212,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       <select
                         value={linkType}
                         onChange={(e) => setLinkType(e.target.value as any)}
-                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none"
+                        className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500/60 cursor-pointer font-bold"
                       >
                         <option value="website">Web / Portal</option>
                         <option value="download">Download / File Link</option>
@@ -1254,7 +1229,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                       value={linkTitle}
                       onChange={(e) => setLinkTitle(e.target.value)}
                       placeholder="Button Display Text (e.g. 'Download Ministry Exam PDF', 'Join Official Telegram')"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none"
+                      className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500/60"
                     />
                   </div>
 
@@ -1268,7 +1243,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setLinkTitle('Download Curriculum PDF');
                         setLinkType('download');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 text-[10px] font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2 py-0.5 rounded-lg text-sky-300 text-[10px] font-bold cursor-pointer"
                     >
                       Download File
                     </button>
@@ -1279,7 +1254,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setLinkTitle('Join Telegram Student Channel');
                         setLinkType('telegram');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-800 text-[10px] font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2 py-0.5 rounded-lg text-sky-400 text-[10px] font-bold cursor-pointer"
                     >
                       Telegram
                     </button>
@@ -1290,7 +1265,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setLinkTitle('Visit Ministry of Education Portal');
                         setLinkType('website');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 text-[10px] font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2 py-0.5 rounded-lg text-indigo-300 text-[10px] font-bold cursor-pointer"
                     >
                       MOE Portal
                     </button>
@@ -1301,7 +1276,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setLinkTitle('Watch Video Lesson');
                         setLinkType('youtube');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-[10px] font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2 py-0.5 rounded-lg text-rose-300 text-[10px] font-bold cursor-pointer"
                     >
                       Video Lesson
                     </button>
@@ -1312,7 +1287,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                         setLinkTitle('Open Google Drive Documents');
                         setLinkType('drive');
                       }}
-                      className="px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[10px] font-bold"
+                      className="btn-luxury-idle luxury-pressable px-2 py-0.5 rounded-lg text-amber-300 text-[10px] font-bold cursor-pointer"
                     >
                       Google Drive
                     </button>
@@ -1322,16 +1297,16 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
 
               {/* 📚 TEXTBOOK ATTACHMENT SECTION */}
               {activeModalTab === 'book' && (
-                <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 animate-in fade-in-50 duration-200">
+                <div className="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-3 animate-in fade-in-50 duration-200">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="font-bold text-slate-700 dark:text-slate-300">
+                      <label className="font-bold text-slate-300">
                         Attach Specific Textbook:
                       </label>
                       <select
                         value={attachedBookId}
                         onChange={(e) => setAttachedBookId(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                        className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500/60 cursor-pointer font-bold"
                       >
                         <option value="">None (General Post)</option>
                         {allBooks.map((b) => (
@@ -1343,13 +1318,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     </div>
 
                     <div className="space-y-1">
-                      <label className="font-bold text-slate-700 dark:text-slate-300">
+                      <label className="font-bold text-slate-300">
                         Action Destination Link:
                       </label>
                       <select
                         value={actionUrl}
                         onChange={(e) => setActionUrl(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                        className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500/60 cursor-pointer font-bold"
                       >
                         <option value="">Default (Notice Board)</option>
                         <option value="tab:examprep">Exam Practice Hub</option>
@@ -1361,10 +1336,10 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="font-bold text-slate-700 dark:text-slate-300">
-                    Publisher / Admin Name:
+                  <label className="font-bold text-slate-300 text-xs">
+                    Publisher / Author Name:
                   </label>
                   <input
                     type="text"
@@ -1372,13 +1347,42 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     value={authorName}
                     onChange={(e) => setAuthorName(e.target.value)}
                     placeholder="e.g. Admin @lalion"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                    className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 font-semibold"
                   />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-300 text-xs">
+                    Author Role:
+                  </label>
+                  <select
+                    value={authorRole}
+                    onChange={(e) => setAuthorRole(e.target.value as 'admin' | 'teacher' | 'student')}
+                    className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500/60 cursor-pointer font-bold"
+                  >
+                    <option value="admin">Administrator</option>
+                    <option value="teacher">Teacher / Educator</option>
+                    <option value="student">Student</option>
+                  </select>
                 </div>
               </div>
 
+              {/* Official Badge Toggle */}
+              <label className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 cursor-pointer select-none hover:border-slate-700 transition-all">
+                <input
+                  type="checkbox"
+                  checked={isOfficial}
+                  onChange={(e) => setIsOfficial(e.target.checked)}
+                  className="w-4 h-4 text-amber-500 rounded focus:ring-amber-400 cursor-pointer accent-amber-500"
+                />
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-xs font-bold text-slate-200">Display "Official" verification badge on notice</span>
+                </div>
+              </label>
+
               <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300">
+                <label className="font-bold text-slate-300">
                   Post Title:
                 </label>
                 <input
@@ -1387,19 +1391,19 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Grade 12 EUEE National Exam Revision Center Activated"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 shadow-inner font-bold"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-700 dark:text-slate-300">
+                  <label className="font-bold text-slate-300">
                     Category:
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                    className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500/60 cursor-pointer font-bold"
                   >
                     <option value="Exam Announcement">Exam Announcement</option>
                     <option value="Curriculum Update">Curriculum Update</option>
@@ -1410,13 +1414,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-700 dark:text-slate-300">
+                  <label className="font-bold text-slate-300">
                     Target Grade:
                   </label>
                   <select
                     value={grade}
                     onChange={(e) => setGrade(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                    className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500/60 cursor-pointer font-bold"
                   >
                     <option value="All Grades (9-12)">All Grades (9-12)</option>
                     <option value="Grade 12 (EUEE / Matric)">Grade 12 (EUEE / Matric)</option>
@@ -1427,7 +1431,7 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-700 dark:text-slate-300">
+                  <label className="font-bold text-slate-300">
                     Subject / Topic:
                   </label>
                   <input
@@ -1435,13 +1439,13 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="e.g. Mathematics, Science"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none"
+                    className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300">
+                <label className="font-bold text-slate-300">
                   Announcement Message:
                 </label>
                 <textarea
@@ -1450,42 +1454,67 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Type your official announcement here..."
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 shadow-inner leading-relaxed"
                 />
               </div>
 
-              {/* Pin Toggle */}
-              <div className="flex items-center gap-2 pt-1">
-                <input
-                  type="checkbox"
-                  id="pinCheck"
-                  checked={isPinned}
-                  onChange={(e) => setIsPinned(e.target.checked)}
-                  className="w-4 h-4 text-amber-500 rounded focus:ring-amber-400"
-                />
-                <label htmlFor="pinCheck" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer flex items-center gap-1.5">
-                  <Pin className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Pin this announcement at top of notice board</span>
+              {/* Pin & Push Notification Options */}
+              <div className="space-y-2.5 pt-2 pb-1">
+                {/* Pin Toggle */}
+                <label className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 cursor-pointer select-none hover:border-slate-700 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={isPinned}
+                    onChange={(e) => setIsPinned(e.target.checked)}
+                    className="w-4 h-4 text-amber-500 rounded focus:ring-amber-400 cursor-pointer accent-amber-500"
+                  />
+                  <div className="flex items-center gap-2">
+                    <Pin className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-xs font-bold text-slate-200">Pin this announcement to top of Notice Board</span>
+                  </div>
+                </label>
+
+                {/* Push Notification Toggle (Highlighted as circled by user) */}
+                <label className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-transparent border border-amber-500/30 cursor-pointer select-none shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:border-amber-500/50 transition-all">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                      <Bell className="w-4 h-4 text-amber-400 animate-pulse" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-black text-amber-300">
+                        Send Push Notification Alert with Sound
+                      </div>
+                      <div className="text-[11px] text-slate-400">
+                        Triggers real-time audio chime alert across all student devices
+                      </div>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={sendPushNotification}
+                    onChange={(e) => setSendPushNotification(e.target.checked)}
+                    className="w-5 h-5 text-amber-500 rounded focus:ring-amber-400 cursor-pointer accent-amber-500 shrink-0"
+                  />
                 </label>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => {
                     setIsCreateModalOpen(false);
                     setEditingPost(null);
                   }}
-                  className="px-4 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold"
+                  className="btn-luxury-idle luxury-pressable px-5 py-2.5 rounded-2xl text-xs font-bold text-slate-300 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-1.5"
+                  className="btn-luxury-active luxury-pressable luxury-sheen-sweep px-7 py-3 text-amber-200 font-black rounded-2xl shadow-xl shadow-amber-500/25 transition-all text-xs cursor-pointer flex items-center gap-2"
                 >
-                  <Megaphone className="w-4 h-4" />
+                  <Megaphone className="w-4 h-4 text-amber-400" />
                   <span>{editingPost ? 'Save Changes' : 'Publish & Broadcast Alert'}</span>
                 </button>
               </div>

@@ -214,22 +214,28 @@ export const StorageService = {
   getSettings(): UserSettings {
     try {
       const data = localStorage.getItem(KEYS.SETTINGS);
-      return data
-        ? JSON.parse(data)
-        : {
-            selectedGrade: 12,
-            selectedRegion: 'national',
-            language: 'en',
-            theme: 'light',
-            fontSize: 'base',
-            autoSpeechRate: 1.0,
-          };
+      if (!data) {
+        return {
+          selectedGrade: 12,
+          selectedRegion: 'national',
+          language: 'en',
+          theme: 'dark',
+          fontSize: 'base',
+          autoSpeechRate: 1.0,
+        };
+      }
+      const parsed = JSON.parse(data);
+      const isExplicitChoice = localStorage.getItem('ethio_explicit_theme_selected');
+      return {
+        ...parsed,
+        theme: isExplicitChoice ? (parsed.theme || 'dark') : 'dark',
+      };
     } catch {
       return {
         selectedGrade: 12,
         selectedRegion: 'national',
         language: 'en',
-        theme: 'light',
+        theme: 'dark',
         fontSize: 'base',
         autoSpeechRate: 1.0,
       };

@@ -2,8 +2,8 @@ import React from 'react';
 import { Home, BookOpen, Award, Bookmark, Info } from 'lucide-react';
 
 interface MobileBottomNavProps {
-  activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about';
-  setActiveTab: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about') => void;
+  activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum';
+  setActiveTab: (tab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum') => void;
   offlineCount: number;
 }
 
@@ -22,7 +22,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
       icon: Bookmark,
       badge: offlineCount > 0 ? offlineCount : undefined,
     },
-    { id: 'about' as const, label: 'Curriculum', icon: Info },
+    { id: 'about' as const, label: 'About', icon: Info },
   ];
 
   return (

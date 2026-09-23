@@ -43,3 +43,8 @@ yarn-error.log*
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Scratch & Temporary Test Files
+scratch/
+.firebase/
+

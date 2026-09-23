@@ -186,3 +186,221 @@ canvas {
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ==========================================================================
+   Luxury Tactile Buttons & Control Deck System
+   ========================================================================== */
+
+/* Tactile Spring Press Physics */
+.luxury-pressable {
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.22s ease,
+              border-color 0.2s ease,
+              background 0.2s ease,
+              color 0.2s ease;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.luxury-pressable:active {
+  transform: scale(0.93) translateY(1.5px) !important;
+}
+
+/* Light Sheen Sweep on Hover / Active */
+.luxury-sheen-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.luxury-sheen-sweep::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -120%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.luxury-sheen-sweep:hover::after,
+.luxury-sheen-sweep:active::after {
+  animation: luxuryGleam 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+}
+
+@keyframes luxuryGleam {
+  0% {
+    left: -120%;
+  }
+  100% {
+    left: 160%;
+  }
+}
+
+/* 
+   LUXURY ACTIVE / CLICKED BUTTON STATE
+   Matches the circled "Natural Science" dark obsidian aesthetic,
+   highlighted by a crisp illuminated cyan/sky border & luminous micro-aura,
+   WITHOUT ANY SOLID BRIGHT BLUE FILL!
+*/
+.btn-luxury-active {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #38bdf8 !important;
+  box-shadow: 
+    0 0 16px -2px rgba(56, 189, 248, 0.45),
+    0 2px 8px 0 rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 0 12px rgba(56, 189, 248, 0.12) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-luxury-active:hover {
+  background: linear-gradient(180deg, rgba(40, 53, 76, 0.98) 0%, rgba(20, 30, 50, 1) 100%) !important;
+  border-color: #7dd3fc !important;
+  box-shadow: 
+    0 0 20px -1px rgba(56, 189, 248, 0.6),
+    0 3px 10px 0 rgba(0, 0, 0, 0.6),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
+    inset 0 0 14px rgba(56, 189, 248, 0.2) !important;
+}
+
+/* 
+   LUXURY IDLE STATE (Unselected / Resting)
+   Dark obsidian frosted glass with subtle border
+*/
+.btn-luxury-idle {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.88) 100%) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(51, 65, 85, 0.75) !important;
+  box-shadow: 
+    0 2px 6px -1px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.btn-luxury-idle:hover {
+  background: linear-gradient(180deg, rgba(51, 65, 85, 0.85) 0%, rgba(30, 41, 59, 0.95) 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(148, 163, 184, 0.6) !important;
+  box-shadow: 
+    0 4px 14px -2px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 
+   LUXURY ACTION BUTTON (For CTAs across the app, replacing old solid blue)
+*/
+.btn-luxury-action {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  box-shadow: 
+    0 4px 14px -2px rgba(0, 0, 0, 0.5),
+    0 0 12px -2px rgba(56, 189, 248, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-luxury-action:hover {
+  background: linear-gradient(180deg, rgba(40, 56, 82, 0.98) 0%, rgba(20, 32, 54, 1) 100%) !important;
+  border-color: rgba(56, 189, 248, 0.85) !important;
+  box-shadow: 
+    0 6px 18px -2px rgba(0, 0, 0, 0.6),
+    0 0 18px 0 rgba(56, 189, 248, 0.4),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Luxury Reset Jewel Pill */
+.btn-luxury-reset {
+  background: linear-gradient(135deg, rgba(136, 19, 55, 0.75) 0%, rgba(190, 18, 60, 0.85) 100%);
+  border: 1px solid rgba(251, 113, 133, 0.45);
+  color: #ffe4e6;
+  box-shadow: 
+    0 3px 12px -2px rgba(225, 29, 72, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.btn-luxury-reset:hover {
+  background: linear-gradient(135deg, rgba(159, 18, 57, 0.9) 0%, rgba(225, 29, 72, 0.95) 100%);
+  border-color: rgba(251, 113, 133, 0.7);
+  color: #ffffff;
+  box-shadow: 
+    0 4px 16px -2px rgba(225, 29, 72, 0.5),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+}
+
+/* Luxury Filter Control Deck Container */
+.luxury-control-deck {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(241, 245, 249, 0.9) 0%, rgba(255, 255, 255, 0.96) 60%, rgba(248, 250, 252, 0.98) 100%);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.dark .luxury-control-deck {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.94) 55%, rgba(3, 7, 18, 0.98) 100%);
+  border: 1px solid rgba(51, 65, 85, 0.65);
+  box-shadow: 
+    0 20px 45px -12px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Segmented Control Inset Tray */
+.luxury-segmented-tray {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dark .luxury-segmented-tray {
+  background: rgba(3, 7, 18, 0.8);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   Luxury App Icon Animation (About & Branding)
+   ========================================================================== */
+@keyframes luxuryIconLevitate {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.04);
+  }
+}
+
+@keyframes luxuryAuraPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px 2px rgba(56, 189, 248, 0.35), 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 38px 8px rgba(56, 189, 248, 0.65), 0 16px 35px -5px rgba(0, 0, 0, 0.75);
+  }
+}
+
+.luxury-brand-icon-anim {
+  animation: luxuryIconLevitate 4s ease-in-out infinite, luxuryAuraPulse 4s ease-in-out infinite;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, box-shadow;
+}
+
+.luxury-brand-icon-anim:hover {
+  transform: translateY(-10px) scale(1.08) !important;
+}
+
+.luxury-brand-icon-anim:active {
+  transform: scale(0.95) !important;
+}
+
+

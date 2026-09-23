@@ -10,10 +10,15 @@ interface ThemeToggleProps {
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => {
   const { t } = useTranslation();
 
+  const handleSelectTheme = (newTheme: 'light' | 'dark' | 'sepia') => {
+    localStorage.setItem('ethio_explicit_theme_selected', 'true');
+    setTheme(newTheme);
+  };
+
   const cycleTheme = () => {
-    if (theme === 'light') setTheme('dark');
-    else if (theme === 'dark') setTheme('sepia');
-    else setTheme('light');
+    if (theme === 'light') handleSelectTheme('dark');
+    else if (theme === 'dark') handleSelectTheme('sepia');
+    else handleSelectTheme('light');
   };
 
   return (
@@ -21,47 +26,47 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
       {/* Mobile Single Compact Cycle Button */}
       <button
         onClick={cycleTheme}
-        className="sm:hidden w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center active:scale-95 shadow-xs"
+        className="sm:hidden w-9 h-9 rounded-xl btn-luxury-idle luxury-pressable transition-all flex items-center justify-center cursor-pointer"
         title={`Theme: ${theme}. Tap to change.`}
       >
-        {theme === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
-        {theme === 'dark' && <Moon className="w-4 h-4 text-blue-400" />}
-        {theme === 'sepia' && <Eye className="w-4 h-4 text-amber-700" />}
+        {theme === 'light' && <Sun className="w-4 h-4 text-amber-400" />}
+        {theme === 'dark' && <Moon className="w-4 h-4 text-sky-400" />}
+        {theme === 'sepia' && <Eye className="w-4 h-4 text-amber-500" />}
       </button>
 
       {/* Desktop / Tablet 3-state Segmented Control */}
-      <div className="hidden sm:flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+      <div className="hidden sm:flex items-center luxury-segmented-tray p-1 rounded-xl">
         <button
-          onClick={() => setTheme('light')}
+          onClick={() => handleSelectTheme('light')}
           title={t('light')}
-          className={`p-1.5 rounded-lg transition-all ${
+          className={`p-1.5 rounded-lg transition-all luxury-pressable cursor-pointer ${
             theme === 'light'
-              ? 'bg-white text-amber-600 shadow-sm'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ? 'btn-luxury-active text-amber-400'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <Sun className="w-4 h-4" />
         </button>
 
         <button
-          onClick={() => setTheme('dark')}
+          onClick={() => handleSelectTheme('dark')}
           title={t('dark')}
-          className={`p-1.5 rounded-lg transition-all ${
+          className={`p-1.5 rounded-lg transition-all luxury-pressable cursor-pointer ${
             theme === 'dark'
-              ? 'bg-slate-900 text-blue-400 shadow-sm'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ? 'btn-luxury-active text-sky-400'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <Moon className="w-4 h-4" />
         </button>
 
         <button
-          onClick={() => setTheme('sepia')}
+          onClick={() => handleSelectTheme('sepia')}
           title={t('sepia')}
-          className={`p-1.5 rounded-lg transition-all ${
+          className={`p-1.5 rounded-lg transition-all luxury-pressable cursor-pointer ${
             theme === 'sepia'
-              ? 'bg-amber-100 text-amber-900 shadow-sm font-bold'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ? 'btn-luxury-active text-amber-300'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <Eye className="w-4 h-4" />

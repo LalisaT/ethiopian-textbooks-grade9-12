@@ -35,9 +35,9 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('disclaimer')}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
                 activeTab === 'disclaimer'
-                  ? 'bg-blue-600 text-white shadow-md ring-1 ring-sky-400/40'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -48,9 +48,9 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('privacy')}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
                 activeTab === 'privacy'
-                  ? 'bg-blue-600 text-white shadow-md ring-1 ring-sky-400/40'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -61,9 +61,9 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('terms')}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
                 activeTab === 'terms'
-                  ? 'bg-blue-600 text-white shadow-md ring-1 ring-sky-400/40'
+                  ? 'btn-luxury-active'
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
@@ -220,9 +220,9 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           <button
             type="button"
             onClick={onAgree}
-            className="w-full py-3 sm:py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 active:scale-[0.98] text-white font-black text-xs sm:text-sm shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3 sm:py-3.5 px-6 rounded-2xl btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" />
             <span>Agree &amp; Continue</span>
           </button>
         </div>

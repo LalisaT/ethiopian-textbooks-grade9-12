@@ -15,7 +15,7 @@ export const AboutCurriculumPage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 space-y-6 sm:space-y-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 space-y-6 sm:space-y-8">
       {/* Header Banner */}
       <div className="rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-8 sm:p-12 border border-slate-800 shadow-xl space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/20 text-sky-300 rounded-full border border-blue-500/30 text-xs font-bold">
@@ -40,7 +40,7 @@ export const AboutCurriculumPage: React.FC = () => {
           </div>
           <div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              Secondary & Preparatory Education Structure
+              Secondary &amp; Preparatory Education Structure
             </h2>
             <p className="text-xs text-slate-500">
               The Ethiopian 6-2-4 Education Reform System (Grades 9–12)
@@ -65,7 +65,7 @@ export const AboutCurriculumPage: React.FC = () => {
             <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 pt-2">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-sky-400" />
-                <span>Foundational STEM labs, molecular chemistry, kinematics & cell biology</span>
+                <span>Foundational STEM labs, molecular chemistry, kinematics &amp; cell biology</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-sky-400" />
@@ -79,10 +79,10 @@ export const AboutCurriculumPage: React.FC = () => {
               <span className="px-2.5 py-0.5 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-extrabold text-xs rounded-full">
                 Grades 11 – 12
               </span>
-              <span className="text-xs font-bold text-slate-400">Preparatory & Matric</span>
+              <span className="text-xs font-bold text-slate-400">Preparatory &amp; Matric</span>
             </div>
             <h3 className="font-bold text-base text-slate-900 dark:text-white">
-              Stream Specialization & EUEE University Entrance
+              Stream Specialization &amp; EUEE University Entrance
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Students branch into <strong>Natural Science</strong> (Physics, Chemistry, Biology, Advanced Math) or <strong>Social Science</strong> (Economics, Geography, History, Social Math). Grade 12 concludes with the EUEE National Exam.
@@ -101,8 +101,6 @@ export const AboutCurriculumPage: React.FC = () => {
         </div>
       </section>
 
-
-
       {/* Core Principles */}
       <section className="bg-blue-50 dark:bg-blue-950/30 rounded-3xl p-8 border border-blue-200 dark:border-blue-900/60 space-y-4">
         <h3 className="font-extrabold text-lg text-blue-950 dark:text-sky-200 flex items-center gap-2">
@@ -119,13 +117,13 @@ export const AboutCurriculumPage: React.FC = () => {
           </div>
           <div className="p-4 bg-white/80 dark:bg-slate-900/80 rounded-2xl border border-blue-100 dark:border-blue-900/40">
             <div className="font-bold text-sm text-blue-800 dark:text-sky-300 mb-1">
-              Vocational & Tech Readiness
+              Vocational &amp; Tech Readiness
             </div>
             Equipping youth with practical hands-on skills in agriculture, digital literacy, and business.
           </div>
           <div className="p-4 bg-white/80 dark:bg-slate-900/80 rounded-2xl border border-blue-100 dark:border-blue-900/40">
             <div className="font-bold text-sm text-blue-800 dark:text-sky-300 mb-1">
-              Civic & Ethical Values
+              Civic &amp; Ethical Values
             </div>
             Promoting constitutional democracy, peace, unity in diversity, and national development.
           </div>
