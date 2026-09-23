@@ -15,8 +15,8 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full max-h-[92dvh] sm:max-h-[88vh] shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200 safe-area-pb">
+      <div className="bg-slate-900 border-t sm:border border-slate-700/80 rounded-t-[32px] sm:rounded-3xl max-w-lg w-full h-[88vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200">
         
         {/* Top Header */}
         <div className="shrink-0 pt-4 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 text-center border-b border-slate-800 bg-slate-950/80">
@@ -74,7 +74,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5 sm:space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed overscroll-contain">
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-3.5 sm:space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed overscroll-contain">
           {activeTab === 'disclaimer' && (
             <div className="space-y-3 sm:space-y-3.5 animate-in fade-in duration-150">
               <p>
@@ -216,11 +216,11 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         </div>
 
         {/* Bottom Action Footer - Pinned & ALWAYS fully visible on mobile */}
-        <div className="shrink-0 p-3 sm:p-4 bg-slate-950/95 border-t border-slate-800 flex flex-col gap-2">
+        <div className="shrink-0 sticky bottom-0 z-30 p-3 sm:p-4 bg-slate-950 border-t border-slate-800 flex flex-col gap-2 shadow-[0_-8px_25px_rgba(0,0,0,0.8)] safe-area-pb">
           <button
             type="button"
             onClick={onAgree}
-            className="w-full py-3 sm:py-3.5 px-6 rounded-2xl btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 sm:py-3.5 px-6 rounded-2xl btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-black text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
           >
             <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" />
             <span>Agree &amp; Continue</span>

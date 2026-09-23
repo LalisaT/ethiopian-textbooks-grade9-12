@@ -82,12 +82,12 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   return (
     <section className="space-y-4">
       {/* Bookshelf Category Selector & Carousel Controls */}
-      <div className="flex items-center justify-between gap-2 px-1">
-        <div className="flex items-center gap-2">
-          <div className="luxury-segmented-tray p-1.5 rounded-2xl flex items-center gap-1.5 text-xs font-bold">
+      <div className="flex items-center justify-between gap-2 px-1 max-w-full overflow-hidden">
+        <div className="flex items-center gap-1.5 sm:gap-2 max-w-full overflow-x-auto no-scrollbar">
+          <div className="luxury-segmented-tray p-1 sm:p-1.5 rounded-2xl flex items-center gap-1 sm:gap-1.5 text-xs font-bold shrink-0">
             <button
               onClick={() => setActiveCategory('all')}
-              className={`shrink-0 whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-black luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
+              className={`shrink-0 whitespace-nowrap px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
                 activeCategory === 'all'
                   ? 'btn-luxury-active'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
@@ -97,7 +97,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
             </button>
             <button
               onClick={() => setActiveCategory('natural')}
-              className={`shrink-0 whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-black luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
+              className={`shrink-0 whitespace-nowrap px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
                 activeCategory === 'natural'
                   ? 'btn-luxury-active'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
@@ -107,7 +107,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
             </button>
             <button
               onClick={() => setActiveCategory('social')}
-              className={`shrink-0 whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-black luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
+              className={`shrink-0 whitespace-nowrap px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black luxury-pressable luxury-sheen-sweep cursor-pointer transition-all ${
                 activeCategory === 'social'
                   ? 'btn-luxury-active'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
@@ -118,7 +118,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
           </div>
 
           {/* Navigation Arrows */}
-          <div className="flex items-center gap-1.5">
+          <div className="hidden sm:flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => handleScroll('left')}
               className="w-9 h-9 rounded-xl btn-luxury-idle luxury-pressable text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"

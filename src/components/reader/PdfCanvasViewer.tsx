@@ -186,12 +186,13 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
         const context = canvas.getContext('2d', { alpha: false });
         if (!context) return;
 
-        const outputScale = Math.min(window.devicePixelRatio || 1, 1.75);
+        const outputScale = Math.min(window.devicePixelRatio || 1, 2.0);
         canvas.width = Math.floor(viewport.width * outputScale);
         canvas.height = Math.floor(viewport.height * outputScale);
         canvas.style.width = `${displayWidth}px`;
         canvas.style.height = `${displayHeight}px`;
-        canvas.style.maxWidth = '100%';
+        canvas.style.aspectRatio = `${unscaledViewport.width} / ${unscaledViewport.height}`;
+        canvas.style.maxWidth = fitMode === 'width' ? '100%' : 'none';
 
         const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
         renderTask = page.render({
@@ -256,20 +257,28 @@ const ContinuousPdfPage: React.FC<ContinuousPdfPageProps> = React.memo(({
       }`}
     >
       <div
-        className={`${paperBgColor} rounded-xl sm:rounded-2xl shadow-xl border border-slate-700/60 relative flex flex-col items-center justify-center max-w-full ${canvasFilterStyle}`}
+        className={`${paperBgColor} rounded-xl sm:rounded-2xl shadow-xl border border-slate-700/60 relative flex flex-col items-center justify-center shrink-0 ${canvasFilterStyle}`}
         style={{
           width: pageDims ? `${pageDims.width}px` : '100%',
+          height: pageDims ? `${pageDims.height}px` : 'auto',
           minHeight: pageDims ? `${pageDims.height}px` : '480px',
-          maxWidth: '100%',
+          maxWidth: fitMode === 'width' ? '100%' : 'none',
+          aspectRatio: pageDims ? `${pageDims.width} / ${pageDims.height}` : undefined,
         }}
       >
         {/* Canvas - displays 100% of original page from top to bottom, ZERO CROPPING */}
         {(isInViewportRange || hasRendered) && (
           <canvas
             ref={canvasRef}
-            className={`block mx-auto max-w-full transition-opacity duration-200 ${
+            className={`block mx-auto transition-opacity duration-200 ${
               hasRendered ? 'opacity-100' : 'opacity-0'
             }`}
+            style={{
+              width: pageDims ? `${pageDims.width}px` : '100%',
+              height: pageDims ? `${pageDims.height}px` : 'auto',
+              maxWidth: fitMode === 'width' ? '100%' : 'none',
+              aspectRatio: pageDims ? `${pageDims.width} / ${pageDims.height}` : undefined,
+            }}
           />
         )}
 
@@ -333,6 +342,16 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const [fitMode, setFitMode] = useState<'custom' | 'width' | 'page'>(isMobile ? 'width' : 'page');
   const [readerTheme, setReaderTheme] = useState<'normal' | 'sepia' | 'dark' | 'contrast'>('normal');
   const [showZoomToast, setShowZoomToast] = useState(false);
+
+  // Auto-hide zoom indicator toast after 1000ms so it NEVER gets stuck on screen
+  useEffect(() => {
+    if (showZoomToast) {
+      const timer = setTimeout(() => {
+        setShowZoomToast(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [showZoomToast, scale]);
 
   // Study Tools State
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -735,11 +754,13 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
-      if (isPinching && e.touches.length < 2) {
-        isPinching = false;
-        touchStartDist = 0;
-        setTimeout(() => setShowZoomToast(false), 800);
-      } else if (!isPinching && e.changedTouches.length === 1) {
+      if (isPinching) {
+        if (e.touches.length < 2) {
+          isPinching = false;
+          touchStartDist = 0;
+          setTimeout(() => setShowZoomToast(false), 500);
+        }
+      } else if (e.changedTouches.length === 1) {
         const deltaX = e.changedTouches[0].clientX - touchStartX;
         const deltaY = e.changedTouches[0].clientY - touchStartY;
         const deltaTime = Date.now() - touchStartTime;
@@ -755,6 +776,12 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           }
         }
       }
+    };
+
+    const handleTouchCancel = () => {
+      isPinching = false;
+      touchStartDist = 0;
+      setTimeout(() => setShowZoomToast(false), 300);
     };
 
     // Mouse drag-to-swipe on desktop/trackpad
@@ -806,6 +833,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     container.addEventListener('touchstart', handleTouchStart, { passive: true });
     container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    container.addEventListener('touchcancel', handleTouchCancel, { passive: true });
     container.addEventListener('mousedown', handleMouseDown);
     container.addEventListener('mouseup', handleMouseUp);
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -817,6 +845,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener('touchcancel', handleTouchCancel);
       container.removeEventListener('mousedown', handleMouseDown);
       container.removeEventListener('mouseup', handleMouseUp);
       container.removeEventListener('wheel', handleWheel);
@@ -866,13 +895,14 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
         if (!context) return;
 
-        // Optimized DPI capping: keeps text pin-sharp while saving 60% memory & preventing lag on BlueStacks/emulators
-        const outputScale = Math.min(window.devicePixelRatio || 1, 1.75);
+        // Optimized DPI capping: keeps text pin-sharp while saving memory
+        const outputScale = Math.min(window.devicePixelRatio || 1, 2.0);
         canvas.width = Math.floor(viewport.width * outputScale);
         canvas.height = Math.floor(viewport.height * outputScale);
         canvas.style.width = `${Math.floor(viewport.width)}px`;
         canvas.style.height = `${Math.floor(viewport.height)}px`;
-        canvas.style.maxWidth = '100%';
+        canvas.style.aspectRatio = `${viewport.width} / ${viewport.height}`;
+        canvas.style.maxWidth = fitMode === 'width' ? '100%' : 'none';
 
         const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
 
@@ -1762,7 +1792,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             if (['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
             setIsZenMode((z) => !z);
           }}
-          className={`flex-1 min-h-0 h-full w-full flex justify-center items-start overflow-y-auto overflow-x-hidden p-1 sm:p-4 md:p-6 relative cursor-default overscroll-contain ${
+          className={`flex-1 min-h-0 h-full w-full flex justify-center items-start overflow-y-auto ${
+            scale > 1.05 || fitMode === 'custom' ? 'overflow-x-auto touch-pan-x touch-pan-y' : 'overflow-x-hidden'
+          } p-1 sm:p-4 md:p-6 relative cursor-default overscroll-contain ${
             isZenMode ? 'pb-16' : 'pb-20 md:pb-6'
           }`}
           title="Double-click page to toggle Clean View / Full Screen"
@@ -1824,9 +1856,18 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             </div>
           ) : (
             <div
-              className={`bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-slate-700/60 transition-all max-w-full ${canvasFilterStyle}`}
+              className={`bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-slate-700/60 transition-all shrink-0 ${canvasFilterStyle}`}
+              style={{
+                maxWidth: fitMode === 'width' ? '100%' : 'none',
+              }}
             >
-              <canvas ref={canvasRef} className="block mx-auto max-w-full" />
+              <canvas
+                ref={canvasRef}
+                className="block mx-auto"
+                style={{
+                  maxWidth: fitMode === 'width' ? '100%' : 'none',
+                }}
+              />
             </div>
           )}
         </div>

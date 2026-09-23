@@ -109,7 +109,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   }, [books, searchQuery]);
 
   return (
-    <div className="relative min-h-screen space-y-6 sm:space-y-10 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-4 sm:pb-6">
+    <div className="relative min-h-screen w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-4 sm:pb-6 overflow-x-hidden">
       {/* 1. Subtle Cosmic Night-Sky Particle Background */}
       <CosmicParticleBackground particleCount={30} />
 
