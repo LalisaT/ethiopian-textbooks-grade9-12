@@ -403,4 +403,50 @@ canvas {
   transform: scale(0.95) !important;
 }
 
+/* ==========================================================================
+   Mini-Shelf Auto-Scrolling Books Animation (Share Board)
+   ========================================================================== */
+@keyframes autoScrollBooksUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-books-drift-up {
+  animation: autoScrollBooksUp 14s linear infinite;
+  will-change: transform;
+}
+
+@keyframes horizontalBooksDrift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-books-drift-horizontal {
+  animation: horizontalBooksDrift 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-books-drift-horizontal:hover {
+  animation-play-state: paused;
+}
+
+.mask-shelf-vertical {
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.mask-shelf-horizontal {
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+
 
