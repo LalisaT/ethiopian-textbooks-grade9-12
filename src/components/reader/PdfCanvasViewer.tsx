@@ -13,6 +13,7 @@ import { InternetRequiredModal } from '../common/InternetRequiredModal';
 import { RewardedVideoAdModal } from '../ads/RewardedVideoAdModal';
 import { ReaderBottomAdBanner } from '../ads/ReaderBottomAdBanner';
 import { NetworkService } from '../../services/networkService';
+import { FastDownloadIcon } from '../common/FastDownloadIcon';
 import {
   ChevronLeft,
   ChevronRight,
@@ -1413,8 +1414,14 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           </div>
 
           {/* Low-data student optimization note */}
-          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-400 text-center leading-relaxed">
-            ⚡ <span className="text-slate-300 font-semibold">Fast Low-Data Download:</span> Downloading once saves this textbook to your device for unlimited 100% offline study.
+          <div className="p-3 rounded-2xl bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 border border-slate-800/90 text-[11px] text-slate-400 flex items-center gap-3 text-left leading-relaxed shadow-lg">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center shrink-0 shadow-inner">
+              <FastDownloadIcon className="w-4 h-4 text-sky-400" />
+            </div>
+            <div>
+              <span className="text-slate-200 font-bold block text-xs">Fast Low-Data Download</span>
+              <span>Downloading once saves this textbook to your device for unlimited 100% offline study.</span>
+            </div>
           </div>
         </div>
 
