@@ -278,13 +278,16 @@ export async function initNativeNotifications(
 
     // 2. Request Standard In-App Notification Permission (POST_NOTIFICATIONS) & Register FCM
     // Using PushNotifications.requestPermissions() displays the native in-app dialog popup
-    // (identical to Facebook, Telegram, WhatsApp) without ever leaving the app.
+    // (identical to Facebook, Telegram, WhatsApp) without ever leaving the app or opening system settings.
     try {
-      const [pushPerm, localPerm] = await Promise.all([
-        PushNotifications.requestPermissions().catch(() => ({ receive: 'prompt' as any })),
-        LocalNotifications.requestPermissions().catch(() => ({ display: 'prompt' as any })),
-      ]);
-      const granted = pushPerm.receive === 'granted' || localPerm.display === 'granted';
+      let granted = false;
+      try {
+        const pushPerm = await PushNotifications.requestPermissions();
+        granted = pushPerm.receive === 'granted';
+      } catch {
+        const localPerm = await LocalNotifications.requestPermissions().catch(() => ({ display: 'prompt' as any }));
+        granted = localPerm.display === 'granted';
+      }
       if (granted) {
         NotificationService.saveSettings({ enabled: true });
         await PushNotifications.register().catch(() => {});
@@ -367,13 +370,16 @@ export async function scheduleDailyStudyReminder() {
             body: 'Keep your study streak going! Review Grade 9-12 textbooks & take a quick exam quiz today.',
             channelId: 'ethio_announcements_channel',
             sound: 'notification_chime.wav',
-            // Inexact notification configuration to ensure Android never requests Alarms & Reminders permission
             extra: { type: 'study_reminder' },
+            // Inexact notification configuration to ensure Android never requests Alarms & Reminders permission
+            isExactNotification: false,
+            isExactMandatory: false,
             schedule: {
               on: { hour: 19, minute: 0 },
               repeats: true,
+              allowWhileIdle: false,
             },
-          } as any,
+          },
         ],
       });
     }
@@ -420,10 +426,12 @@ export const NotificationService = {
           const push = await PushNotifications.requestPermissions();
           granted = push.receive === 'granted';
           if (granted) {
-            await PushNotifications.register();
+            await PushNotifications.register().catch(() => {});
           }
         } catch (e) {
           console.warn('Push notification permission error:', e);
+          const local = await LocalNotifications.requestPermissions().catch(() => ({ display: 'denied' as any }));
+          granted = local.display === 'granted';
         }
 
         this.saveSettings({ enabled: granted });
@@ -481,6 +489,11 @@ export const NotificationService = {
               channelId: 'ethio_announcements_channel',
               sound: 'notification_chime.wav',
               extra: extraData || {},
+              // CRUCIAL: Android 12+ (API 31+) exact alarm prevention.
+              // Explicitly set isExactNotification to false so Capacitor never
+              // launches ACTION_REQUEST_SCHEDULE_EXACT_ALARM ("Alarms and reminders" settings screen).
+              isExactNotification: false,
+              isExactMandatory: false,
             },
           ],
         });
