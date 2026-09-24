@@ -48,11 +48,12 @@ export interface NotificationSettings {
 const DEFAULT_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-welcome',
-    title: 'Welcome to Ethiopian Digital Textbooks!',
-    body: 'Your offline digital library for Grades 9-12 & EUEE is ready. Download books and study anytime without internet connection.',
+    title: 'Welcome to Ethiopian Textbooks & EUEE Hub! 🇪🇹',
+    body: 'Your offline digital library and entrance exam simulator is ready! Access official Grade 9-12 textbooks, teacher guides, unit summaries, and national EUEE model exams 100% offline.',
     date: new Date().toISOString(),
     read: false,
     type: 'welcome',
+    category: 'Welcome Guide',
   },
   {
     id: 'notif-exam-prep',
@@ -62,6 +63,7 @@ const DEFAULT_NOTIFICATIONS: AppNotification[] = [
     read: false,
     type: 'exam_alert',
     actionUrl: 'tab:examprep',
+    category: 'Exam Alert',
   },
 ];
 
@@ -489,6 +491,9 @@ export const NotificationService = {
               channelId: 'ethio_announcements_channel',
               sound: 'notification_chime.wav',
               extra: extraData || {},
+              // User preference: Do not pin any notification on Android notification bar
+              ongoing: false,
+              autoCancel: true,
               // CRUCIAL: Android 12+ (API 31+) exact alarm prevention.
               // Explicitly set isExactNotification to false so Capacitor never
               // launches ACTION_REQUEST_SCHEDULE_EXACT_ALARM ("Alarms and reminders" settings screen).
@@ -552,11 +557,23 @@ export const NotificationService = {
         })
         .map((n) => {
           if (
+            n.id === 'notif-welcome' ||
+            n.title.includes('Welcome to Ethiopian Digital Textbooks') ||
+            n.title.includes('App Successfully Installed!')
+          ) {
+            return {
+              ...n,
+              title: 'Welcome to Ethiopian Textbooks & EUEE Hub! 🇪🇹',
+              body: 'Your offline digital library and entrance exam simulator is ready! Access official Grade 9-12 textbooks, teacher guides, unit summaries, and national EUEE model exams 100% offline.',
+              category: 'Welcome Guide',
+            };
+          }
+          if (
             n.id === 'notif-exam-prep' ||
             n.type === 'exam_alert' ||
             /exam|matric|esslce|euee|simulation|quiz|question/i.test(`${n.title} ${n.body}`)
           ) {
-            return { ...n, actionUrl: 'tab:examprep' };
+            return { ...n, actionUrl: 'tab:examprep', category: n.category || 'Exam Alert' };
           }
           return n;
         });
@@ -905,9 +922,11 @@ export const NotificationService = {
   // Trigger "App Downloaded / Installed" Notification
   notifyAppInstalled(): void {
     this.addNotification(
-      'App Successfully Installed!',
-      'Ethiopian Textbooks is now installed on your device. You can launch it directly from your home screen and study 100% offline!',
-      'download'
+      'Welcome to Ethiopian Textbooks & EUEE Hub! 🇪🇹',
+      'Your offline digital library and entrance exam simulator is ready! Access official Grade 9-12 textbooks, teacher guides, unit summaries, and national EUEE model exams 100% offline.',
+      'welcome',
+      'tab:explore',
+      'Welcome Guide'
     );
   },
 

@@ -112,7 +112,7 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
         grade: targetGrade,
         subject: 'Official Broadcast',
         isOfficial: true,
-        pinned: true,
+        pinned: false,
         attachedBookId: attachedBookId || '',
         attachedBookTitle: targetAttachedBookTitle || '',
         actionUrl: destination,

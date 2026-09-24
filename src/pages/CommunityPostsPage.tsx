@@ -628,23 +628,11 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
               className={`relative rounded-3xl p-6 sm:p-7 transition-all duration-300 space-y-4 group overflow-hidden ${
                 targetPostId === post.id
                   ? 'bg-slate-900/98 ring-4 ring-amber-400 dark:ring-amber-500 shadow-[0_0_50px_rgba(245,158,11,0.35)] border-2 border-amber-400 scale-[1.01]'
-                  : post.pinned
-                  ? 'bg-gradient-to-b from-slate-900/95 via-slate-900/98 to-slate-950 border border-amber-500/40 shadow-[0_8px_32px_-8px_rgba(245,158,11,0.18)] hover:shadow-[0_16px_48px_-8px_rgba(245,158,11,0.25)] hover:-translate-y-0.5'
-                  : 'bg-gradient-to-b from-slate-900/90 via-slate-900/95 to-slate-950 border border-slate-800/90 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.4)] hover:border-slate-700 hover:shadow-[0_12px_36px_-6px_rgba(0,0,0,0.5)] hover:-translate-y-0.5'
+                  : 'bg-gradient-to-b from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-800/90 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] hover:border-slate-700/80 transition-colors'
               }`}
             >
-              {/* Luxury hairline light runner on top edge for pinned posts */}
-              {post.pinned && (
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-90 pointer-events-none" />
-              )}
-
-              {/* Ambient corner flare */}
-              {post.pinned && (
-                <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-              )}
-
-              {/* Top Eyebrow Badges & Admin Controls */}
-              <div className="flex items-center justify-between gap-2 pb-0.5">
+              {/* Top Eyebrow: Category Pill, Date Chip & Admin Controls (Only left date as requested) */}
+              <div className="flex items-center justify-between gap-2 pb-1">
                 <div className="flex flex-wrap items-center gap-2">
                   {/* Category Pill with unified luxury styling */}
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-slate-900/90 border border-amber-500/30 text-amber-300 shadow-xs">
@@ -660,27 +648,22 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     <span>{post.category}</span>
                   </span>
 
-                  {/* Pinned Golden Seal - Icon Only */}
-                  {post.pinned && (
-                    <span
-                      className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-amber-400/20 via-yellow-400/25 to-amber-500/20 border border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.25)] text-amber-300"
-                      title="Pinned Announcement"
-                    >
-                      <Pin className="w-3.5 h-3.5 fill-current text-amber-400" />
+                  {/* Clean Date Chip - ONLY DATE LEFT */}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-[11px] font-medium text-slate-400 shadow-xs">
+                    <Calendar className="w-3 h-3 text-slate-500" />
+                    <span>
+                      {new Date(post.date).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
                     </span>
-                  )}
+                  </span>
                 </div>
 
                 {/* Admin quick controls */}
                 {isAdmin && (
                   <div className="flex items-center gap-1 bg-slate-900/80 border border-slate-700/60 rounded-xl p-0.5 shadow-sm">
-                    <button
-                      onClick={() => handleTogglePin(post.id)}
-                      className="p-1.5 text-slate-400 hover:text-amber-400 rounded-lg transition-colors cursor-pointer"
-                      title={post.pinned ? 'Unpin announcement' : 'Pin to top'}
-                    >
-                      <Pin className={`w-3.5 h-3.5 ${post.pinned ? 'fill-current text-amber-400' : ''}`} />
-                    </button>
                     <button
                       onClick={() => handleOpenEditModal(post)}
                       className="p-1.5 text-slate-400 hover:text-sky-400 rounded-lg transition-colors cursor-pointer"
@@ -697,64 +680,6 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                     </button>
                   </div>
                 )}
-              </div>
-
-              {/* Author Profile Row */}
-              <div className="flex items-start gap-3.5 pt-1">
-                {/* Luxury Squircle Avatar with Metallic Rim */}
-                <div className="relative shrink-0">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400/80 via-amber-500/40 to-slate-800 p-[1.5px] shadow-md shadow-amber-500/10">
-                    <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-                      {post.authorRole === 'admin' ? (
-                        <ShieldCheck className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
-                      ) : post.authorRole === 'teacher' ? (
-                        <Award className="w-5 h-5 text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
-                      ) : (
-                        <User className="w-5 h-5 text-slate-300" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Author Info & Structured Metadata Row */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-black text-base sm:text-lg text-white tracking-tight leading-tight">
-                      {post.author}
-                    </span>
-                    {post.isOfficial && (
-                      <span
-                        className="inline-flex items-center justify-center text-amber-400"
-                        title="Official Verified Channel"
-                      >
-                        <CheckCircle className="w-4 h-4 text-amber-400 fill-amber-400/20 drop-shadow-[0_0_6px_rgba(245,158,11,0.4)]" />
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Clean Luxury Metadata Chips Row (Unified Obsidian Glass) */}
-                  <div className="flex flex-wrap items-center gap-2 mt-2">
-                    {/* Date Chip */}
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300 shadow-xs">
-                      <Calendar className="w-3 h-3 text-slate-400" />
-                      <span>{new Date(post.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                    </span>
-
-                    {/* Grade Chip */}
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300 shadow-xs">
-                      <GraduationCap className="w-3 h-3 text-slate-400" />
-                      <span>{post.grade}</span>
-                    </span>
-
-                    {/* Subject Chip */}
-                    {post.subject && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300 shadow-xs">
-                        <BookOpen className="w-3 h-3 text-slate-400" />
-                        <span>{post.subject}</span>
-                      </span>
-                    )}
-                  </div>
-                </div>
               </div>
 
               {/* Title & Body Content */}

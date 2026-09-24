@@ -117,11 +117,6 @@ export const NotificationDetailModal: React.FC<NotificationDetailModalProps> = (
                   <Sparkles className="w-3 h-3 text-amber-400" />
                   <span>{notification.category || 'Official Alert'}</span>
                 </span>
-                {notification.grade && (
-                  <span className="text-[10px] font-bold text-sky-300 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md">
-                    {notification.grade}
-                  </span>
-                )}
               </div>
               <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-1">
                 <Calendar className="w-3 h-3 text-slate-500" />
