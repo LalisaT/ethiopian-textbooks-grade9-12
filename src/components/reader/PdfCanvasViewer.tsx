@@ -1592,7 +1592,10 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
       {/* MOBILE COMPACT TOP BAR (Hidden on md+ screens and in Clean View) */}
       {!isZenMode && (
-        <div className="md:hidden sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between gap-2 shadow-xl w-full">
+        <div
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+          className="md:hidden sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 pb-2 flex items-center justify-between gap-2 shadow-xl w-full"
+        >
           <div className="flex items-center gap-2 min-w-0">
             <button
               onClick={onBack}
@@ -1602,7 +1605,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
               <span className="text-[11px]">Library</span>
             </button>
 
-            <div className="min-w-0">
+            <div className="min-w-0 max-w-[125px] xs:max-w-[165px]">
               <div className="text-xs font-black text-white truncate">
                 {book.title}
               </div>
@@ -2023,8 +2026,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           className={`flex-1 min-h-0 h-full w-full flex justify-center items-start overflow-y-auto ${
             scale > 1.05 || fitMode === 'custom' ? 'overflow-x-auto touch-pan-x touch-pan-y' : 'overflow-x-hidden'
           } p-1 sm:p-4 md:p-6 relative cursor-default overscroll-contain ${
-            isZenMode ? 'pb-16' : 'pb-20 md:pb-6'
+            isZenMode ? 'pb-16' : 'pb-36 md:pb-8'
           }`}
+          style={!isZenMode ? { paddingBottom: 'calc(135px + max(env(safe-area-inset-bottom, 0px), 16px))' } : undefined}
           title="Double-click page to toggle Clean View / Full Screen"
         >
           {/* Left Side Page Turn Button (Desktop only - hidden on mobile to prevent covering text) */}
@@ -2175,14 +2179,20 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
         {/* AdMob Bottom Reader Banner (Rendered exclusively when mobile data/internet is OPEN) */}
         {!isZenMode && (
-          <div className="fixed bottom-14 md:bottom-2 inset-x-0 z-30 px-3 flex justify-center pointer-events-none">
+          <div
+            style={{ bottom: 'calc(54px + max(env(safe-area-inset-bottom, 0px), 16px))' }}
+            className="fixed inset-x-0 z-30 px-3 flex justify-center pointer-events-none md:bottom-2"
+          >
             <ReaderBottomAdBanner />
           </div>
         )}
 
         {/* MOBILE PRO BOTTOM BAR (Hidden in Clean View or on Desktop) */}
         {!isZenMode && (
-          <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-3 py-2 flex items-center justify-between shadow-2xl safe-area-bottom">
+          <div
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}
+            className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-3 pt-2 flex items-center justify-between shadow-2xl safe-area-bottom"
+          >
             {/* Prev Page */}
             <button
               onClick={handlePrevPage}

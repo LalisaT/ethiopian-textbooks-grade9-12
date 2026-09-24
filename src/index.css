@@ -22,16 +22,18 @@
 }
 
 /* Safe Area Inset Support for Mobile Devices (Android 3-Button Nav, Camera Cutouts, iOS Home Bar) */
-.safe-area-pb {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 28px) !important;
+.safe-area-pb,
+.safe-area-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px) !important;
 }
 
-.safe-area-pt {
-  padding-top: max(env(safe-area-inset-top, 0px), 12px) !important;
+.safe-area-pt,
+.safe-area-top {
+  padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
 }
 
 .safe-area-mb {
-  margin-bottom: max(env(safe-area-inset-bottom, 0px), 28px) !important;
+  margin-bottom: max(env(safe-area-inset-bottom, 0px), 20px) !important;
 }
 
 /* Sepia Mode theme variables */

@@ -275,16 +275,13 @@ export async function initNativeNotifications(
       lightColor: '#F59E0B',
     });
 
-    // 2. Request Local Notification permissions
-    const localPerm = await LocalNotifications.requestPermissions();
-    if (localPerm.display === 'granted') {
-      NotificationService.saveSettings({ enabled: true });
-    }
-
-    // 3. Register for Push Notifications (FCM)
+    // 2. Request Standard In-App Notification Permission (POST_NOTIFICATIONS) & Register FCM
+    // Using PushNotifications.requestPermissions() displays the native in-app dialog popup
+    // (identical to Facebook, Telegram, WhatsApp) without ever leaving the app.
     try {
       const pushPerm = await PushNotifications.requestPermissions();
       if (pushPerm.receive === 'granted') {
+        NotificationService.saveSettings({ enabled: true });
         await PushNotifications.register();
       }
 
@@ -415,17 +412,18 @@ export const NotificationService = {
   async requestPermission(): Promise<boolean> {
     if (Capacitor.isNativePlatform()) {
       try {
-        const local = await LocalNotifications.requestPermissions();
-        let pushGranted = false;
+        let granted = false;
         try {
+          // Request Android 13+ in-app POST_NOTIFICATIONS dialog (identical to Facebook/Telegram)
           const push = await PushNotifications.requestPermissions();
-          pushGranted = push.receive === 'granted';
-          if (pushGranted) {
+          granted = push.receive === 'granted';
+          if (granted) {
             await PushNotifications.register();
           }
-        } catch {}
+        } catch (e) {
+          console.warn('Push notification permission error:', e);
+        }
 
-        const granted = local.display === 'granted' || pushGranted;
         this.saveSettings({ enabled: granted });
 
         if (granted) {
@@ -468,7 +466,7 @@ export const NotificationService = {
     // 2. Vibrate phone
     vibratePhone();
 
-    // 3. Dispatch on native Android status bar with sound & high priority!
+    // 3. Dispatch on native Android status bar with sound & high priority heads-up!
     if (Capacitor.isNativePlatform()) {
       try {
         const notifId = Math.floor(Math.random() * 2147483647);
@@ -479,10 +477,7 @@ export const NotificationService = {
               title,
               body,
               channelId: 'ethio_announcements_channel',
-              smallIcon: 'ic_launcher',
-              iconColor: '#0B1120',
               sound: 'notification_chime.wav',
-              schedule: { at: new Date(Date.now() + 100) },
               extra: extraData || {},
             },
           ],
@@ -523,7 +518,7 @@ export const NotificationService = {
     }
   },
 
-  // Get all in-app notifications (auto-cleaning any test spam)
+  // Get all in-app notifications
   getNotifications(): AppNotification[] {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -537,12 +532,10 @@ export const NotificationService = {
         deletedPostIds = JSON.parse(localStorage.getItem('ethio_community_deleted_posts') || '[]');
       } catch {}
 
-      // Clean out test notifications, deleted post notifications, and ensure exam alerts route to examprep
+      // Clean out deleted post notifications and route exam prep properly
       const cleaned = parsed
         .filter((n) => {
           if (!n || !n.title) return false;
-          if (n.title.toLowerCase().includes('test notification')) return false;
-          if (n.title.toLowerCase().includes('test 1') || n.body?.toLowerCase().includes('teat 1')) return false;
           if (n.postId && deletedPostIds.includes(n.postId)) return false;
           if (n.id && deletedPostIds.some((delId) => n.id.includes(delId))) return false;
           return true;
@@ -700,9 +693,10 @@ export const NotificationService = {
   subscribeToBroadcastNotifications(onNewAlert?: (notif: AppNotification) => void): () => void {
     try {
       let isInitialLoad = true;
-      const q = query(collection(db, 'broadcast_notifications'), orderBy('date', 'desc'), limit(30));
+      // Index-free query: works immediately on all Firebase setups without requiring manual index creation
+      const broadcastColl = collection(db, 'broadcast_notifications');
       const unsubscribe = onSnapshot(
-        q,
+        broadcastColl,
         (snapshot) => {
           let listChanged = false;
           const currentList = this.getNotifications();
@@ -711,7 +705,7 @@ export const NotificationService = {
 
           snapshot.docChanges().forEach((change) => {
             const remoteNotif = change.doc.data() as AppNotification;
-            if (!remoteNotif || !remoteNotif.title || change.doc.id.startsWith('test_')) return;
+            if (!remoteNotif || !remoteNotif.title) return;
 
             if (change.type === 'added') {
               const alreadyExists = notifMap.has(remoteNotif.id);
@@ -721,12 +715,8 @@ export const NotificationService = {
               });
               listChanged = true;
 
-              // Play push chime sound, vibrate, and notify if it's a live incoming broadcast
-              // or created within the last 3 minutes
-              const notifTime = new Date(remoteNotif.date).getTime();
-              const isRecent = !isNaN(notifTime) && Date.now() - notifTime < 1000 * 60 * 3;
-
-              if (!alreadyExists && (!isInitialLoad || isRecent)) {
+              // If a new broadcast arrives while the app is active, immediately alert student!
+              if (!isInitialLoad) {
                 playChimeSound();
                 vibratePhone();
                 this.sendSystemNotification(remoteNotif.title, remoteNotif.body);
@@ -741,10 +731,7 @@ export const NotificationService = {
               });
               listChanged = true;
 
-              // Trigger alert callback if modified recently
-              const notifTime = new Date(remoteNotif.date).getTime();
-              const isRecent = !isNaN(notifTime) && Date.now() - notifTime < 1000 * 60 * 3;
-              if (isRecent && onNewAlert) {
+              if (!isInitialLoad && onNewAlert) {
                 playChimeSound();
                 vibratePhone();
                 onNewAlert(remoteNotif);
@@ -760,7 +747,7 @@ export const NotificationService = {
             }
           });
 
-          // Purge any broadcast notifications whose post was deleted from Firestore
+          // Purge any broadcast notifications whose post was explicitly deleted
           const firestoreNotifIds = new Set(snapshot.docs.map((d) => d.id));
           let deletedPostIds: string[] = [];
           try {
@@ -771,8 +758,7 @@ export const NotificationService = {
             if (notif.type === 'admin_broadcast' && !id.startsWith('notif-welcome') && !id.startsWith('notif-exam-prep')) {
               const shouldPurge =
                 !firestoreNotifIds.has(id) ||
-                (notif.postId && deletedPostIds.includes(notif.postId)) ||
-                (notif.title && (notif.title.toLowerCase().includes('test 1') || notif.title.toLowerCase().includes('test notification')));
+                (notif.postId && deletedPostIds.includes(notif.postId));
               if (shouldPurge) {
                 notifMap.delete(id);
                 listChanged = true;
@@ -787,6 +773,25 @@ export const NotificationService = {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('notifications-changed'));
+            }
+          }
+
+          // On first launch, if there is a recent unread broadcast, display prominent in-app banner
+          if (isInitialLoad && snapshot.docs.length > 0) {
+            const now = Date.now();
+            const unreadRecent = snapshot.docs
+              .map((d) => d.data() as AppNotification)
+              .filter((n) => {
+                if (!n || !n.title) return false;
+                const existing = notifMap.get(n.id);
+                if (existing && existing.read) return false;
+                const time = new Date(n.date).getTime();
+                return !isNaN(time) && now - time < 1000 * 60 * 60 * 48; // within last 48 hours
+              })
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+
+            if (unreadRecent && onNewAlert) {
+              onNewAlert(unreadRecent);
             }
           }
 
