@@ -29,6 +29,7 @@ import { ShareAppModal } from './components/common/ShareAppModal';
 import { ExitConfirmModal } from './components/common/ExitConfirmModal';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum'>('home');
@@ -174,6 +175,10 @@ export const App: React.FC = () => {
         handleNotificationNavRef.current(tappedNotif);
       }
     });
+
+    if (Capacitor.isNativePlatform()) {
+      SplashScreen.hide().catch(() => {});
+    }
 
     return () => {
       unsubscribeBroadcast();

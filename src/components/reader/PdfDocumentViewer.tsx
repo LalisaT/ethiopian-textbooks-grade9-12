@@ -19,6 +19,9 @@ import {
   HardDrive,
   DownloadCloud,
   CheckCircle2,
+  WifiOff,
+  RefreshCw,
+  ShieldAlert,
 } from 'lucide-react';
 
 import { LargeFileDownloadModal } from '../books/LargeFileDownloadModal';
@@ -65,7 +68,17 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
         await DbService.deletePdfFile(book.id);
       }
 
-      // 2. Direct streaming via PDF.js HTTP requests (loads page 1 in 100ms)
+      // 2. Check if device is offline
+      const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
+      if (!isOnline) {
+        // Book is not downloaded and user is offline -> show Internet Required screen directly
+        setUploadedPdfBlob(null);
+        setPdfUrl(null);
+        setIsLoadingPdf(false);
+        return;
+      }
+
+      // 3. Direct streaming via PDF.js HTTP requests with live download progress
       if (book.pdfUrl) {
         setPdfUrl(book.pdfUrl);
         setUploadedPdfBlob(null);
@@ -73,7 +86,7 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
         return;
       }
 
-      // 3. Fallback for custom user uploaded books
+      // 4. Fallback for custom user uploaded books
       if (record && record.blob) {
         setUploadedPdfBlob(record.blob);
         setPdfUrl(null);
@@ -81,15 +94,12 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
         return;
       }
 
-      // 4. Sample generation ONLY for mock/test books without real pdfUrl
-      const result = await CloudStorageService.downloadAndSaveBookToDevice(book, undefined, false);
-      if (result.success && result.blob) {
-        setUploadedPdfBlob(result.blob);
-        setPdfUrl(null);
-      }
+      // 5. If no URL and not in DB, show connection required
+      setUploadedPdfBlob(null);
+      setPdfUrl(null);
     } catch (e) {
       console.error('Error fetching PDF:', e);
-      if (book.pdfUrl) {
+      if (book.pdfUrl && navigator.onLine) {
         setPdfUrl(book.pdfUrl);
       }
     } finally {
@@ -177,150 +187,89 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
     );
   }
 
-  // Fallback for system books without attached PDF
+  // Fallback: Book is not saved/downloaded to device and user is offline or needs initial connection
   return (
-    <div className="h-full w-full overflow-hidden bg-slate-950 text-slate-100 flex flex-col">
+    <div className="h-full w-full overflow-y-auto bg-slate-950 text-slate-100 flex flex-col">
       {/* Top Single Header */}
-      <div className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shadow-xl">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onBack}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
-          >
-            <ArrowLeft className="w-4 h-4 text-emerald-400" />
-            <span>Library</span>
-          </button>
-          <div>
-            <div className="text-xs sm:text-sm font-black text-white truncate max-w-md">
-              {book.title}
-            </div>
-            <div className="text-[10px] text-slate-400">
-              Grade {book.grade} • {book.subject}
-            </div>
+      <div className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between shadow-xl">
+        <button
+          onClick={onBack}
+          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
+        >
+          <ArrowLeft className="w-4 h-4 text-sky-400" />
+          <span>Return to Library</span>
+        </button>
+        <div className="text-right">
+          <div className="text-xs sm:text-sm font-black text-white truncate max-w-xs sm:max-w-md">
+            {book.title}
           </div>
-        </div>
-
-        {/* Page Nav */}
-        <div className="flex items-center gap-2 bg-slate-950 px-3.5 py-1.5 rounded-2xl border border-slate-800 shadow-inner">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage <= 1}
-            className="p-1 rounded text-slate-400 hover:text-white disabled:opacity-30"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <div className="text-xs font-mono font-bold px-2">
-            Page {currentPage} of {totalPages}
+          <div className="text-[10px] text-slate-400">
+            Grade {book.grade} • {book.subject}
           </div>
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage >= totalPages}
-            className="p-1 rounded text-slate-400 hover:text-white disabled:opacity-30"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Zoom */}
-        <div className="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-xl border border-slate-800 text-xs">
-          <button onClick={() => setZoomLevel((z) => Math.max(80, z - 10))} className="p-1 text-slate-400 hover:text-white">
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-          <span className="font-mono text-[11px] px-1">{zoomLevel}%</span>
-          <button onClick={() => setZoomLevel((z) => Math.min(130, z + 10))} className="p-1 text-slate-400 hover:text-white">
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
         </div>
       </div>
 
-      {/* Main Canvas */}
-      <div className="flex-1 w-full bg-slate-950 flex flex-col items-center justify-start p-4 sm:p-8 overflow-y-auto">
-        <div
-          className="bg-white text-slate-900 rounded-3xl shadow-2xl transition-all overflow-hidden border border-slate-300 w-full max-w-4xl p-8 sm:p-14 space-y-8"
-          style={{ transform: `scale(${zoomLevel / 100})`, minHeight: '900px' }}
-        >
-          <div className="flex items-center justify-between border-b-2 border-emerald-600 pb-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
-            <span>FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA • MINISTRY OF EDUCATION</span>
-            <span>GRADE {book.grade} {book.subject.toUpperCase()}</span>
+      {/* Main Internet Required Screen */}
+      <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-8">
+        <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl shadow-slate-950/80">
+          {/* Animated Offline Icon */}
+          <div className="relative mx-auto w-20 h-20">
+            <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-xl shadow-amber-950/40">
+              <WifiOff className="w-10 h-10" />
+            </div>
+            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500"></span>
+            </span>
           </div>
 
-          <div className="text-center py-14 space-y-8">
-            <div className="w-28 h-28 rounded-3xl mx-auto bg-gradient-to-br from-emerald-600 via-yellow-500 to-red-600 p-1 shadow-2xl">
-              <div className="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center text-4xl shadow-inner">
-                🇪🇹
-              </div>
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-bold text-amber-300">
+              <ShieldAlert className="w-3.5 h-3.5" />
+              <span>Offline • Initial Download Required</span>
             </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Internet Connection Required
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">
+              <strong className="text-slate-200">{book.title} (Grade {book.grade})</strong> has not been downloaded to your device yet. Please connect to Wi-Fi or mobile data once to download and store it for permanent offline reading.
+            </p>
+          </div>
 
-            <div className="space-y-3">
-              <div className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-800 font-extrabold text-xs rounded-full border border-emerald-200 uppercase tracking-wider">
-                OFFICIAL ETHIOPIAN STUDENT TEXTBOOK
-              </div>
-              <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight pt-2">
-                {book.title}
-              </h1>
+          {/* Student Guarantee Banner */}
+          <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60 text-[11px] sm:text-xs text-slate-300 text-left flex items-start gap-2.5">
+            <BookOpen className="w-4 h-4 flex-shrink-0 mt-0.5 text-sky-400" />
+            <div className="leading-relaxed">
+              <strong className="text-white">One-Time Download Guarantee:</strong> You only need an internet connection <span className="text-sky-300 font-semibold">ONCE</span> to download this book. After that, it remains on your device forever with zero mobile data!
             </div>
+          </div>
 
-            <div className="p-6 max-w-xl mx-auto rounded-2xl bg-slate-50 border border-slate-200 text-left space-y-2.5 text-xs text-slate-700 shadow-sm">
-              <div className="flex justify-between border-b border-slate-200 pb-1.5">
-                <span className="font-semibold text-slate-500">Grade Level:</span>
-                <span className="font-bold text-slate-900">Grade {book.grade}</span>
-              </div>
-              <div className="flex justify-between border-b border-slate-200 pb-1.5">
-                <span className="font-semibold text-slate-500">Language:</span>
-                <span className="font-bold uppercase text-slate-900">{book.language}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold text-slate-500">Total Units:</span>
-                <span className="font-bold text-slate-900">{book.totalUnits} Units</span>
-              </div>
-            </div>
+          {/* Action Buttons */}
+          <div className="space-y-3 pt-2">
+            <button
+              onClick={() => fetchBlob()}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Connect to Internet & Retry</span>
+            </button>
 
-            {/* 📱 Mobile Storage & In-App Offline Reader Actions */}
-            <div className="max-w-xl mx-auto pt-4 space-y-4">
-              <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 border border-emerald-300 dark:border-emerald-800 text-left space-y-3 shadow-lg">
-                <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-extrabold text-sm sm:text-base">
-                  <HardDrive className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Mobile Storage & In-App Offline Reading</span>
-                </div>
+            <button
+              onClick={onBack}
+              className="w-full py-3 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-2 border border-slate-700"
+            >
+              <BookOpen className="w-4 h-4 text-emerald-400" />
+              <span>Browse Saved Offline Books</span>
+            </button>
 
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                  <strong>Save to Mobile Storage:</strong> Download this textbook directly to your phone / computer storage (Downloads folder) and cache it in the app for 100% offline reading with zero internet.
-                </p>
-
-                <div className="pt-2">
-                  {/* Action: Download to phone */}
-                  <button
-                    onClick={handleDownloadToPhone}
-                    disabled={isDownloading}
-                    className="w-full p-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-sm shadow-md transition-all flex items-center justify-center gap-2.5 disabled:opacity-50"
-                  >
-                    {isDownloading ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>Saving to Phone ({downloadProgress}%)...</span>
-                      </>
-                    ) : (
-                      <>
-                        <DownloadCloud className="w-5 h-5" />
-                        <span>Download to Phone & Read</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                {onOpenDownloadModal && (
-                  <div className="pt-2 border-t border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between text-xs">
-                    <span className="text-slate-500 dark:text-slate-400">Prefer Telegram or Google Drive?</span>
-                    <button
-                      onClick={onOpenDownloadModal}
-                      className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline"
-                    >
-                      View Cloud Mirrors →
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+            {onOpenDownloadModal && (
+              <button
+                onClick={onOpenDownloadModal}
+                className="w-full py-2.5 px-3 text-xs text-sky-400 hover:text-sky-300 font-semibold transition-colors"
+              >
+                Alternative Cloud Mirrors (Telegram / Drive) →
+              </button>
+            )}
           </div>
         </div>
       </div>

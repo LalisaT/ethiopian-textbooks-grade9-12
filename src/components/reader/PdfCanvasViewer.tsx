@@ -46,6 +46,8 @@ import {
   Compass,
   Sun,
   Moon,
+  WifiOff,
+  ShieldAlert,
 } from 'lucide-react';
 
 // Configure PDF.js worker locally for 100% offline & same-origin security compliance
@@ -332,6 +334,9 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   const [rotation, setRotation] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [downloadStats, setDownloadStats] = useState<{ loadedMb: string; totalMb: string } | null>(null);
+  const [isOfflineRequired, setIsOfflineRequired] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isZenMode, setIsZenMode] = useState(false);
   const [isContinuousScroll, setIsContinuousScroll] = useState(true);
@@ -388,17 +393,20 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
   const lang = isOromoBook ? 'om' : isAmharicBook ? 'am' : (book.language || 'en');
 
-  // Multi-tier resilient loader: Blob -> ArrayBuffer GET -> disabled-range URL -> IndexedDB -> Curriculum Generator
+  // Multi-tier resilient loader: Blob -> IndexedDB -> Stream Download with Live Progress -> Offline Screen
   const loadDocument = async (isRetry = false) => {
     let isCancelled = false;
     try {
       setIsLoading(true);
       setErrorMsg('');
+      setIsOfflineRequired(false);
+      setDownloadProgress(0);
+      setDownloadStats(null);
 
       let doc: pdfjsLib.PDFDocumentProxy | null = null;
       let lastError: any = null;
 
-      // Tier 1: Authentic offline Blob from IndexedDB or props (> 100 KB to avoid dummy samples)
+      // Tier 1: Authentic offline Blob from props (> 100 KB)
       if (pdfBlob && pdfBlob.size > 100000) {
         try {
           const arrayBuffer = await pdfBlob.arrayBuffer();
@@ -408,99 +416,12 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           });
           doc = await loadingTask.promise;
         } catch (err) {
-          console.warn('Loading from pdfBlob failed, trying fallback...', err);
+          console.warn('Loading from pdfBlob failed, trying IndexedDB cache...', err);
           lastError = err;
         }
       }
 
-      // Safe URL helper avoiding double-encoding (%20 -> %2520)
-      const getSafeUrl = (rawUrl: string) => {
-        try {
-          return encodeURI(decodeURI(rawUrl));
-        } catch {
-          return encodeURI(rawUrl);
-        }
-      };
-
-      // Tier 2: Target URL (ArrayBuffer fetch preferred on Android to avoid Range stream bug)
-      const targetUrl = pdfUrl || book.pdfUrl;
-      if (!doc && targetUrl) {
-        const encodedTargetUrl = getSafeUrl(targetUrl);
-        // 2A: Direct fetch as ArrayBuffer (clean GET request, no Range headers, works 100% in Android WebView)
-        try {
-          const resp = await fetch(encodedTargetUrl);
-          const contentType = resp.headers.get('content-type') || '';
-          if (resp.ok && !contentType.includes('text/html')) {
-            const arrayBuffer = await resp.arrayBuffer();
-            if (arrayBuffer.byteLength > 100000) {
-              const loadingTask = pdfjsLib.getDocument({
-                data: arrayBuffer,
-                isEvalSupported: false,
-              });
-              doc = await loadingTask.promise;
-
-              // Cache authentic PDF in IndexedDB for instant future opens
-              try {
-                const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-              } catch {}
-            }
-          }
-        } catch (err) {
-          console.warn('Direct fetch as ArrayBuffer failed:', err);
-          lastError = err;
-        }
-
-        // 2B: Fallback to pdfjsLib.getDocument({ url }) with disabled Range & Stream
-        if (!doc) {
-          try {
-            const loadingTask = pdfjsLib.getDocument({
-              url: encodedTargetUrl,
-              disableRange: true,
-              disableStream: true,
-              disableAutoFetch: false,
-              isEvalSupported: false,
-            });
-            const candidateDoc = await loadingTask.promise;
-            if (candidateDoc && candidateDoc.numPages > 3) {
-              doc = candidateDoc;
-            }
-          } catch (err) {
-            console.warn('PDF.js url loading failed:', err);
-            lastError = err;
-          }
-        }
-
-        // 2C: If local file returned 404, fetch authentic textbook from GitHub Releases Cloud Storage
-        if (!doc) {
-          const githubUrl = `${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`;
-          try {
-            const resp = await fetch(githubUrl);
-            const contentType = resp.headers.get('content-type') || '';
-            if (resp.ok && !contentType.includes('text/html')) {
-              const arrayBuffer = await resp.arrayBuffer();
-              if (arrayBuffer.byteLength > 100000) {
-                const loadingTask = pdfjsLib.getDocument({
-                  data: arrayBuffer,
-                  isEvalSupported: false,
-                });
-                doc = await loadingTask.promise;
-                // Cache in IndexedDB private storage for instant offline access
-                try {
-                  const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                  await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
-                  StorageService.markBookOffline(book.id);
-                } catch {}
-              }
-            }
-          } catch (err) {
-            console.warn('GitHub Releases cloud fetch failed:', err);
-            lastError = err;
-          }
-        }
-      }
-
-      // Tier 3: Check device offline cache in IndexedDB
+      // Tier 2: Check device offline cache in IndexedDB (Immediate 0ms load if previously downloaded)
       if (!doc) {
         try {
           const cached = await DbService.getPdfFile(book.id);
@@ -525,22 +446,164 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         }
       }
 
-      // Tier 4: Guaranteed Official Curriculum Edition Generator (Emergency UI Fallback)
-      // Generates the textbook syllabus when completely offline and file not cached
-      if (!doc) {
-        try {
-          console.info(`Generating fallback curriculum textbook for ${book.title}...`);
-          const sampleBytes = await CloudStorageService.generateSampleBookPdfBytes(book);
-          const loadingTask = pdfjsLib.getDocument({
-            data: sampleBytes,
-            isEvalSupported: false,
-          });
-          doc = await loadingTask.promise;
-          // Note: Do NOT save dummy sample into IndexedDB so it never poisons the cache!
-        } catch (err) {
-          console.error('Curriculum generator fallback failed:', err);
-          lastError = err;
+      // If document was found in local storage / blob, finish immediately!
+      if (doc) {
+        if (!isCancelled) {
+          setPdfDoc(doc);
+          setTotalPages(doc.numPages);
+          setCurrentPage(1);
+          setIsLoading(false);
+          setErrorMsg('');
         }
+        return;
+      }
+
+      // Tier 3: Book is NOT downloaded yet. Check connectivity.
+      const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
+      if (!isOnline) {
+        if (!isCancelled) {
+          setIsOfflineRequired(true);
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      // Safe URL helper avoiding double-encoding (%20 -> %2520)
+      const getSafeUrl = (rawUrl: string) => {
+        try {
+          return encodeURI(decodeURI(rawUrl));
+        } catch {
+          return encodeURI(rawUrl);
+        }
+      };
+
+      // Helper to stream chunks and track download progress with percentages (1, 2, 3, 5, 10, 25, 50, 75, 95, 100%)
+      const streamDownloadPdf = async (url: string): Promise<Uint8Array | null> => {
+        try {
+          const resp = await fetch(url);
+          if (!resp.ok) return null;
+          const contentType = resp.headers.get('content-type') || '';
+          if (contentType.includes('text/html')) return null;
+
+          const contentLength = resp.headers.get('content-length');
+          const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
+          const totalMb = totalBytes > 0
+            ? (totalBytes / (1024 * 1024)).toFixed(1)
+            : (book.fileSizeMb ? String(book.fileSizeMb) : '18.5');
+
+          if (!isCancelled) {
+            setDownloadProgress(1);
+            setDownloadStats({ loadedMb: '0.1', totalMb });
+          }
+
+          if (!resp.body) {
+            const buf = await resp.arrayBuffer();
+            if (buf.byteLength > 100000) {
+              if (!isCancelled) {
+                setDownloadProgress(100);
+                setDownloadStats({ loadedMb: (buf.byteLength / (1024 * 1024)).toFixed(1), totalMb });
+              }
+              return new Uint8Array(buf);
+            }
+            return null;
+          }
+
+          const reader = resp.body.getReader();
+          const chunks: Uint8Array[] = [];
+          let loadedBytes = 0;
+          let lastReportedPct = 1;
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            if (value) {
+              chunks.push(value);
+              loadedBytes += value.length;
+              const loadedMb = (loadedBytes / (1024 * 1024)).toFixed(1);
+
+              let pct: number;
+              if (totalBytes > 0) {
+                pct = Math.min(99, Math.max(1, Math.round((loadedBytes / totalBytes) * 100)));
+              } else {
+                // Adaptive estimator based on textbook size
+                const estBytes = (book.fileSizeMb || 18) * 1024 * 1024;
+                pct = Math.min(98, Math.max(1, Math.round((loadedBytes / estBytes) * 100)));
+              }
+
+              if (pct !== lastReportedPct && !isCancelled) {
+                lastReportedPct = pct;
+                setDownloadProgress(pct);
+                setDownloadStats({ loadedMb, totalMb });
+              }
+            }
+          }
+
+          const allBytes = new Uint8Array(loadedBytes);
+          let offset = 0;
+          for (const chunk of chunks) {
+            allBytes.set(chunk, offset);
+            offset += chunk.length;
+          }
+
+          if (allBytes.byteLength > 100000) {
+            if (!isCancelled) {
+              setDownloadProgress(100);
+              setDownloadStats({ loadedMb: (allBytes.byteLength / (1024 * 1024)).toFixed(1), totalMb });
+            }
+            return allBytes;
+          }
+          return null;
+        } catch (err) {
+          console.warn('streamDownloadPdf failed:', url, err);
+          return null;
+        }
+      };
+
+      // Candidate URLs for authentic textbook
+      const candidateUrls: string[] = [];
+      const targetUrl = pdfUrl || book.pdfUrl;
+      if (targetUrl) candidateUrls.push(getSafeUrl(targetUrl));
+      if (book.cdnPdfUrl && !candidateUrls.includes(book.cdnPdfUrl)) candidateUrls.push(book.cdnPdfUrl);
+      const githubUrl = `${DEFAULT_CLOUD_CONFIG.githubReleaseBaseUrl}/${book.id}.pdf`;
+      if (!candidateUrls.includes(githubUrl)) candidateUrls.push(githubUrl);
+
+      // Attempt stream downloading
+      let downloadedBytes: Uint8Array | null = null;
+      for (const url of candidateUrls) {
+        if (isCancelled) break;
+        downloadedBytes = await streamDownloadPdf(url);
+        if (downloadedBytes) break;
+      }
+
+      if (downloadedBytes && !isCancelled) {
+        // Cache immediately in IndexedDB for permanent offline reading
+        try {
+          const blob = new Blob([downloadedBytes as unknown as BlobPart], { type: 'application/pdf' });
+          await DbService.savePdfFile(book.id, blob, `${book.title}.pdf`);
+          StorageService.markBookOffline(book.id);
+        } catch (saveErr) {
+          console.warn('Failed to cache downloaded PDF:', saveErr);
+        }
+
+        // Render PDF
+        const loadingTask = pdfjsLib.getDocument({
+          data: downloadedBytes as any,
+          isEvalSupported: false,
+        });
+        doc = await loadingTask.promise;
+      }
+
+      // If document was not loaded (failed download, network loss, etc.)
+      if (!doc && !isCancelled) {
+        const stillOnline = typeof navigator !== 'undefined' ? navigator.onLine : false;
+        if (!stillOnline) {
+          setIsOfflineRequired(true);
+          setIsLoading(false);
+          return;
+        }
+        setErrorMsg('Unable to download authentic textbook. Please check your internet connection and try again.');
+        setIsLoading(false);
+        return;
       }
 
       if (doc && !isCancelled) {
@@ -549,14 +612,16 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         setCurrentPage(1);
         setIsLoading(false);
         setErrorMsg('');
-      } else if (!isCancelled) {
-        setErrorMsg(lastError?.message || 'Failed to load PDF document.');
-        setIsLoading(false);
       }
     } catch (err: any) {
       console.error('Error loading PDF:', err);
       if (!isCancelled) {
-        setErrorMsg('Failed to load PDF document.');
+        const stillOnline = typeof navigator !== 'undefined' ? navigator.onLine : false;
+        if (!stillOnline) {
+          setIsOfflineRequired(true);
+        } else {
+          setErrorMsg('Failed to load PDF document.');
+        }
         setIsLoading(false);
       }
     }
@@ -1165,16 +1230,6 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     },
   }[lang === 'om' ? 'om' : lang === 'am' ? 'am' : 'en'];
 
-  if (isLoading) {
-    return (
-      <div className="py-40 flex flex-col items-center justify-center space-y-4 bg-slate-950 text-white min-h-screen">
-        <Loader2 className="w-12 h-12 animate-spin text-sky-400" />
-        <div className="text-base font-black">Opening Authentic Textbook Canvas...</div>
-        <div className="text-xs text-slate-500">Preparing pixel-perfect pages with all math equations and figures</div>
-      </div>
-    );
-  }
-
   const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && onUpdatePdfFile) {
@@ -1182,26 +1237,200 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     }
   };
 
-  const handleForceGenerateCurriculum = async () => {
-    setIsLoading(true);
-    setErrorMsg('');
-    try {
-      const sampleBytes = await CloudStorageService.generateSampleBookPdfBytes(book);
-      const loadingTask = pdfjsLib.getDocument({
-        data: sampleBytes,
-        isEvalSupported: false,
-      });
-      const doc = await loadingTask.promise;
-      setPdfDoc(doc);
-      setTotalPages(doc.numPages);
-      setCurrentPage(1);
-      setIsLoading(false);
-    } catch (err: any) {
-      setErrorMsg('Could not initialize edition. Please try again.');
-      setIsLoading(false);
-    }
-  };
+  // 1. Internet Connection Required Screen (Never shows dummy mock syllabus - Photo 2)
+  if (isOfflineRequired) {
+    return (
+      <div className="fixed inset-0 h-screen h-[100dvh] w-screen overflow-y-auto bg-slate-950 text-slate-100 flex flex-col z-50">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileImport}
+          accept="application/pdf"
+          className="hidden"
+        />
 
+        {/* Top Single Header */}
+        <div className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between shadow-xl">
+          <button
+            onClick={onBack}
+            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4 text-sky-400" />
+            <span>Return to Library</span>
+          </button>
+          <div className="text-right">
+            <div className="text-xs sm:text-sm font-black text-white truncate max-w-xs sm:max-w-md">
+              {book.title}
+            </div>
+            <div className="text-[10px] text-slate-400">
+              Grade {book.grade} • {book.subject}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Internet Required Screen */}
+        <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-8">
+          <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl shadow-slate-950/80">
+            {/* Animated Offline Icon */}
+            <div className="relative mx-auto w-20 h-20">
+              <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-xl shadow-amber-950/40">
+                <WifiOff className="w-10 h-10" />
+              </div>
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500"></span>
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-bold text-amber-300">
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>Offline • Initial Download Required</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Internet Connection Required
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">
+                <strong className="text-slate-200">{book.title} (Grade {book.grade})</strong> has not been downloaded to your device yet. Please connect to Wi-Fi or mobile data once to download and store it for permanent offline reading.
+              </p>
+            </div>
+
+            {/* Student Guarantee Banner */}
+            <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60 text-[11px] sm:text-xs text-slate-300 text-left flex items-start gap-2.5">
+              <BookOpen className="w-4 h-4 flex-shrink-0 mt-0.5 text-sky-400" />
+              <div className="leading-relaxed">
+                <strong className="text-white">One-Time Download Guarantee:</strong> You only need an internet connection <span className="text-sky-300 font-semibold">ONCE</span> to download this book. After that, it remains on your device forever with zero mobile data!
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3 pt-2">
+              <button
+                onClick={() => loadDocument(true)}
+                className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>Connect to Internet & Retry</span>
+              </button>
+
+              <button
+                onClick={onBack}
+                className="w-full py-3 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-2 border border-slate-700"
+              >
+                <BookOpen className="w-4 h-4 text-emerald-400" />
+                <span>Browse Saved Offline Books</span>
+              </button>
+
+              {onUpdatePdfFile && (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-2.5 px-4 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2"
+                >
+                  <UploadCloud className="w-4 h-4 text-sky-400" />
+                  <span>Import PDF from Device Storage</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Dynamic Download Progress Loading Screen (Photo 1)
+  if (isLoading) {
+    return (
+      <div className="py-20 sm:py-32 px-4 flex flex-col items-center justify-center space-y-5 bg-slate-950 text-white min-h-screen">
+        {/* Animated Glowing Spinner Icon */}
+        <div className="relative">
+          <div className="w-16 h-16 rounded-3xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shadow-xl shadow-sky-950/40">
+            <Loader2 className="w-8 h-8 animate-spin text-sky-400" />
+          </div>
+          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-sky-500"></span>
+          </span>
+        </div>
+
+        <div className="text-center space-y-1.5 max-w-sm">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-[11px] font-bold text-slate-400">
+            <span>Grade {book.grade} • {book.subject}</span>
+          </div>
+          <div className="text-base sm:text-lg font-black text-white truncate max-w-xs sm:max-w-sm mx-auto">
+            {downloadProgress > 0 && downloadProgress < 100
+              ? 'Downloading Official Textbook...'
+              : 'Opening Authentic Textbook Canvas...'}
+          </div>
+          <div className="text-xs text-slate-400">
+            {downloadProgress > 0 && downloadProgress < 100
+              ? 'Fast-downloading original edition & caching for offline study'
+              : 'Preparing pixel-perfect pages with all math equations and figures'}
+          </div>
+        </div>
+
+        {/* Real-time Dynamic Download Progress Bar (Photo 1) */}
+        <div className="w-full max-w-sm px-4 pt-2 space-y-3 animate-fadeIn">
+          {/* Progress Header */}
+          <div className="flex items-center justify-between text-xs font-bold">
+            <div className="flex items-center gap-2 text-sky-400">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+              </span>
+              <span>
+                {downloadProgress >= 100
+                  ? 'Finalizing Pages...'
+                  : downloadProgress > 0
+                  ? `Downloading ${downloadProgress}%`
+                  : 'Preparing Connection...'}
+              </span>
+            </div>
+            <div className="text-slate-400 font-mono text-[11px]">
+              {downloadStats ? `${downloadStats.loadedMb} MB / ${downloadStats.totalMb} MB` : `${downloadProgress}%`}
+            </div>
+          </div>
+
+          {/* Progress Track & Fill */}
+          <div className="h-3 w-full bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner">
+            <div
+              className="h-full rounded-full transition-all duration-200 ease-out bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400 shadow-[0_0_12px_rgba(56,189,248,0.5)]"
+              style={{ width: `${Math.max(4, downloadProgress)}%` }}
+            />
+          </div>
+
+          {/* Stepped Milestones (1, 10, 25, 50, 75, 95, 100%) */}
+          <div className="flex justify-between items-center text-[10px] font-mono px-0.5">
+            {[1, 10, 25, 50, 75, 95, 100].map((step) => (
+              <span
+                key={step}
+                className={`transition-colors duration-200 ${
+                  downloadProgress >= step ? 'text-sky-400 font-bold' : 'text-slate-600'
+                }`}
+              >
+                {step}%
+              </span>
+            ))}
+          </div>
+
+          {/* Low-data student optimization note */}
+          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-400 text-center leading-relaxed">
+            ⚡ <span className="text-slate-300 font-semibold">Fast Low-Data Download:</span> Downloading once saves this textbook to your device for unlimited 100% offline study.
+          </div>
+        </div>
+
+        {/* Return Button */}
+        <button
+          onClick={onBack}
+          className="mt-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Return to Library</span>
+        </button>
+      </div>
+    );
+  }
+
+  // 3. Error Screen
   if (errorMsg) {
     return (
       <div className="p-6 sm:p-12 text-center max-w-md mx-auto space-y-5 bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center">
@@ -1228,14 +1457,6 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         </div>
 
         <div className="w-full space-y-2.5 pt-2">
-          <button
-            onClick={handleForceGenerateCurriculum}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 btn-luxury-action luxury-pressable luxury-sheen-sweep text-white rounded-xl text-xs font-black transition-all cursor-pointer"
-          >
-            <BookOpen className="w-4 h-4 text-sky-400" />
-            <span>Open Official Curriculum Edition</span>
-          </button>
-
           {onUpdatePdfFile && (
             <button
               onClick={() => fileInputRef.current?.click()}
@@ -1249,14 +1470,14 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => loadDocument(true)}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 rounded-xl text-xs font-semibold text-slate-300 transition-all"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Retry</span>
             </button>
             <button
               onClick={onBack}
-              className="flex-1 py-2 px-3 bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 rounded-xl text-xs font-semibold text-slate-300 transition-all"
+              className="flex-1 py-2.5 px-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-all"
             >
               Return to Library
             </button>

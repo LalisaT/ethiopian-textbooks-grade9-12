@@ -150,13 +150,10 @@ export const CloudStorageService = {
           }
         }
 
-        // Fallback: If device is completely offline or files not yet uploaded to release,
-        // dynamically generate preview bytes without poisoning private IndexedDB cache
+        // If device is offline or candidate downloads failed, return failure
+        // so the app can show the Internet Connection Required screen
         if (!blob) {
-          const pdfBytes = await this.generateSampleBookPdfBytes(book);
-          const fallbackBlob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-          if (onProgress) onProgress(100);
-          return { success: false, blob: fallbackBlob };
+          return { success: false, blob: undefined };
         }
       }
 
