@@ -58,21 +58,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Quick Auto-Fill Helper for Localhost / Development */}
-          <div className="flex items-center justify-between pb-1">
-            <span className="text-[11px] text-slate-400 font-bold">Admin credentials</span>
-            <button
-              type="button"
-              onClick={() => {
-                setUsername('lalion');
-                setPassword('157394');
-              }}
-              className="text-[11px] font-black text-amber-500 hover:text-amber-400 cursor-pointer bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 transition-all active:scale-95"
-            >
-              Fill @lalion Credentials
-            </button>
-          </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4" autoComplete="off">
           {errorMsg && (
             <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -90,6 +76,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 type="text"
                 required
                 autoFocus
+                autoComplete="off"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter admin username"
@@ -107,6 +94,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter admin password"

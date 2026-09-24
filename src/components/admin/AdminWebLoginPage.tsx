@@ -11,8 +11,8 @@ export const AdminWebLoginPage: React.FC<AdminWebLoginPageProps> = ({
   onLoginSuccess,
   onViewStudentMode,
 }) => {
-  const [username, setUsername] = useState('lalion');
-  const [password, setPassword] = useState('157394');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -70,7 +70,7 @@ export const AdminWebLoginPage: React.FC<AdminWebLoginPageProps> = ({
         )}
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
           <div className="space-y-1.5">
             <label className="block text-xs font-bold text-slate-300">
               Admin Username
@@ -80,35 +80,25 @@ export const AdminWebLoginPage: React.FC<AdminWebLoginPageProps> = ({
               <input
                 type="text"
                 required
+                autoComplete="off"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username (e.g. lalion)"
+                placeholder="Enter admin username"
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-950/80 border border-slate-800 rounded-2xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 font-semibold"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-300">
-                Admin Password
-              </label>
-              <button
-                type="button"
-                onClick={() => {
-                  setUsername('lalion');
-                  setPassword('157394');
-                }}
-                className="text-[10px] font-bold text-amber-400 hover:text-amber-300 cursor-pointer"
-              >
-                Auto-fill @lalion
-              </button>
-            </div>
+            <label className="block text-xs font-bold text-slate-300">
+              Admin Password
+            </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
