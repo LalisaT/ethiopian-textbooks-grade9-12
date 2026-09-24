@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "83809959551",
+    "project_id": "ethiopian-textbooks",
+    "storage_bucket": "ethiopian-textbooks.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83809959551:android:765c7975eecf727f4b894a",
+        "android_client_info": {
+          "package_name": "com.ethiopian.grade912textbooks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2TpPHTSgsT6FWA3ThADJRLWRkdR7xjao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

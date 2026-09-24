@@ -9,6 +9,9 @@ import {
   orderBy,
   limit,
 } from 'firebase/firestore';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { PushNotifications, Token, ActionPerformed } from '@capacitor/push-notifications';
+import { Capacitor } from '@capacitor/core';
 
 export interface AppNotification {
   id: string;
@@ -245,6 +248,140 @@ export function vibratePhone() {
     } catch {}
   }
 }
+let isNativeNotifInitialized = false;
+
+/**
+ * Initialize native Android & iOS push notification channels, FCM registration, and background alarms
+ */
+export async function initNativeNotifications(
+  onNotificationTapped?: (notification: AppNotification) => void
+) {
+  if (typeof window === 'undefined') return;
+  if (!Capacitor.isNativePlatform()) return;
+  if (isNativeNotifInitialized) return;
+  isNativeNotifInitialized = true;
+
+  try {
+    // 1. Create Android Notification Channel (High priority heads-up status bar alert with sound & vibration)
+    await LocalNotifications.createChannel({
+      id: 'ethio_announcements_channel',
+      name: 'Ethiopian Textbooks & Alerts',
+      description: 'Textbook updates, daily study reminders, and EUEE exam alerts',
+      importance: 5, // High importance (heads-up notification on top)
+      visibility: 1, // Visible on secure lockscreen
+      sound: 'notification_chime.wav',
+      vibration: true,
+      lights: true,
+      lightColor: '#F59E0B',
+    });
+
+    // 2. Request Local Notification permissions
+    const localPerm = await LocalNotifications.requestPermissions();
+    if (localPerm.display === 'granted') {
+      NotificationService.saveSettings({ enabled: true });
+    }
+
+    // 3. Register for Push Notifications (FCM)
+    try {
+      const pushPerm = await PushNotifications.requestPermissions();
+      if (pushPerm.receive === 'granted') {
+        await PushNotifications.register();
+      }
+
+      PushNotifications.addListener('registration', async (token: Token) => {
+        try {
+          await setDoc(
+            doc(db, 'device_push_tokens', token.value),
+            {
+              token: token.value,
+              platform: Capacitor.getPlatform(),
+              updatedAt: new Date().toISOString(),
+              appName: 'Ethiopian Textbooks Grade 9-12',
+            },
+            { merge: true }
+          );
+        } catch (e) {
+          console.warn('Could not save FCM device push token to Firestore:', e);
+        }
+      });
+
+      PushNotifications.addListener('registrationError', (err) => {
+        console.warn('Push registration warning:', err);
+      });
+
+      // Handle push notification received in foreground
+      PushNotifications.addListener('pushNotificationReceived', (notification) => {
+        playChimeSound();
+        vibratePhone();
+        NotificationService.addNotification(
+          notification.title || 'Official Announcement',
+          notification.body || '',
+          'admin_broadcast',
+          notification.data?.actionUrl,
+          notification.data?.category,
+          notification.data?.grade,
+          notification.data
+        );
+      });
+
+      // Handle push notification tapped from Android status bar / lockscreen
+      PushNotifications.addListener('pushNotificationActionPerformed', (action: ActionPerformed) => {
+        const notifData = action.notification.data as AppNotification;
+        if (onNotificationTapped && notifData) {
+          onNotificationTapped(notifData);
+        }
+      });
+    } catch (pushErr) {
+      console.warn('Push notification registration warning:', pushErr);
+    }
+
+    // 4. Handle Local notification tapped from Android status bar
+    LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
+      const extra = action.notification.extra as AppNotification;
+      if (onNotificationTapped && extra) {
+        onNotificationTapped(extra);
+      }
+    });
+
+    // 5. Schedule recurring Daily Study Reminder (fires even when app is closed)
+    scheduleDailyStudyReminder();
+  } catch (err) {
+    console.warn('Native notification initialization error:', err);
+  }
+}
+
+/**
+ * Schedule recurring study reminder at 7:00 PM (19:00) using Android native AlarmManager
+ */
+export async function scheduleDailyStudyReminder() {
+  if (typeof window === 'undefined' || !Capacitor.isNativePlatform()) return;
+  try {
+    const pending = await LocalNotifications.getPending();
+    const hasReminder = pending.notifications.some((n) => n.id === 99901);
+    if (!hasReminder) {
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: 99901,
+            title: '📚 Daily Study Reminder',
+            body: 'Keep your study streak going! Review Grade 9-12 textbooks & take a quick exam quiz today.',
+            channelId: 'ethio_announcements_channel',
+            smallIcon: 'ic_launcher',
+            iconColor: '#0B1120',
+            sound: 'notification_chime.wav',
+            schedule: {
+              on: { hour: 19, minute: 0 },
+              allowWhileIdle: true,
+              repeats: true,
+            },
+          },
+        ],
+      });
+    }
+  } catch (e) {
+    console.warn('Failed to schedule daily study reminder:', e);
+  }
+}
 
 export const NotificationService = {
   // Play the notification audio sound
@@ -259,17 +396,51 @@ export const NotificationService = {
 
   // Check if browser notifications are supported
   isSupported(): boolean {
-    return typeof window !== 'undefined' && 'Notification' in window;
+    if (typeof window === 'undefined') return false;
+    if (Capacitor.isNativePlatform()) return true;
+    return 'Notification' in window;
   },
 
   // Get current permission status
   getPermission(): NotificationPermission {
+    if (typeof window === 'undefined') return 'denied';
+    if (Capacitor.isNativePlatform()) {
+      return this.getSettings().enabled ? 'granted' : 'default';
+    }
     if (!this.isSupported()) return 'denied';
     return Notification.permission;
   },
 
   // Request user permission for device notifications
   async requestPermission(): Promise<boolean> {
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const local = await LocalNotifications.requestPermissions();
+        let pushGranted = false;
+        try {
+          const push = await PushNotifications.requestPermissions();
+          pushGranted = push.receive === 'granted';
+          if (pushGranted) {
+            await PushNotifications.register();
+          }
+        } catch {}
+
+        const granted = local.display === 'granted' || pushGranted;
+        this.saveSettings({ enabled: granted });
+
+        if (granted) {
+          await this.sendSystemNotification(
+            'Notifications & Sound Activated!',
+            'You will receive real-time push alerts with sound on your status bar whenever new books are posted or exam alerts arrive.'
+          );
+        }
+        return granted;
+      } catch (err) {
+        console.error('Error requesting native notification permission:', err);
+        return false;
+      }
+    }
+
     if (!this.isSupported()) return false;
     try {
       const perm = await Notification.requestPermission();
@@ -290,14 +461,39 @@ export const NotificationService = {
   },
 
   // Send a real device / browser / phone system push notification with sound & vibration
-  sendSystemNotification(title: string, body: string, icon: string = '/icon-192.png') {
+  async sendSystemNotification(title: string, body: string, icon: string = '/icon-192.png', extraData?: any) {
     // 1. Play sound
     playChimeSound();
 
     // 2. Vibrate phone
     vibratePhone();
 
-    // 3. Dispatch system notification (via ServiceWorker if available, else standard Notification)
+    // 3. Dispatch on native Android status bar with sound & high priority!
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const notifId = Math.floor(Math.random() * 2147483647);
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              id: notifId,
+              title,
+              body,
+              channelId: 'ethio_announcements_channel',
+              smallIcon: 'ic_launcher',
+              iconColor: '#0B1120',
+              sound: 'notification_chime.wav',
+              schedule: { at: new Date(Date.now() + 100) },
+              extra: extraData || {},
+            },
+          ],
+        });
+        return;
+      } catch (nativeErr) {
+        console.warn('Native LocalNotifications.schedule error:', nativeErr);
+      }
+    }
+
+    // 4. Fallback for Web/PWA
     if (!this.isSupported() || Notification.permission !== 'granted') {
       return;
     }
@@ -311,7 +507,7 @@ export const NotificationService = {
             badge: icon,
             vibrate: [200, 100, 200],
             tag: `ethio-alert-${Date.now()}`,
-            data: { url: window.location.origin },
+            data: { url: window.location.origin, ...(extraData || {}) },
           } as any);
         });
       } else {

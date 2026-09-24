@@ -130,12 +130,14 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
 
             <div className="flex items-center gap-1">
               <button
-                onClick={() => {
-                  NotificationService.playSound();
-                  NotificationService.vibrate();
+                onClick={async () => {
+                  await NotificationService.sendSystemNotification(
+                    '📚 System Notification Test',
+                    'Notification bar alerts, sound chime, and vibration are active and working!'
+                  );
                 }}
                 className="p-1 text-xs text-slate-500 hover:text-amber-500 transition-colors"
-                title="Test notification chime sound"
+                title="Test notification chime sound & status bar alert"
               >
                 <Volume2 className="w-3.5 h-3.5" />
               </button>

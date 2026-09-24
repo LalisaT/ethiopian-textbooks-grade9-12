@@ -23,7 +23,7 @@ import { DisclaimerModal } from './components/common/DisclaimerModal';
 import { PwaInstallPrompt } from './components/common/PwaInstallPrompt';
 import { PushNotificationBanner } from './components/common/PushNotificationBanner';
 import { NotificationDetailModal } from './components/common/NotificationDetailModal';
-import { AppNotification, NotificationService } from './services/notificationService';
+import { AppNotification, NotificationService, initNativeNotifications } from './services/notificationService';
 import { AdminWebLoginPage } from './components/admin/AdminWebLoginPage';
 import { ShareAppModal } from './components/common/ShareAppModal';
 import { ExitConfirmModal } from './components/common/ExitConfirmModal';
@@ -50,6 +50,7 @@ export const App: React.FC = () => {
 
   // Share App Modal State
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const handleNotificationNavRef = useRef<(n: AppNotification) => void>(() => {});
 
   // Exit App Confirmation Modal State & 3-Tap Counter
   const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
@@ -165,6 +166,13 @@ export const App: React.FC = () => {
     // Real-time Firestore Broadcast Alert Listener (triggers chime & popup for all students)
     const unsubscribeBroadcast = NotificationService.subscribeToBroadcastNotifications((newAlert) => {
       setActivePushNotification(newAlert);
+    });
+
+    // Initialize native Android & iOS push notification channels, FCM, and background alarms
+    initNativeNotifications((tappedNotif) => {
+      if (tappedNotif) {
+        handleNotificationNavRef.current(tappedNotif);
+      }
     });
 
     return () => {
@@ -597,6 +605,7 @@ export const App: React.FC = () => {
 
     handleNavigateTab('community');
   };
+  handleNotificationNavRef.current = handleNotificationNavigation;
 
   // If Reader is active, render full-screen reading experience
   if (readerState) {
