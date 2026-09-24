@@ -340,15 +340,13 @@ export async function initNativeNotifications(
       }
     });
 
-    // 5. Schedule recurring Daily Study Reminder (fires even when app is closed)
-    scheduleDailyStudyReminder();
   } catch (err) {
     console.warn('Native notification initialization error:', err);
   }
 }
 
 /**
- * Schedule recurring study reminder at 7:00 PM (19:00) using Android native AlarmManager
+ * Inexact recurring study reminder (standard Android non-exact alarm, zero battery impact, never leaves app)
  */
 export async function scheduleDailyStudyReminder() {
   if (typeof window === 'undefined' || !Capacitor.isNativePlatform()) return;
@@ -363,15 +361,14 @@ export async function scheduleDailyStudyReminder() {
             title: '📚 Daily Study Reminder',
             body: 'Keep your study streak going! Review Grade 9-12 textbooks & take a quick exam quiz today.',
             channelId: 'ethio_announcements_channel',
-            smallIcon: 'ic_launcher',
-            iconColor: '#0B1120',
             sound: 'notification_chime.wav',
+            // Inexact notification configuration to ensure Android never requests Alarms & Reminders permission
+            extra: { type: 'study_reminder' },
             schedule: {
               on: { hour: 19, minute: 0 },
-              allowWhileIdle: true,
               repeats: true,
             },
-          },
+          } as any,
         ],
       });
     }
@@ -776,7 +773,7 @@ export const NotificationService = {
             }
           }
 
-          // On first launch, if there is a recent unread broadcast, display prominent in-app banner
+          // On first launch, if there is a recent unread broadcast, display prominent in-app banner & notify
           if (isInitialLoad && snapshot.docs.length > 0) {
             const now = Date.now();
             const unreadRecent = snapshot.docs
@@ -791,6 +788,9 @@ export const NotificationService = {
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
 
             if (unreadRecent && onNewAlert) {
+              playChimeSound();
+              vibratePhone();
+              this.sendSystemNotification(unreadRecent.title, unreadRecent.body);
               onNewAlert(unreadRecent);
             }
           }

@@ -1251,26 +1251,32 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
         />
 
         {/* Top Single Header */}
-        <div className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between shadow-xl">
+        <div
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+          className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3.5 pb-2.5 flex items-center justify-between gap-2 shadow-xl"
+        >
           <button
             onClick={onBack}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm shrink-0 active:scale-95"
           >
-            <ArrowLeft className="w-4 h-4 text-sky-400" />
-            <span>Return to Library</span>
+            <ArrowLeft className="w-4 h-4 text-sky-400 shrink-0" />
+            <span>Library</span>
           </button>
-          <div className="text-right">
-            <div className="text-xs sm:text-sm font-black text-white truncate max-w-xs sm:max-w-md">
+          <div className="text-right min-w-0 max-w-[170px] xs:max-w-[240px] sm:max-w-md">
+            <div className="text-xs sm:text-sm font-black text-white truncate">
               {book.title}
             </div>
-            <div className="text-[10px] text-slate-400">
+            <div className="text-[10px] text-slate-400 truncate">
               Grade {book.grade} • {book.subject}
             </div>
           </div>
         </div>
 
         {/* Main Internet Required Screen */}
-        <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-8">
+        <div
+          style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 24px)' }}
+          className="flex-1 w-full flex items-center justify-center p-4 pb-8 sm:p-8"
+        >
           <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl shadow-slate-950/80">
             {/* Animated Offline Icon */}
             <div className="relative mx-auto w-20 h-20">
@@ -1365,7 +1371,11 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           <div className="text-xs text-slate-400">
             {downloadProgress > 0 && downloadProgress < 100
               ? 'Fast-downloading original edition & caching for offline study'
-              : 'Preparing pixel-perfect pages with all math equations and figures'}
+              : (book.subject || '').toLowerCase().includes('math')
+              ? 'Preparing pixel-perfect formulas, graphs, and step-by-step solutions'
+              : (book.subject || '').toLowerCase().includes('physic') || (book.subject || '').toLowerCase().includes('chem') || (book.subject || '').toLowerCase().includes('bio')
+              ? 'Preparing high-resolution scientific diagrams, formulas, and illustrations'
+              : 'Preparing high-resolution textbook pages, diagrams, and illustrations'}
           </div>
         </div>
 
@@ -1413,14 +1423,19 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
             ))}
           </div>
 
-          {/* Low-data student optimization note */}
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 border border-slate-800/90 text-[11px] text-slate-400 flex items-center gap-3 text-left leading-relaxed shadow-lg">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center shrink-0 shadow-inner">
+          {/* 1-Time Internet Download Guarantee Note */}
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-slate-900/95 via-blue-950/40 to-slate-900/95 border border-sky-500/30 text-[11px] text-slate-300 flex items-center gap-3 text-left leading-relaxed shadow-xl">
+            <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center shrink-0 shadow-inner">
               <FastDownloadIcon className="w-4 h-4 text-sky-400" />
             </div>
             <div>
-              <span className="text-slate-200 font-bold block text-xs">Fast Low-Data Download</span>
-              <span>Downloading once saves this textbook to your device for unlimited 100% offline study.</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-white font-black text-xs tracking-tight">1-TIME INTERNET DOWNLOAD</span>
+                <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 text-[9px] font-black uppercase">Offline Forever</span>
+              </div>
+              <span className="text-slate-300 text-[11px] leading-tight block mt-0.5">
+                Requires internet connection <strong className="text-sky-300 font-bold">ONLY ONCE</strong>. Once downloaded, this book is stored on your device forever with zero mobile data!
+              </span>
             </div>
           </div>
         </div>
@@ -1431,7 +1446,7 @@ export const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           className="mt-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Return to Library</span>
+          <span>Library</span>
         </button>
       </div>
     );

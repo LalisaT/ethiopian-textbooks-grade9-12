@@ -191,26 +191,32 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
   return (
     <div className="h-full w-full overflow-y-auto bg-slate-950 text-slate-100 flex flex-col">
       {/* Top Single Header */}
-      <div className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between shadow-xl">
+      <div
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+        className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3.5 pb-2.5 flex items-center justify-between gap-2 shadow-xl"
+      >
         <button
           onClick={onBack}
-          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
+          className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm shrink-0 active:scale-95"
         >
-          <ArrowLeft className="w-4 h-4 text-sky-400" />
-          <span>Return to Library</span>
+          <ArrowLeft className="w-4 h-4 text-sky-400 shrink-0" />
+          <span>Library</span>
         </button>
-        <div className="text-right">
-          <div className="text-xs sm:text-sm font-black text-white truncate max-w-xs sm:max-w-md">
+        <div className="text-right min-w-0 max-w-[170px] xs:max-w-[240px] sm:max-w-md">
+          <div className="text-xs sm:text-sm font-black text-white truncate">
             {book.title}
           </div>
-          <div className="text-[10px] text-slate-400">
+          <div className="text-[10px] text-slate-400 truncate">
             Grade {book.grade} • {book.subject}
           </div>
         </div>
       </div>
 
       {/* Main Internet Required Screen */}
-      <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-8">
+      <div
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 24px)' }}
+        className="flex-1 w-full flex items-center justify-center p-4 pb-8 sm:p-8"
+      >
         <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl shadow-slate-950/80">
           {/* Animated Offline Icon */}
           <div className="relative mx-auto w-20 h-20">
@@ -267,7 +273,7 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
                 onClick={onOpenDownloadModal}
                 className="w-full py-2.5 px-3 text-xs text-sky-400 hover:text-sky-300 font-semibold transition-colors"
               >
-                Alternative Cloud Mirrors (Telegram / Drive) →
+                Telegram & Drive Mirrors →
               </button>
             )}
           </div>
