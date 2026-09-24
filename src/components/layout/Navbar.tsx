@@ -76,7 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header
-      className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors"
+      className="sticky top-0 z-40 bg-[#0B1120]/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 text-white transition-colors"
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
       {/* Top Professional Luxury Flowing Accent Stripe */}

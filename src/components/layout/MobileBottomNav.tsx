@@ -28,9 +28,9 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/98 backdrop-blur-2xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.65)] transition-all px-2 pt-2"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0B1120]/95 backdrop-blur-2xl border-t border-slate-800/80 shadow-[0_-4px_25px_rgba(0,0,0,0.7)] transition-all px-2 py-1.5"
       style={{
-        paddingBottom: 'calc(max(env(safe-area-inset-bottom, 0px), 24px) + 8px)',
+        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)',
       }}
     >
       <div className="flex items-center justify-around max-w-lg mx-auto">
@@ -46,20 +46,17 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                   setActiveTab(tab.id);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`relative -top-2 flex flex-col items-center justify-center p-2 rounded-2xl transition-all duration-200 active:scale-90 ${
+                className={`relative flex flex-col items-center justify-center px-3 py-1 rounded-2xl transition-all duration-200 active:scale-95 ${
                   isActive
-                    ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/40 ring-4 ring-white dark:ring-slate-950 scale-105'
-                    : 'bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 hover:scale-105'
+                    ? 'bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/40 ring-2 ring-amber-400/50 scale-105'
+                    : 'bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 shadow-sm shadow-amber-500/20 hover:scale-105'
                 }`}
                 title="Grade 12 EUEE Hub"
               >
-                <Icon className="w-5 h-5 font-black" />
+                <Icon className="w-4 h-4 font-black" />
                 <span className="text-[10px] font-black tracking-tight mt-0.5">
                   EUEE
                 </span>
-                {isActive && (
-                  <span className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-slate-950" />
-                )}
               </button>
             );
           }
@@ -73,23 +70,23 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               }}
               className={`relative flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all duration-150 active:scale-90 min-w-[50px] sm:min-w-[58px] ${
                 isActive
-                  ? 'text-blue-600 dark:text-sky-400 font-bold'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? 'text-sky-400 font-extrabold'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
+                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-sky-400' : ''}`} />
                 {tab.badge !== undefined && (
-                  <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 bg-blue-600 text-white text-[10px] font-black rounded-full shadow-sm animate-pulse">
+                  <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 bg-sky-500 text-slate-950 text-[10px] font-black rounded-full shadow-sm animate-pulse">
                     {tab.badge}
                   </span>
                 )}
               </div>
-              <span className={`text-[10px] tracking-tight mt-1 ${isActive ? 'font-black' : 'font-medium'}`}>
+              <span className={`text-[10px] tracking-tight mt-1 ${isActive ? 'font-black text-sky-400' : 'font-medium'}`}>
                 {tab.label}
               </span>
               {isActive && (
-                <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-sky-400 mt-0.5" />
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] mt-0.5" />
               )}
             </button>
           );

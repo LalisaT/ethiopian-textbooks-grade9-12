@@ -116,14 +116,7 @@ export const App: React.FC = () => {
   const [isAllSystemDeleted, setIsAllSystemDeleted] = useState<boolean>(() => DbService.isAllSystemBooksDeleted());
   const [storageUsage, setStorageUsage] = useState({ usedBytes: 0, usedMb: 0, totalBooksCount: 0 });
 
-  const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>(() => {
-    const isExplicitUserChoice = localStorage.getItem('ethio_explicit_theme_selected');
-    if (isExplicitUserChoice) {
-      const savedSettings = StorageService.getSettings();
-      return savedSettings.theme || 'dark';
-    }
-    return 'dark';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>('dark');
 
   const [offlineBookIds, setOfflineBookIds] = useState<string[]>(() => {
     return StorageService.getOfflineBookIds();
@@ -230,13 +223,13 @@ export const App: React.FC = () => {
   // Sync Theme with DOM
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('dark', 'theme-sepia');
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'sepia') {
+    root.classList.add('dark');
+    if (theme === 'sepia') {
       root.classList.add('theme-sepia');
+    } else {
+      root.classList.remove('theme-sepia');
     }
-    StorageService.saveSettings({ theme });
+    StorageService.saveSettings({ theme: 'dark' });
   }, [theme]);
 
   // Admin Login / Logout Trigger
