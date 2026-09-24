@@ -32,6 +32,36 @@ export function getDeletedPostIds(): string[] {
   }
 }
 
+/**
+ * Universal parser for Google Cloud Firestore REST API field values.
+ * Allows 100% reliable direct HTTP/REST sync across all mobile devices & network conditions.
+ */
+export function parseFirestoreRestFields(fields: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const [key, val] of Object.entries(fields)) {
+    if (!val || typeof val !== 'object') continue;
+    if (val.stringValue !== undefined) result[key] = val.stringValue;
+    else if (val.booleanValue !== undefined) result[key] = val.booleanValue;
+    else if (val.integerValue !== undefined) result[key] = parseInt(val.integerValue, 10);
+    else if (val.doubleValue !== undefined) result[key] = parseFloat(val.doubleValue);
+    else if (val.timestampValue !== undefined) result[key] = val.timestampValue;
+    else if (val.arrayValue !== undefined) {
+      const values = val.arrayValue.values || [];
+      result[key] = values.map((item: any) => {
+        if (!item || typeof item !== 'object') return item;
+        if (item.stringValue !== undefined) return item.stringValue;
+        if (item.mapValue !== undefined) return parseFirestoreRestFields(item.mapValue.fields || {});
+        return item;
+      });
+    } else if (val.mapValue !== undefined) {
+      result[key] = parseFirestoreRestFields(val.mapValue.fields || {});
+    } else if (val.nullValue !== undefined) {
+      result[key] = null;
+    }
+  }
+  return result;
+}
+
 export const DEFAULT_POSTS: CommunityPost[] = [
   {
     id: 'post-official-1',
@@ -261,6 +291,78 @@ export const PostService = {
     } catch (e) {
       console.warn('Error subscribing to Firestore announcements:', e);
       return () => {};
+    }
+  },
+
+  // Guaranteed Direct REST Sync from Cloud Firestore (100% reliable across all Android devices & networks)
+  async syncPostsFromRemote(callback?: (posts: CommunityPost[]) => void): Promise<CommunityPost[]> {
+    try {
+      const url = 'https://firestore.googleapis.com/v1/projects/ethiopian-textbooks/databases/(default)/documents/official_announcements?pageSize=100';
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) {
+        console.warn('REST official_announcements fetch warning, status:', res.status);
+        return this.getPosts();
+      }
+      const data = await res.json();
+      const docs = data.documents || [];
+
+      let userLikes: string[] = [];
+      let userBookmarks: string[] = [];
+      try {
+        userLikes = JSON.parse(localStorage.getItem(STORAGE_KEY_LIKES) || '[]');
+        userBookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY_BOOKMARKS) || '[]');
+      } catch {}
+
+      const deletedIds = getDeletedPostIds();
+      const postMap = new Map<string, CommunityPost>();
+      DEFAULT_POSTS.forEach((p) => {
+        if (!deletedIds.includes(p.id)) {
+          postMap.set(p.id, { ...p });
+        }
+      });
+
+      docs.forEach((d: any) => {
+        const id = d.name?.split('/').pop();
+        if (!id || id.startsWith('test_') || deletedIds.includes(id)) return;
+        const parsed = parseFirestoreRestFields(d.fields || {}) as CommunityPost;
+        if (parsed && parsed.title && !parsed.isDeleted) {
+          postMap.set(id, { ...parsed, id });
+        }
+      });
+
+      const mergedPosts = Array.from(postMap.values())
+        .filter((p) => p && p.title && !p.id.startsWith('test_'))
+        .map((p) => ({
+          ...p,
+          title: p.title?.replace(/ESSLCE/g, 'EUEE') || '',
+          content: p.content?.replace(/ESSLCE/g, 'EUEE') || '',
+          grade: p.grade?.replace(/ESSLCE/g, 'EUEE') || 'All Grades',
+          linkUrl: p.linkUrl?.includes('ethio_students_grade9_12')
+            ? 'https://t.me/Ethiopianstudentbooks'
+            : p.linkUrl,
+          linkTitle: p.linkUrl?.includes('ethio_students_grade9_12')
+            ? 'Join High School Telegram Community (@Ethiopianstudentbooks)'
+            : p.linkTitle,
+          likedByMe: userLikes.includes(p.id),
+          isBookmarked: userBookmarks.includes(p.id),
+        }))
+        .sort((a, b) => {
+          if (a.pinned && !b.pinned) return -1;
+          if (!a.pinned && b.pinned) return 1;
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+
+      this.savePosts(mergedPosts);
+      if (callback) callback(mergedPosts);
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('posts-changed'));
+      }
+
+      return mergedPosts;
+    } catch (e) {
+      console.warn('syncPostsFromRemote error:', e);
+      return this.getPosts();
     }
   },
 

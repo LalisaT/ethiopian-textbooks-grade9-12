@@ -22,24 +22,16 @@ export const firebaseConfig = {
 // Initialize Firebase App as Singleton
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Cloud Firestore Database Instance with Single-Tab Mobile WebView Persistence
+// Cloud Firestore Database Instance with clean multi-platform compatibility
 function initDb(): Firestore {
   try {
-    if (typeof window !== 'undefined') {
-      return initializeFirestore(app, {
-        localCache: persistentLocalCache({
-          tabManager: persistentSingleTabManager({ forceOwnership: true }),
-        }),
-        experimentalAutoDetectLongPolling: true,
-      });
-    }
     return getFirestore(app);
   } catch (e) {
-    console.warn('initializeFirestore warning, falling back to default:', e);
+    console.warn('getFirestore warning, falling back to initializeFirestore:', e);
     try {
-      return getFirestore(app);
-    } catch {
       return initializeFirestore(app, {});
+    } catch {
+      return getFirestore(app);
     }
   }
 }

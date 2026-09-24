@@ -45,6 +45,7 @@ import {
   GraduationCap,
   Calendar,
   ArrowUpRight,
+  RefreshCw,
 } from 'lucide-react';
 
 interface CommunityPostsPageProps {
@@ -123,12 +124,27 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
     }
   };
 
+  const [isSyncing, setIsSyncing] = useState(false);
+
   const refreshPosts = () => {
     setPosts(PostService.getPosts());
   };
 
+  const handleSyncNow = async () => {
+    setIsSyncing(true);
+    try {
+      const updated = await PostService.syncPostsFromRemote();
+      setPosts(updated);
+    } finally {
+      setTimeout(() => setIsSyncing(false), 500);
+    }
+  };
+
   useEffect(() => {
     refreshPosts();
+    // Guaranteed instant cloud REST pull on mount (bypasses any WebSocket/cache deadlock)
+    PostService.syncPostsFromRemote().then((updated) => setPosts(updated)).catch(() => {});
+
     // Real-time Firestore Live Sync across all student & admin devices
     const unsubscribe = PostService.subscribeToPosts((updatedPosts) => {
       setPosts(updatedPosts);
@@ -468,6 +484,14 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
                 <Award className="w-3.5 h-3.5 text-amber-400" />
                 <span>{posts.length} Active Bulletins</span>
               </span>
+              <button
+                onClick={handleSyncNow}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-[11px] font-bold text-sky-300 shadow-sm active:scale-95 transition-all cursor-pointer"
+                title="Tap to sync with cloud database"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 text-sky-400 ${isSyncing ? 'animate-spin' : ''}`} />
+                <span>{isSyncing ? 'Syncing...' : 'Sync Cloud'}</span>
+              </button>
             </div>
           </div>
 

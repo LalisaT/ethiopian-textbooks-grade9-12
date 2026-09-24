@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   X,
   Volume2,
+  RefreshCw,
 } from 'lucide-react';
 import { NotificationService, AppNotification } from '../../services/notificationService';
 
@@ -87,13 +88,29 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
     }
   };
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleSyncNotifications = async () => {
+    setIsRefreshing(true);
+    try {
+      await NotificationService.syncNotificationsFromRemote();
+      refreshNotifs();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
+
   return (
     <div ref={dropdownRef} className="relative">
       {/* Bell Button */}
       <button
         onClick={() => {
-          setIsOpen(!isOpen);
+          const next = !isOpen;
+          setIsOpen(next);
           refreshNotifs();
+          if (next) {
+            NotificationService.syncNotificationsFromRemote().then(() => refreshNotifs()).catch(() => {});
+          }
         }}
         className={`relative w-9 h-9 rounded-2xl transition-all flex items-center justify-center luxury-pressable cursor-pointer shrink-0 ${
           isOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
@@ -130,6 +147,13 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
             </div>
 
             <div className="flex items-center gap-1">
+              <button
+                onClick={handleSyncNotifications}
+                className="p-1 text-xs text-slate-500 hover:text-sky-500 transition-colors"
+                title="Sync latest notifications from cloud"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-sky-400' : ''}`} />
+              </button>
               <button
                 onClick={async () => {
                   await NotificationService.sendSystemNotification(

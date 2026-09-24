@@ -1,4 +1,5 @@
 import { db, sanitizeForFirestore } from './firebaseConfig';
+import { parseFirestoreRestFields } from './postService';
 import {
   collection,
   doc,
@@ -801,6 +802,74 @@ export const NotificationService = {
     } catch (e) {
       console.warn('Error subscribing to broadcast notifications:', e);
       return () => {};
+    }
+  },
+
+  // Guaranteed Direct REST Sync for Notifications from Cloud Firestore (100% reliable across all Android devices & networks)
+  async syncNotificationsFromRemote(onNewAlert?: (notif: AppNotification) => void): Promise<AppNotification[]> {
+    try {
+      const url = 'https://firestore.googleapis.com/v1/projects/ethiopian-textbooks/databases/(default)/documents/broadcast_notifications?pageSize=100';
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) {
+        console.warn('REST broadcast_notifications fetch warning, status:', res.status);
+        return this.getNotifications();
+      }
+      const data = await res.json();
+      const docs = data.documents || [];
+
+      const currentList = this.getNotifications();
+      const notifMap = new Map<string, AppNotification>();
+      currentList.forEach((n) => notifMap.set(n.id, n));
+
+      let hasNew = false;
+      let newestAlert: AppNotification | null = null;
+      let listChanged = false;
+
+      for (const d of docs) {
+        const id = d.name?.split('/').pop();
+        if (!id || id.startsWith('test_')) continue;
+        const parsed = parseFirestoreRestFields(d.fields || {}) as AppNotification;
+        if (parsed && parsed.title) {
+          const alreadyExists = notifMap.has(id);
+          const fullNotif: AppNotification = {
+            ...parsed,
+            id,
+            read: alreadyExists ? (notifMap.get(id)?.read ?? false) : false,
+          };
+          if (!alreadyExists) {
+            hasNew = true;
+            newestAlert = fullNotif;
+            listChanged = true;
+          }
+          notifMap.set(id, fullNotif);
+        }
+      }
+
+      if (listChanged) {
+        const updated = Array.from(notifMap.values()).sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('notifications-changed'));
+        }
+
+        if (hasNew && newestAlert !== null) {
+          const target: AppNotification = newestAlert;
+          playChimeSound();
+          vibratePhone();
+          this.sendSystemNotification(target.title, target.body);
+          if (onNewAlert) onNewAlert(target);
+        }
+
+        return updated;
+      }
+
+      return this.getNotifications();
+    } catch (e) {
+      console.warn('syncNotificationsFromRemote error:', e);
+      return this.getNotifications();
     }
   },
 

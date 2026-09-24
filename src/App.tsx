@@ -160,8 +160,31 @@ export const App: React.FC = () => {
       setOfflineBookIds(StorageService.getOfflineBookIds());
     };
 
-    window.addEventListener('focus', handleSync);
-    window.addEventListener('visibilitychange', handleSync);
+    // 1. Guaranteed Direct Cloud REST Sync on launch (ensures posts & notifications load instantly on mobile)
+    PostService.syncPostsFromRemote().catch(() => {});
+    NotificationService.syncNotificationsFromRemote((newAlert) => {
+      setActivePushNotification(newAlert);
+    }).catch(() => {});
+
+    // 2. Background cloud polling every 20 seconds (ensures instant delivery on mobile even if WebSockets sleep)
+    const cloudSyncInterval = setInterval(() => {
+      PostService.syncPostsFromRemote().catch(() => {});
+      NotificationService.syncNotificationsFromRemote((newAlert) => {
+        setActivePushNotification(newAlert);
+      }).catch(() => {});
+    }, 20000);
+
+    const handleSyncWithCloud = () => {
+      handleSync();
+      PostService.syncPostsFromRemote().catch(() => {});
+      NotificationService.syncNotificationsFromRemote((newAlert) => {
+        setActivePushNotification(newAlert);
+      }).catch(() => {});
+    };
+
+    window.addEventListener('focus', handleSyncWithCloud);
+    window.addEventListener('visibilitychange', handleSyncWithCloud);
+    window.addEventListener('online', handleSyncWithCloud);
     window.addEventListener('storage', handleSync);
 
     // Real-time Firestore Broadcast Alert Listener (triggers chime & popup for all students)
@@ -184,10 +207,12 @@ export const App: React.FC = () => {
     }
 
     return () => {
+      clearInterval(cloudSyncInterval);
       unsubscribeBroadcast();
       unsubscribePosts();
-      window.removeEventListener('focus', handleSync);
-      window.removeEventListener('visibilitychange', handleSync);
+      window.removeEventListener('focus', handleSyncWithCloud);
+      window.removeEventListener('visibilitychange', handleSyncWithCloud);
+      window.removeEventListener('online', handleSyncWithCloud);
       window.removeEventListener('storage', handleSync);
     };
   }, []);
