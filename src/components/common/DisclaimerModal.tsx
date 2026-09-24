@@ -15,8 +15,8 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200 safe-area-pb">
-      <div className="bg-slate-900 border-t sm:border border-slate-700/80 rounded-t-[32px] sm:rounded-3xl max-w-lg w-full h-[88vh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+      <div className="bg-slate-900 border-t sm:border border-slate-700/80 rounded-t-[28px] sm:rounded-3xl max-w-lg w-full h-[82dvh] sm:h-auto sm:max-h-[85vh] shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-200">
         
         {/* Top Header */}
         <div className="shrink-0 pt-4 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 text-center border-b border-slate-800 bg-slate-950/80">
@@ -215,14 +215,19 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           )}
         </div>
 
-        {/* Bottom Action Footer - Pinned & ALWAYS fully visible on mobile */}
-        <div className="shrink-0 sticky bottom-0 z-30 p-3 sm:p-4 bg-slate-950 border-t border-slate-800 flex flex-col gap-2 shadow-[0_-8px_25px_rgba(0,0,0,0.8)] safe-area-pb">
+        {/* Bottom Action Footer - Pinned & ALWAYS fully visible above Android System Buttons */}
+        <div
+          className="shrink-0 sticky bottom-0 z-30 px-4 pt-3.5 sm:pt-4 bg-slate-950/98 backdrop-blur-xl border-t border-slate-800 flex flex-col gap-2 shadow-[0_-12px_30px_rgba(0,0,0,0.9)]"
+          style={{
+            paddingBottom: 'calc(max(env(safe-area-inset-bottom, 0px), 28px) + 12px)',
+          }}
+        >
           <button
             type="button"
             onClick={onAgree}
-            className="w-full py-3.5 sm:py-3.5 px-6 rounded-2xl btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-black text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
+            className="w-full py-4 sm:py-3.5 px-6 rounded-2xl btn-luxury-action luxury-pressable luxury-sheen-sweep text-white font-black text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xl active:scale-98"
           >
-            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" />
+            <CheckCircle2 className="w-5 h-5 text-sky-400" />
             <span>Agree &amp; Continue</span>
           </button>
         </div>

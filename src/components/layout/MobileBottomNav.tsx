@@ -28,7 +28,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] transition-colors px-2 py-1.5 safe-area-pb"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/98 backdrop-blur-2xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.65)] transition-all px-2 pt-2"
+      style={{
+        paddingBottom: 'calc(max(env(safe-area-inset-bottom, 0px), 24px) + 8px)',
+      }}
     >
       <div className="flex items-center justify-around max-w-lg mx-auto">
         {tabs.map((tab) => {
@@ -43,7 +46,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                   setActiveTab(tab.id);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`relative -top-2.5 flex flex-col items-center justify-center p-2 rounded-2xl transition-all duration-200 active:scale-90 ${
+                className={`relative -top-2 flex flex-col items-center justify-center p-2 rounded-2xl transition-all duration-200 active:scale-90 ${
                   isActive
                     ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/40 ring-4 ring-white dark:ring-slate-950 scale-105'
                     : 'bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 hover:scale-105'
@@ -68,7 +71,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 setActiveTab(tab.id);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`relative flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-150 active:scale-90 min-w-[58px] ${
+              className={`relative flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all duration-150 active:scale-90 min-w-[50px] sm:min-w-[58px] ${
                 isActive
                   ? 'text-blue-600 dark:text-sky-400 font-bold'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'

@@ -75,18 +75,21 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <header
+      className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       {/* Top Professional Luxury Flowing Accent Stripe */}
       <div className="h-[2px] w-full luxury-flow-line" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Brand Logo & Name + Mobile Back Button */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0 pr-1">
             {onBackStep && (
               <button
                 onClick={onBackStep}
-                className="md:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-all flex items-center justify-center cursor-pointer shadow-sm active:scale-95 shrink-0 border border-slate-200 dark:border-slate-700/60"
+                className="md:hidden w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-all flex items-center justify-center cursor-pointer shadow-sm active:scale-95 shrink-0 border border-slate-200 dark:border-slate-700/60"
                 title={activeTab === 'home' ? 'Exit App (<)' : 'Back (<)'}
                 aria-label={activeTab === 'home' ? 'Exit App' : 'Go Back'}
               >
@@ -95,15 +98,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
 
             <div
-              className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0 min-w-0"
+              className="flex items-center gap-2 sm:gap-3 cursor-pointer group min-w-0"
               onClick={() => setActiveTab('home')}
             >
-              <BrandLogo size="md" />
+              <div className="shrink-0 scale-90 sm:scale-100">
+                <BrandLogo size="md" />
+              </div>
               <div className="min-w-0">
-                <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base lg:text-lg tracking-tight leading-tight block truncate">
+                <span className="font-black text-slate-900 dark:text-white text-xs sm:text-base lg:text-lg tracking-tight leading-tight block truncate max-w-[130px] xs:max-w-[170px] sm:max-w-none">
                   Ethiopian Textbooks
                 </span>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
+                <div className="hidden xs:flex items-center gap-1 text-[9px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
                   <span className="text-blue-600 dark:text-sky-400 font-black">Grades 9–12</span>
                   <span className="text-slate-300 dark:text-slate-600">•</span>
                   <span className="truncate">EUEE &amp; Guides</span>
@@ -140,7 +145,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Controls: Language, Notifications & Theme */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             {/* Join Telegram Channel Quick Action Button */}
             <a
               href="https://t.me/Ethiopianstudentbooks"
@@ -153,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Telegram</span>
             </a>
 
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               <LanguageSelector />
               <NotificationDropdown onNavigateNotification={onNavigateNotification} />
               <ThemeToggle theme={theme} setTheme={setTheme} />
@@ -161,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Mobile menu hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`md:hidden w-9 h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer focus:outline-none ${
+                className={`md:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer focus:outline-none shrink-0 ${
                   mobileMenuOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
                 }`}
                 title="Menu"

@@ -351,7 +351,12 @@ export const ShareAppModal: React.FC<ShareAppModalProps> = ({
         </div>
 
         {/* Modal Body / Share Actions */}
-        <div className="px-5 pt-1 pb-6 space-y-3.5">
+        <div
+          className="px-5 pt-1 pb-6 space-y-3.5"
+          style={{
+            paddingBottom: 'calc(max(env(safe-area-inset-bottom, 0px), 24px) + 12px)',
+          }}
+        >
           {/* Section: SHARE TO */}
           <div>
             <div className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2">

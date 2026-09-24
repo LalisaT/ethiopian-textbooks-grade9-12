@@ -669,7 +669,7 @@ export const App: React.FC = () => {
       )}
 
       {/* Main Page Routing */}
-      <main className={`flex-1 ${activeTab === 'about' ? 'pb-2' : 'pb-16 lg:pb-8'}`}>
+      <main className={`flex-1 ${activeTab === 'about' ? 'pb-28 sm:pb-2' : 'pb-36 sm:pb-28 lg:pb-8'}`}>
         {activeTab === 'home' && (
           <HomePage
             books={allBooks}
