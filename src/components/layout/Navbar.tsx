@@ -210,56 +210,56 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               </div>
 
-              {/* Drawer Language Selector - Dropdown Style Matching Home Navbar */}
-              <div className="relative">
-                <button
-                  onClick={() => setDrawerLangOpen(!drawerLangOpen)}
-                  className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl btn-luxury-idle text-xs font-bold transition-all cursor-pointer"
-                >
-                  <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-200">
-                    <Globe className="w-4 h-4 text-blue-600 dark:text-sky-400" />
-                    <span>{t('changeLanguage', 'Language')}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm">{currentLang.flag}</span>
-                    <span className="font-extrabold text-blue-600 dark:text-sky-400">{currentLang.native}</span>
+              {/* Drawer Language Selector - Minimized Compact Dropdown */}
+              <div className="relative flex items-center justify-end px-1">
+                <div className="relative">
+                  <button
+                    onClick={() => setDrawerLangOpen(!drawerLangOpen)}
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer luxury-pressable ${
+                      drawerLangOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
+                    }`}
+                    title="Select Language"
+                    aria-label="Select Language"
+                  >
+                    <Globe className={`w-3.5 h-3.5 shrink-0 ${drawerLangOpen ? 'text-white dark:text-sky-300' : 'text-blue-600 dark:text-sky-400'}`} />
+                    <span className="font-black text-blue-600 dark:text-sky-400 leading-none">{currentLang.native}</span>
                     <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${drawerLangOpen ? 'rotate-180 text-blue-600 dark:text-sky-400' : ''}`} />
-                  </div>
-                </button>
+                  </button>
 
-                {drawerLangOpen && (
-                  <div className="mt-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-1.5 shadow-xl animate-in fade-in slide-in-from-top-1 duration-150 space-y-0.5">
-                    <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      Select Language
-                    </div>
-                    {LANGUAGES.map((lang) => {
-                      const isSelected = language === lang.code;
-                      return (
-                        <button
-                          key={lang.code}
-                          onClick={() => {
-                            setLanguage(lang.code);
-                            setDrawerLangOpen(false);
-                          }}
-                          className={`w-full text-left px-3 py-2 flex items-center justify-between text-xs transition-colors cursor-pointer ${
-                            isSelected
-                              ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 font-bold'
-                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="text-base">{lang.flag}</span>
-                            <div>
-                              <div className="font-bold leading-tight">{lang.native}</div>
-                              <div className="text-[10px] text-slate-400">{lang.label}</div>
+                  {drawerLangOpen && (
+                    <div className="absolute right-0 top-full mt-1.5 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-1.5 shadow-2xl z-30 animate-in fade-in slide-in-from-top-1 duration-150 space-y-0.5">
+                      <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        Select Language
+                      </div>
+                      {LANGUAGES.map((lang) => {
+                        const isSelected = language === lang.code;
+                        return (
+                          <button
+                            key={lang.code}
+                            onClick={() => {
+                              setLanguage(lang.code);
+                              setDrawerLangOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2 flex items-center justify-between text-xs transition-colors cursor-pointer ${
+                              isSelected
+                                ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-400 font-bold'
+                                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-base">{lang.flag}</span>
+                              <div>
+                                <div className="font-bold leading-tight">{lang.native}</div>
+                                <div className="text-[10px] text-slate-400">{lang.label}</div>
+                              </div>
                             </div>
-                          </div>
-                          {isSelected && <Check className="w-4 h-4 text-blue-600 dark:text-sky-400" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                            {isSelected && <Check className="w-4 h-4 text-blue-600 dark:text-sky-400" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Navigation Links */}
