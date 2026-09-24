@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <BrandLogo size="md" />
               </div>
               <div className="min-w-0">
-                <span className="font-black text-slate-900 dark:text-white text-xs sm:text-base lg:text-lg tracking-tight leading-tight block truncate max-w-[130px] xs:max-w-[170px] sm:max-w-none">
+                <span className="font-black text-slate-900 dark:text-white text-xs sm:text-base lg:text-lg tracking-tight leading-tight block truncate max-w-[180px] xs:max-w-none">
                   Ethiopian Textbooks
                 </span>
                 <div className="hidden xs:flex items-center gap-1 text-[9px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
@@ -156,15 +156,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Telegram</span>
             </a>
 
-            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-              <LanguageSelector />
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+              <div className="hidden md:block">
+                <LanguageSelector />
+              </div>
               <NotificationDropdown onNavigateNotification={onNavigateNotification} />
               <ThemeToggle theme={theme} setTheme={setTheme} />
 
               {/* Mobile menu hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`md:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer focus:outline-none shrink-0 ${
+                className={`md:hidden w-9 h-9 rounded-2xl transition-all flex items-center justify-center luxury-pressable cursor-pointer focus:outline-none shrink-0 ${
                   mobileMenuOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
                 }`}
                 title={t('menu', 'Menu')}

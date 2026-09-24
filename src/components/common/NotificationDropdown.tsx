@@ -95,7 +95,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           setIsOpen(!isOpen);
           refreshNotifs();
         }}
-        className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer shrink-0 ${
+        className={`relative w-9 h-9 rounded-2xl transition-all flex items-center justify-center luxury-pressable cursor-pointer shrink-0 ${
           isOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
         }`}
         title="App & Study Notifications"

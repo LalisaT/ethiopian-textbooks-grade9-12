@@ -26,7 +26,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
       {/* Mobile Single Compact Cycle Button */}
       <button
         onClick={cycleTheme}
-        className="sm:hidden w-8 h-8 rounded-xl btn-luxury-idle luxury-pressable transition-all flex items-center justify-center cursor-pointer shrink-0"
+        className="sm:hidden w-9 h-9 rounded-2xl btn-luxury-idle luxury-pressable transition-all flex items-center justify-center cursor-pointer shrink-0"
         title={`Theme: ${theme}. Tap to change.`}
         aria-label={`Theme: ${theme}. Tap to change.`}
       >
