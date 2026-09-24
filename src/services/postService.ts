@@ -20,13 +20,13 @@ const STORAGE_KEY_DELETED = 'ethio_community_deleted_posts';
 export function getDeletedPostIds(): string[] {
   try {
     const list: string[] = JSON.parse(localStorage.getItem(STORAGE_KEY_DELETED) || '[]');
-    if (!list.includes('post-tip-3')) {
-      list.push('post-tip-3');
-      try {
-        localStorage.setItem(STORAGE_KEY_DELETED, JSON.stringify(list));
-      } catch {}
-    }
-    return list;
+    // Clean out any real posts that were erroneously blacklisted by older client code.
+    // Only 'post-tip-3' (the legacy mock) should remain suppressed.
+    const cleaned = list.filter((id) => id === 'post-tip-3');
+    try {
+      localStorage.setItem(STORAGE_KEY_DELETED, JSON.stringify(cleaned));
+    } catch {}
+    return cleaned;
   } catch {
     return ['post-tip-3'];
   }
@@ -165,10 +165,11 @@ export const PostService = {
   // Real-time Firestore sync listener across all devices
   subscribeToPosts(callback: (posts: CommunityPost[]) => void): () => void {
     try {
-      const q = query(collection(db, 'official_announcements'), orderBy('date', 'desc'));
+      // Query official announcements in real time without index dependencies
+      const coll = collection(db, 'official_announcements');
 
       const unsubscribe = onSnapshot(
-        q,
+        coll,
         (snapshot) => {
           let userLikes: string[] = [];
           let userBookmarks: string[] = [];
@@ -179,23 +180,7 @@ export const PostService = {
 
           const deletedIds = getDeletedPostIds();
 
-          // 1. Gather all active announcement IDs from Firestore snapshot
-          const firestoreDocIds = new Set<string>();
-          const remotePosts: CommunityPost[] = [];
-
-          snapshot.forEach((docSnap) => {
-            if (docSnap.id.startsWith('test_')) return;
-            const data = docSnap.data() as CommunityPost;
-            if (data && data.title && !data.isDeleted) {
-              firestoreDocIds.add(docSnap.id);
-              remotePosts.push({
-                ...data,
-                id: docSnap.id,
-              });
-            }
-          });
-
-          // 2. Base map initialized with default official announcements (excluding deleted ones)
+          // 1. Base map initialized with default official announcements (excluding explicitly deleted legacy mocks)
           const postMap = new Map<string, CommunityPost>();
           DEFAULT_POSTS.forEach((p) => {
             if (!deletedIds.includes(p.id)) {
@@ -203,88 +188,41 @@ export const PostService = {
             }
           });
 
-          // 3. Reconcile local posts from localStorage:
-          // Any custom announcement in localStorage that is NOT in Firestore was deleted by Admin!
-          // We immediately purge it from this device's localStorage & add to deletedIds.
-          let updatedDeletedIds = [...deletedIds];
-          let deletedChanged = false;
+          // 2. Authoritative remote Firestore posts overwrite/populate the feed
+          snapshot.forEach((docSnap) => {
+            if (docSnap.id.startsWith('test_')) return;
+            const data = docSnap.data() as CommunityPost;
+            if (data && data.title && !data.isDeleted) {
+              const postItem: CommunityPost = {
+                ...data,
+                id: docSnap.id,
+              };
 
-          try {
-            const data = localStorage.getItem(STORAGE_KEY_POSTS);
-            if (data) {
-              const localPosts: CommunityPost[] = JSON.parse(data);
-              localPosts.forEach((p) => {
-                if (!p || !p.id || p.id.startsWith('test_')) return;
-
-                // Explicitly deleted
-                if (updatedDeletedIds.includes(p.id)) {
-                  postMap.delete(p.id);
-                  return;
+              if (postItem.id === 'post-official-1') {
+                if (postItem.author.includes('Educational Assessment') || !postItem.author) {
+                  postItem.author = 'Exam Practice Hub';
                 }
-
-                const isDefault = DEFAULT_POSTS.some((dp) => dp.id === p.id);
-                // If it is a custom post not in Firestore, it was deleted from admin!
-                if (!isDefault && !firestoreDocIds.has(p.id)) {
-                  updatedDeletedIds.push(p.id);
-                  deletedChanged = true;
-                  postMap.delete(p.id);
-                  return;
-                }
-
-                if (p.id === 'post-tip-3' && (p.author === 'Chala Desta' || p.authorRole === 'student')) {
-                  p.author = 'Admin @lalion';
-                  p.authorRole = 'admin';
-                  p.isOfficial = true;
-                  p.pinned = true;
-                }
-                if (p.id === 'post-official-1' && (p.author.includes('Educational Assessment') || !p.author)) {
-                  p.author = 'Exam Practice Hub';
-                }
-                if (p.id === 'post-guide-2' && (p.imageUrl?.includes('unsplash') || !p.title.includes('Welcome'))) {
-                  p.title = 'Welcome to Ethiopian Textbooks & EUEE Hub! 🇪🇹';
-                  p.content = 'Welcome new students and teachers! Your offline digital library and entrance exam simulator is now ready. Access official Ethiopian Ministry of Education Grade 9-12 textbooks, teacher guides, unit summaries, and national EUEE model exams with zero internet required once downloaded.';
-                  p.imageUrl = '/brand/welcome-banner.jpg';
-                  p.imageCaption = 'Official Welcome Guide for New Ethiopian Textbooks App Downloaders';
-                  p.subject = 'All Subjects & Guides';
-                }
-                postMap.set(p.id, p);
-              });
-            }
-          } catch {}
-
-          if (deletedChanged) {
-            try {
-              localStorage.setItem(STORAGE_KEY_DELETED, JSON.stringify(updatedDeletedIds));
-            } catch {}
-          }
-
-          // 4. Authoritative remote Firestore posts overwrite local copies
-          remotePosts.forEach((p) => {
-            if (!updatedDeletedIds.includes(p.id)) {
-              if (p.id === 'post-official-1') {
-                if (p.author.includes('Educational Assessment') || !p.author) {
-                  p.author = 'Exam Practice Hub';
-                }
-                if (p.imageUrl?.includes('unsplash') || !p.imageUrl) {
-                  p.imageUrl = '/brand/exam-prep-banner.jpg';
-                  p.imageCaption = 'Official Grade 12 EUEE / Matric National Exam Practice Hub & Model Simulator';
+                if (postItem.imageUrl?.includes('unsplash') || !postItem.imageUrl) {
+                  postItem.imageUrl = '/brand/exam-prep-banner.jpg';
+                  postItem.imageCaption = 'Official Grade 12 EUEE / Matric National Exam Practice Hub & Model Simulator';
                 }
               }
-              if (p.id === 'post-guide-2') {
-                p.title = 'Welcome to Ethiopian Textbooks & EUEE Hub! 🇪🇹';
-                p.content = 'Welcome new students and teachers! Your offline digital library and entrance exam simulator is now ready. Access official Ethiopian Ministry of Education Grade 9-12 textbooks, teacher guides, unit summaries, and national EUEE model exams with zero internet required once downloaded.';
-                p.imageUrl = '/brand/welcome-banner.jpg';
-                p.imageCaption = 'Official Welcome Guide for New Ethiopian Textbooks App Downloaders';
-                p.subject = 'All Subjects & Guides';
-                delete (p as any).actionUrl;
+              if (postItem.id === 'post-guide-2') {
+                postItem.title = 'Welcome to Ethiopian Textbooks & EUEE Hub! 🇪🇹';
+                postItem.content = 'Welcome new students and teachers! Your offline digital library and entrance exam simulator is now ready. Access official Ethiopian Ministry of Education Grade 9-12 textbooks, teacher guides, unit summaries, and national EUEE model exams with zero internet required once downloaded.';
+                postItem.imageUrl = '/brand/welcome-banner.jpg';
+                postItem.imageCaption = 'Official Welcome Guide for New Ethiopian Textbooks App Downloaders';
+                postItem.subject = 'All Subjects & Guides';
+                delete (postItem as any).actionUrl;
               }
-              postMap.set(p.id, p);
+
+              postMap.set(postItem.id, postItem);
             }
           });
 
-          // 5. Convert to array and format/sort: pinned first, then newest date
+          // 3. Convert to array and format/sort: pinned first, then newest date
           const mergedPosts = Array.from(postMap.values())
-            .filter((p) => p && p.title && !p.id.startsWith('test_') && !updatedDeletedIds.includes(p.id))
+            .filter((p) => p && p.title && !p.id.startsWith('test_'))
             .map((p) => ({
               ...p,
               title: p.title?.replace(/ESSLCE/g, 'EUEE') || '',

@@ -279,10 +279,14 @@ export async function initNativeNotifications(
     // Using PushNotifications.requestPermissions() displays the native in-app dialog popup
     // (identical to Facebook, Telegram, WhatsApp) without ever leaving the app.
     try {
-      const pushPerm = await PushNotifications.requestPermissions();
-      if (pushPerm.receive === 'granted') {
+      const [pushPerm, localPerm] = await Promise.all([
+        PushNotifications.requestPermissions().catch(() => ({ receive: 'prompt' as any })),
+        LocalNotifications.requestPermissions().catch(() => ({ display: 'prompt' as any })),
+      ]);
+      const granted = pushPerm.receive === 'granted' || localPerm.display === 'granted';
+      if (granted) {
         NotificationService.saveSettings({ enabled: true });
-        await PushNotifications.register();
+        await PushNotifications.register().catch(() => {});
       }
 
       PushNotifications.addListener('registration', async (token: Token) => {
@@ -524,17 +528,12 @@ export const NotificationService = {
         return DEFAULT_NOTIFICATIONS;
       }
       const parsed: AppNotification[] = JSON.parse(data);
-      let deletedPostIds: string[] = [];
-      try {
-        deletedPostIds = JSON.parse(localStorage.getItem('ethio_community_deleted_posts') || '[]');
-      } catch {}
 
-      // Clean out deleted post notifications and route exam prep properly
+      // Clean out legacy mock notification and route exam prep properly
       const cleaned = parsed
         .filter((n) => {
           if (!n || !n.title) return false;
-          if (n.postId && deletedPostIds.includes(n.postId)) return false;
-          if (n.id && deletedPostIds.some((delId) => n.id.includes(delId))) return false;
+          if (n.postId === 'post-tip-3' || n.id === 'notif-tip-3') return false;
           return true;
         })
         .map((n) => {
@@ -744,19 +743,16 @@ export const NotificationService = {
             }
           });
 
-          // Purge any broadcast notifications whose post was explicitly deleted
+          // Keep broadcast notifications synchronized with Firestore
           const firestoreNotifIds = new Set(snapshot.docs.map((d) => d.id));
-          let deletedPostIds: string[] = [];
-          try {
-            deletedPostIds = JSON.parse(localStorage.getItem('ethio_community_deleted_posts') || '[]');
-          } catch {}
 
           for (const [id, notif] of notifMap.entries()) {
             if (notif.type === 'admin_broadcast' && !id.startsWith('notif-welcome') && !id.startsWith('notif-exam-prep')) {
-              const shouldPurge =
-                !firestoreNotifIds.has(id) ||
-                (notif.postId && deletedPostIds.includes(notif.postId));
-              if (shouldPurge) {
+              if (notif.postId === 'post-tip-3' || id === 'notif-tip-3') {
+                notifMap.delete(id);
+                listChanged = true;
+              } else if (!firestoreNotifIds.has(id)) {
+                // Was deleted by Admin in Firestore
                 notifMap.delete(id);
                 listChanged = true;
               }
@@ -773,7 +769,7 @@ export const NotificationService = {
             }
           }
 
-          // On first launch, if there is a recent unread broadcast, display prominent in-app banner & notify
+          // On launch or connect, if there is an unread broadcast from the last 7 days, alert student!
           if (isInitialLoad && snapshot.docs.length > 0) {
             const now = Date.now();
             const unreadRecent = snapshot.docs
@@ -783,7 +779,7 @@ export const NotificationService = {
                 const existing = notifMap.get(n.id);
                 if (existing && existing.read) return false;
                 const time = new Date(n.date).getTime();
-                return !isNaN(time) && now - time < 1000 * 60 * 60 * 48; // within last 48 hours
+                return !isNaN(time) && now - time < 1000 * 60 * 60 * 24 * 7; // within last 7 days
               })
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
 

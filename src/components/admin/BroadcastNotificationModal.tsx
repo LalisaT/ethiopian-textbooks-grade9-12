@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { NotificationService } from '../../services/notificationService';
 import { PostService } from '../../services/postService';
+import { compressImageForUpload } from '../../utils/imageCompressor';
 import { Book } from '../../types/book';
 
 interface BroadcastNotificationModalProps {
@@ -65,23 +66,22 @@ export const BroadcastNotificationModal: React.FC<BroadcastNotificationModalProp
     NotificationService.playSound();
   };
 
-  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check size limit (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Please select an image smaller than 5MB');
-      return;
+    try {
+      const compressed = await compressImageForUpload(file);
+      setImageUrl(compressed);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
     }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setImageUrl(reader.result);
-      }
-    };
-    reader.readAsDataURL(file);
   };
 
   const handleSendBroadcast = (e: React.FormEvent) => {

@@ -3,6 +3,7 @@ import { CommunityPost } from '../types/post';
 import { Book } from '../types/book';
 import { PostService } from '../services/postService';
 import { NotificationService } from '../services/notificationService';
+import { compressImageForUpload } from '../utils/imageCompressor';
 import {
   Megaphone,
   PlusCircle,
@@ -104,22 +105,22 @@ export const CommunityPostsPage: React.FC<CommunityPostsPageProps> = ({
   const [copiedPostId, setCopiedPostId] = useState<string | null>(null);
   const [speakingPostId, setSpeakingPostId] = useState<string | null>(null);
 
-  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Please select an image smaller than 5MB');
-      return;
+    try {
+      const compressed = await compressImageForUpload(file);
+      setImageUrl(compressed);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
     }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setImageUrl(reader.result);
-      }
-    };
-    reader.readAsDataURL(file);
   };
 
   const refreshPosts = () => {

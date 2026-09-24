@@ -164,6 +164,21 @@
   box-shadow: 0 1px 8px rgba(14, 165, 233, 0.25);
 }
 
+.theme-light .luxury-flow-line,
+html:not(.dark) .luxury-flow-line {
+  background: linear-gradient(
+    90deg,
+    rgba(241, 245, 249, 0.9) 0%,
+    rgba(186, 230, 253, 0.8) 25%,
+    rgba(2, 132, 199, 0.9) 47%,
+    rgba(14, 165, 233, 1) 50%,
+    rgba(2, 132, 199, 0.9) 53%,
+    rgba(186, 230, 253, 0.8) 75%,
+    rgba(241, 245, 249, 0.9) 100%
+  );
+  box-shadow: 0 1px 6px rgba(2, 132, 199, 0.2);
+}
+
 .ethio-gradient-bar {
   background: linear-gradient(
     90deg,
@@ -277,11 +292,10 @@ canvas {
 
 /* 
    LUXURY ACTIVE / CLICKED BUTTON STATE
-   Matches the circled "Natural Science" dark obsidian aesthetic,
-   highlighted by a crisp illuminated cyan/sky border & luminous micro-aura,
-   WITHOUT ANY SOLID BRIGHT BLUE FILL!
+   Dark Mode Obsidian Glow vs Light Mode Crisp Sky Glow
 */
-.btn-luxury-active {
+.btn-luxury-active,
+.dark .btn-luxury-active {
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
   color: #ffffff !important;
   border: 1.5px solid #38bdf8 !important;
@@ -293,7 +307,8 @@ canvas {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.btn-luxury-active:hover {
+.btn-luxury-active:hover,
+.dark .btn-luxury-active:hover {
   background: linear-gradient(180deg, rgba(40, 53, 76, 0.98) 0%, rgba(20, 30, 50, 1) 100%) !important;
   border-color: #7dd3fc !important;
   box-shadow: 
@@ -303,11 +318,35 @@ canvas {
     inset 0 0 14px rgba(56, 189, 248, 0.2) !important;
 }
 
+/* Light Theme Active State */
+.theme-light .btn-luxury-active,
+html:not(.dark) .btn-luxury-active {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #0284c7 !important;
+  box-shadow: 
+    0 0 14px -2px rgba(2, 132, 199, 0.4),
+    0 2px 6px 0 rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.theme-light .btn-luxury-active:hover,
+html:not(.dark) .btn-luxury-active:hover {
+  background: linear-gradient(180deg, #0369a1 0%, #075985 100%) !important;
+  border-color: #0369a1 !important;
+  box-shadow: 
+    0 0 18px -1px rgba(2, 132, 199, 0.55),
+    0 3px 8px 0 rgba(0, 0, 0, 0.15),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+}
+
 /* 
    LUXURY IDLE STATE (Unselected / Resting)
-   Dark obsidian frosted glass with subtle border
+   Dark obsidian frosted glass vs Light clean white-slate card
 */
-.btn-luxury-idle {
+.btn-luxury-idle,
+.dark .btn-luxury-idle {
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.88) 100%) !important;
   color: #cbd5e1 !important;
   border: 1px solid rgba(51, 65, 85, 0.75) !important;
@@ -316,7 +355,8 @@ canvas {
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
-.btn-luxury-idle:hover {
+.btn-luxury-idle:hover,
+.dark .btn-luxury-idle:hover {
   background: linear-gradient(180deg, rgba(51, 65, 85, 0.85) 0%, rgba(30, 41, 59, 0.95) 100%) !important;
   color: #ffffff !important;
   border-color: rgba(148, 163, 184, 0.6) !important;
@@ -325,10 +365,32 @@ canvas {
     inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
+/* Light Theme Idle State */
+.theme-light .btn-luxury-idle,
+html:not(.dark) .btn-luxury-idle {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  text-shadow: none !important;
+}
+
+.theme-light .btn-luxury-idle:hover,
+html:not(.dark) .btn-luxury-idle:hover {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.08) !important;
+}
+
 /* 
-   LUXURY ACTION BUTTON (For CTAs across the app, replacing old solid blue)
+   LUXURY ACTION BUTTON (For CTAs across the app)
 */
-.btn-luxury-action {
+.btn-luxury-action,
+.dark .btn-luxury-action {
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
   color: #ffffff !important;
   border: 1px solid rgba(56, 189, 248, 0.5) !important;
@@ -339,13 +401,34 @@ canvas {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.btn-luxury-action:hover {
+.btn-luxury-action:hover,
+.dark .btn-luxury-action:hover {
   background: linear-gradient(180deg, rgba(40, 56, 82, 0.98) 0%, rgba(20, 32, 54, 1) 100%) !important;
   border-color: rgba(56, 189, 248, 0.85) !important;
   box-shadow: 
     0 6px 18px -2px rgba(0, 0, 0, 0.6),
     0 0 18px 0 rgba(56, 189, 248, 0.4),
     inset 0 1px 1.5px rgba(255, 255, 255, 0.3) !important;
+}
+
+.theme-light .btn-luxury-action,
+html:not(.dark) .btn-luxury-action {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #0284c7 !important;
+  box-shadow: 
+    0 3px 10px -1px rgba(2, 132, 199, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.theme-light .btn-luxury-action:hover,
+html:not(.dark) .btn-luxury-action:hover {
+  background: linear-gradient(180deg, #0369a1 0%, #075985 100%) !important;
+  border-color: #0369a1 !important;
+  box-shadow: 
+    0 4px 14px -1px rgba(2, 132, 199, 0.5),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Luxury Reset Jewel Pill */

@@ -4,7 +4,7 @@ import {
   initializeFirestore,
   getFirestore,
   persistentLocalCache,
-  persistentMultipleTabManager,
+  persistentSingleTabManager,
   Firestore,
 } from "firebase/firestore";
 
@@ -22,20 +22,25 @@ export const firebaseConfig = {
 // Initialize Firebase App as Singleton
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Cloud Firestore Database Instance with Multi-Tab Persistence
+// Cloud Firestore Database Instance with Single-Tab Mobile WebView Persistence
 function initDb(): Firestore {
   try {
     if (typeof window !== 'undefined') {
       return initializeFirestore(app, {
         localCache: persistentLocalCache({
-          tabManager: persistentMultipleTabManager(),
+          tabManager: persistentSingleTabManager({ forceOwnership: true }),
         }),
+        experimentalAutoDetectLongPolling: true,
       });
     }
     return getFirestore(app);
-  } catch {
-    // If already initialized, get existing instance
-    return getFirestore(app);
+  } catch (e) {
+    console.warn('initializeFirestore warning, falling back to default:', e);
+    try {
+      return getFirestore(app);
+    } catch {
+      return initializeFirestore(app, {});
+    }
   }
 }
 

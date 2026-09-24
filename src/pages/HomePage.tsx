@@ -125,15 +125,15 @@ export const HomePage: React.FC<HomePageProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Grade 9–12 textbooks, EUEE past papers, subjects..."
-            className="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-800 rounded-full text-xs sm:text-sm text-white placeholder-slate-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+            placeholder={t('searchHeroPlaceholder', 'Search Grade 9–12 textbooks, EUEE past papers, subjects...')}
+            className="w-full pl-11 pr-4 py-3 bg-white/95 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-full text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-400 shadow-md dark:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-bold text-slate-400 hover:text-white"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
             >
-              Clear
+              {t('clearSearch', 'Clear')}
             </button>
           )}
         </div>
@@ -141,14 +141,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* Filter Bar: Interactive Grade & Category Filter Chips */}
         <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1.5 px-0.5 scroll-smooth touch-pan-x">
           {[
-            { id: 'all' as const, label: 'For You' },
-            { id: 'g12' as const, label: 'Grade 12 (EUEE)' },
-            { id: 'g11' as const, label: 'Grade 11' },
-            { id: 'g10' as const, label: 'Grade 10' },
-            { id: 'g9' as const, label: 'Grade 9' },
-            { id: 'natural' as const, label: 'Natural Science' },
-            { id: 'social' as const, label: 'Social Science' },
-            { id: 'tg' as const, label: "Teacher's Guides" },
+            { id: 'all' as const, label: t('forYou', 'For You') },
+            { id: 'g12' as const, label: `${t('grade12', 'Grade 12')} (EUEE)` },
+            { id: 'g11' as const, label: t('grade11', 'Grade 11') },
+            { id: 'g10' as const, label: t('grade10', 'Grade 10') },
+            { id: 'g9' as const, label: t('grade9', 'Grade 9') },
+            { id: 'natural' as const, label: t('naturalScience', 'Natural Science') },
+            { id: 'social' as const, label: t('socialScience', 'Social Science') },
+            { id: 'tg' as const, label: t('teacherGuides', "Teacher's Guides") },
           ].map((chip) => {
             const isSelected = activeChip === chip.id;
             return (
@@ -224,15 +224,12 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <span>National High School Curriculum • New Edition</span>
               </div>
 
-              <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
-                Ethiopian Grade 9–12 <br className="hidden sm:inline" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-300 to-indigo-300">
-                  Textbooks &amp; EUEE Matric Hub
-                </span>
+              <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-white">
+                {t('heroTitle', 'Ethiopian Grade 9–12 Textbooks & EUEE Matric Hub')}
               </h2>
 
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-xl">
-                Official Ministry of Education textbooks and <strong>Teacher's Guides</strong>. Master <strong>Natural &amp; Social Sciences</strong> and practice for the <strong>Grade 12 Ethiopian University Entrance Examination</strong> with 100% offline study capability.
+                {t('heroDesc', "Official Ministry of Education textbooks and Teacher's Guides. Master Natural & Social Sciences with 100% offline study capability.")}
               </p>
 
 
@@ -240,19 +237,19 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                  <span>MOE Syllabus</span>
+                  <span>{t('moeSyllabus', 'MOE Syllabus')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Atom className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span>Natural &amp; Social</span>
+                  <span>{t('naturalAndSocial', 'Natural & Social')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>2020–2024 Past Papers</span>
+                  <span>{t('pastPapers', '2020–2024 Past Papers')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <BookMarked className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                  <span>100% Offline</span>
+                  <span>{t('offlineStudyGuarantee', '100% Offline')}</span>
                 </div>
               </div>
             </div>
@@ -289,7 +286,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 3. Shelf 1: Continue Reading (Google Play Store Style) */}
       {continueReadingBooks.length > 0 && (
         <PlayStoreShelf
-          title="Continue Reading"
+          title={t('continueReading', 'Continue Reading')}
           subtitle="Pick up where you left off"
           badge="In Progress"
           books={continueReadingBooks}
@@ -306,10 +303,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="flex items-center justify-between px-1">
           <div>
             <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
-              High School Grade Levels
+              {t('highSchoolGrades', 'High School Grade Levels')}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Direct access to syllabus textbooks by academic year
+              {t('highSchoolGradesDesc', 'Direct access to syllabus textbooks by academic year')}
             </p>
           </div>
         </div>
@@ -318,7 +315,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           {[
             {
               grade: 12 as GradeLevel,
-              title: 'Grade 12 Senior',
+              title: `${t('grade12', 'Grade 12')} Senior`,
               subtitle: 'EUEE Preparatory',
               desc: 'Calculus, Physics, Chemistry, Biology, Economics, History & Matric',
               color: 'from-amber-500 to-yellow-600',
@@ -326,7 +323,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             },
             {
               grade: 11 as GradeLevel,
-              title: 'Grade 11 Senior',
+              title: `${t('grade11', 'Grade 11')} Senior`,
               subtitle: 'Stream Choice',
               desc: 'Natural Science & Social Science specialization and STEM',
               color: 'from-blue-600 to-indigo-700',
@@ -334,7 +331,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             },
             {
               grade: 10 as GradeLevel,
-              title: 'Grade 10 Secondary',
+              title: `${t('grade10', 'Grade 10')} Secondary`,
               subtitle: 'General Secondary',
               desc: 'Mechanics, Hydrocarbons, Physiology, Relations & ICT',
               color: 'from-blue-600 to-indigo-700',
@@ -342,7 +339,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             },
             {
               grade: 9 as GradeLevel,
-              title: 'Grade 9 Freshman',
+              title: `${t('grade9', 'Grade 9')} Freshman`,
               subtitle: 'High School Entry',
               desc: 'Foundations of Algebra, Physical Quantities & General Science',
               color: 'from-purple-600 to-violet-700',
@@ -373,7 +370,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400">
-                <span>Open Grade</span>
+                <span>{t('openGrade', 'Open Grade')}</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
@@ -387,7 +384,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 7. Shelf 4: Natural Science Core Textbooks */}
       {naturalScienceBooks.length > 0 && (
         <PlayStoreShelf
-          title="Natural Science Stream"
+          title={t('naturalScience', 'Natural Science Stream')}
           books={naturalScienceBooks}
           onOpenPdf={onOpenPdf}
           onToggleOffline={onToggleOffline}
@@ -407,7 +404,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </span>
               <div>
                 <div className="text-[10px] font-black uppercase tracking-wider text-amber-400">
-                  Daily EUEE Quick Challenge • National Exam Prep
+                  {t('dailyExamPrep', 'Daily EUEE Quick Challenge • National Exam Prep')}
                 </div>
                 <h4 className="text-xs sm:text-sm font-black text-white">
                   {quickChallengeQuestion.chapterTitle} ({quickChallengeQuestion.subject.toUpperCase()})
@@ -473,7 +470,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="p-3 rounded-2xl bg-slate-800/90 border border-slate-700 text-xs space-y-1 animate-in fade-in duration-200">
               <div className="font-extrabold flex items-center gap-1.5 text-amber-300">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Solution:</span>
+                <span>{t('solution', 'Solution')}:</span>
               </div>
               <p className="text-slate-300 text-[11px] leading-relaxed">
                 {quickChallengeQuestion.explanation}
@@ -483,7 +480,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   onClick={onNavigateToExamPrep}
                   className="text-xs font-black text-amber-400 hover:text-amber-300 flex items-center gap-1"
                 >
-                  <span>Practice More EUEE Questions</span>
+                  <span>{t('practiceMoreQuestions', 'Practice More EUEE Questions')}</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
@@ -495,7 +492,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 9. Shelf 5: Social Science Core Textbooks */}
       {socialScienceBooks.length > 0 && (
         <PlayStoreShelf
-          title="Social Science Stream"
+          title={t('socialScience', 'Social Science Stream')}
           books={socialScienceBooks}
           onOpenPdf={onOpenPdf}
           onToggleOffline={onToggleOffline}
@@ -508,9 +505,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 10. Shelf 6: Teacher's Guides Edition */}
       {teacherGuides.length > 0 && (
         <PlayStoreShelf
-          title="Official Teacher's Guides"
-          subtitle="Curriculum lesson plans, answer keys & teaching manuals"
-          badge="Educator Guides"
+          title={t('teacherGuides', "Official Teacher's Guides")}
+          subtitle={t('curriculumManuals', "Curriculum lesson plans, answer keys & teaching manuals")}
+          badge={t('educatorGuides', "Educator Guides")}
           books={teacherGuides}
           onOpenPdf={onOpenPdf}
           onToggleOffline={onToggleOffline}
@@ -533,10 +530,10 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
-                  Official Telegram Channel
+                  {t('officialTelegram', 'Official Telegram Channel')}
                 </span>
                 <span className="px-1.5 py-0.2 bg-sky-500 text-white rounded text-[9px] font-black uppercase tracking-wider shrink-0">
-                  Verified
+                  {t('verified', 'Verified')}
                 </span>
               </div>
               <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
@@ -552,7 +549,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition-all flex items-center gap-1.5 shrink-0"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>Join</span>
+            <span>{t('joinTelegram', 'Join')}</span>
           </a>
         </div>
       </section>

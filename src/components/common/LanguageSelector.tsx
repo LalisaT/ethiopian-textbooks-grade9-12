@@ -32,14 +32,15 @@ export const LanguageSelector: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1.5 h-9 px-2.5 rounded-xl text-xs font-bold luxury-pressable transition-all cursor-pointer ${
+        className={`flex items-center gap-1 sm:gap-1.5 h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl text-xs font-bold luxury-pressable transition-all cursor-pointer shrink-0 ${
           isOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
         }`}
         title="Change Language"
+        aria-label="Change Language"
       >
-        <Globe className={`w-3.5 h-3.5 shrink-0 ${isOpen ? 'text-sky-300' : 'text-sky-400'}`} />
+        <Globe className={`w-3.5 h-3.5 shrink-0 ${isOpen ? 'text-white dark:text-sky-300' : 'text-blue-600 dark:text-sky-400'}`} />
         <span className="hidden sm:inline font-semibold">{currentLang.native}</span>
-        <span className={`font-black text-[10px] tracking-wider uppercase ${isOpen ? 'text-white' : 'text-sky-400'}`}>
+        <span className={`font-black text-[10px] tracking-wider uppercase ${isOpen ? 'text-white' : 'text-blue-600 dark:text-sky-400'}`}>
           {currentLang.code}
         </span>
       </button>

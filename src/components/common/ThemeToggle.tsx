@@ -26,12 +26,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
       {/* Mobile Single Compact Cycle Button */}
       <button
         onClick={cycleTheme}
-        className="sm:hidden w-9 h-9 rounded-xl btn-luxury-idle luxury-pressable transition-all flex items-center justify-center cursor-pointer"
+        className="sm:hidden w-8 h-8 rounded-xl btn-luxury-idle luxury-pressable transition-all flex items-center justify-center cursor-pointer shrink-0"
         title={`Theme: ${theme}. Tap to change.`}
+        aria-label={`Theme: ${theme}. Tap to change.`}
       >
-        {theme === 'light' && <Sun className="w-4 h-4 text-amber-400" />}
-        {theme === 'dark' && <Moon className="w-4 h-4 text-sky-400" />}
-        {theme === 'sepia' && <Eye className="w-4 h-4 text-amber-500" />}
+        {theme === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
+        {theme === 'dark' && <Moon className="w-4 h-4 text-blue-600 dark:text-sky-400" />}
+        {theme === 'sepia' && <Eye className="w-4 h-4 text-amber-600" />}
       </button>
 
       {/* Desktop / Tablet 3-state Segmented Control */}

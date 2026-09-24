@@ -95,12 +95,13 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           setIsOpen(!isOpen);
           refreshNotifs();
         }}
-        className={`relative w-9 h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer ${
+        className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl transition-all flex items-center justify-center luxury-pressable cursor-pointer shrink-0 ${
           isOpen ? 'btn-luxury-active' : 'btn-luxury-idle'
         }`}
         title="App & Study Notifications"
+        aria-label="App & Study Notifications"
       >
-        <Bell className={`w-4 h-4 ${isOpen ? 'text-sky-300' : 'text-slate-300'}`} />
+        <Bell className={`w-4 h-4 ${isOpen ? 'text-white dark:text-sky-300' : 'text-slate-600 dark:text-slate-300'}`} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>

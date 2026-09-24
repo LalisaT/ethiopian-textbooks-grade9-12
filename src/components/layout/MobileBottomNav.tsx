@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, BookOpen, Award, Bookmark, Info } from 'lucide-react';
+import { useTranslation } from '../../i18n/useTranslation';
 
 interface MobileBottomNavProps {
   activeTab: 'home' | 'explore' | 'examprep' | 'community' | 'saved' | 'about' | 'curriculum';
@@ -12,23 +13,25 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   setActiveTab,
   offlineCount,
 }) => {
+  const { t } = useTranslation();
+
   const tabs = [
-    { id: 'home' as const, label: 'Home', icon: Home },
-    { id: 'explore' as const, label: 'Textbooks', icon: BookOpen },
-    { id: 'examprep' as const, label: 'EUEE', icon: Award, highlight: true },
+    { id: 'home' as const, label: t('home'), icon: Home },
+    { id: 'explore' as const, label: t('textbooks', 'Textbooks'), icon: BookOpen },
+    { id: 'examprep' as const, label: t('eueeHub', 'EUEE'), icon: Award, highlight: true },
     {
       id: 'saved' as const,
-      label: 'Saved',
+      label: t('savedBooks', 'Saved'),
       icon: Bookmark,
       badge: offlineCount > 0 ? offlineCount : undefined,
     },
-    { id: 'about' as const, label: 'About', icon: Info },
+    { id: 'about' as const, label: t('aboutApp', 'About'), icon: Info },
   ];
 
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0B1120]/95 backdrop-blur-2xl border-t border-slate-800/80 shadow-[0_-4px_25px_rgba(0,0,0,0.7)] transition-all px-2 py-1.5"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-2xl border-t border-slate-200 dark:border-slate-800/80 shadow-[0_-4px_25px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.7)] transition-all px-2 py-1.5"
       style={{
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)',
       }}
@@ -70,8 +73,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               }}
               className={`relative flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all duration-150 active:scale-90 min-w-[50px] sm:min-w-[58px] ${
                 isActive
-                  ? 'text-sky-400 font-extrabold'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'text-sky-600 dark:text-sky-400 font-extrabold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <div className="relative">

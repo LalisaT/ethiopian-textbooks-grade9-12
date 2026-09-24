@@ -24,6 +24,7 @@ import { PwaInstallPrompt } from './components/common/PwaInstallPrompt';
 import { PushNotificationBanner } from './components/common/PushNotificationBanner';
 import { NotificationDetailModal } from './components/common/NotificationDetailModal';
 import { AppNotification, NotificationService, initNativeNotifications } from './services/notificationService';
+import { PostService } from './services/postService';
 import { AdminWebLoginPage } from './components/admin/AdminWebLoginPage';
 import { ShareAppModal } from './components/common/ShareAppModal';
 import { ExitConfirmModal } from './components/common/ExitConfirmModal';
@@ -116,7 +117,13 @@ export const App: React.FC = () => {
   const [isAllSystemDeleted, setIsAllSystemDeleted] = useState<boolean>(() => DbService.isAllSystemBooksDeleted());
   const [storageUsage, setStorageUsage] = useState({ usedBytes: 0, usedMb: 0, totalBooksCount: 0 });
 
-  const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>('dark');
+  const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>(() => {
+    try {
+      const saved = StorageService.getSettings().theme;
+      if (saved === 'light' || saved === 'dark' || saved === 'sepia') return saved;
+    } catch {}
+    return 'dark';
+  });
 
   const [offlineBookIds, setOfflineBookIds] = useState<string[]>(() => {
     return StorageService.getOfflineBookIds();
@@ -162,6 +169,9 @@ export const App: React.FC = () => {
       setActivePushNotification(newAlert);
     });
 
+    // Real-time Firestore Posts Listener (ensures community bulletins and posts are always synced on mobile)
+    const unsubscribePosts = PostService.subscribeToPosts(() => {});
+
     // Initialize native Android & iOS push notification channels, FCM, and background alarms
     initNativeNotifications((tappedNotif) => {
       if (tappedNotif) {
@@ -175,6 +185,7 @@ export const App: React.FC = () => {
 
     return () => {
       unsubscribeBroadcast();
+      unsubscribePosts();
       window.removeEventListener('focus', handleSync);
       window.removeEventListener('visibilitychange', handleSync);
       window.removeEventListener('storage', handleSync);
@@ -223,13 +234,24 @@ export const App: React.FC = () => {
   // Sync Theme with DOM
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.add('dark');
-    if (theme === 'sepia') {
+    const body = document.body;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('theme-sepia', 'theme-light');
+      body.classList.add('dark');
+      body.classList.remove('theme-sepia', 'theme-light');
+    } else if (theme === 'light') {
+      root.classList.remove('dark', 'theme-sepia');
+      root.classList.add('theme-light');
+      body.classList.remove('dark', 'theme-sepia');
+      body.classList.add('theme-light');
+    } else if (theme === 'sepia') {
+      root.classList.remove('dark', 'theme-light');
       root.classList.add('theme-sepia');
-    } else {
-      root.classList.remove('theme-sepia');
+      body.classList.remove('dark', 'theme-light');
+      body.classList.add('theme-sepia');
     }
-    StorageService.saveSettings({ theme: 'dark' });
+    StorageService.saveSettings({ theme });
   }, [theme]);
 
   // Admin Login / Logout Trigger
