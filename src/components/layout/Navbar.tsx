@@ -59,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'home' as const, label: t('home'), icon: BookOpen },
-    { id: 'explore' as const, label: t('textbooks', 'Textbooks'), icon: Compass },
+    { id: 'explore' as const, label: t('books', 'Books'), icon: Compass },
     { id: 'teacher_guides' as const, label: t('teacherGuides', "Teacher's Guides"), icon: GraduationCap },
     { id: 'examprep' as const, label: t('eueeHub', 'EUEE Hub'), icon: Award },
     {
@@ -88,28 +88,28 @@ export const Navbar: React.FC<NavbarProps> = ({
       className="sticky top-0 z-40 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/80 text-slate-900 dark:text-white transition-colors"
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
-      {/* Top Professional Luxury Flowing Accent Stripe */}
-      <div className="h-[2px] w-full luxury-flow-line" />
+      {/* Top Professional Glowing Accent Stripe */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 shadow-[0_0_10px_rgba(56,189,248,0.7)]" />
 
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0 pr-1">
             <div
-              className="flex items-center gap-2 sm:gap-3 cursor-pointer group min-w-0"
+              className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group min-w-0"
               onClick={() => setActiveTab('home')}
             >
-              <div className="shrink-0 scale-90 sm:scale-100">
+              <div className="shrink-0">
                 <BrandLogo size="md" />
               </div>
               <div className="min-w-0">
-                <span className="font-black text-slate-900 dark:text-white text-xs sm:text-base lg:text-lg tracking-tight leading-tight block truncate max-w-[180px] xs:max-w-none">
+                <span className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base lg:text-lg tracking-tight leading-tight block truncate">
                   Ethiopian Textbooks
                 </span>
-                <div className="hidden xs:flex items-center gap-1 text-[9px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mt-0.5">
-                  <span className="text-blue-600 dark:text-sky-400 font-black">Grades 9–12</span>
-                  <span className="text-slate-300 dark:text-slate-600">•</span>
-                  <span className="truncate">EUEE &amp; Guides</span>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-bold leading-none mt-0.5 whitespace-nowrap">
+                  <span className="text-sky-500 dark:text-sky-400 font-black">Grades 9–12</span>
+                  <span className="text-slate-400 dark:text-slate-500">•</span>
+                  <span className="text-slate-600 dark:text-slate-300 font-medium">EUEE &amp; Guides</span>
                 </div>
               </div>
             </div>
@@ -198,8 +198,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex items-center gap-2.5">
                   <BrandLogo size="sm" />
                   <div>
-                    <h3 className="font-black text-sm text-slate-900 dark:text-white">Ethiopian Textbooks</h3>
-                    <p className="text-[10px] text-blue-600 dark:text-sky-400 font-bold">{t('menu', 'Menu')}</p>
+                    <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">Ethiopian Textbooks</h3>
+                    <div className="flex items-center gap-1 text-[10px] font-bold mt-0.5 whitespace-nowrap">
+                      <span className="text-sky-500 dark:text-sky-400 font-black">Grades 9–12</span>
+                      <span className="text-slate-400 dark:text-slate-500">•</span>
+                      <span className="text-slate-600 dark:text-slate-300 font-medium">EUEE &amp; Guides</span>
+                    </div>
                   </div>
                 </div>
                 <button

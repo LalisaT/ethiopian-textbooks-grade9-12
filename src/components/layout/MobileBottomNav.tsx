@@ -17,7 +17,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
   const tabs = [
     { id: 'home' as const, label: t('home'), icon: Home },
-    { id: 'explore' as const, label: t('textbooks', 'Textbooks'), icon: BookOpen },
+    { id: 'explore' as const, label: t('books', 'Books'), icon: BookOpen },
     { id: 'examprep' as const, label: t('eueeHub', 'EUEE'), icon: Award, highlight: true },
     {
       id: 'saved' as const,

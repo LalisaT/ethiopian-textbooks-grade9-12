@@ -13,7 +13,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 }) => {
   const dimensions = {
     sm: 'w-8 h-8 rounded-xl',
-    md: 'w-10 h-10 rounded-2xl',
+    md: 'w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl',
     lg: 'w-12 h-12 rounded-2xl',
     xl: 'w-16 h-16 rounded-3xl',
   }[size];
@@ -31,7 +31,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src="/brand/app-icon.jpg"
         alt="Ethiopian Textbooks Logo"
-        className={`${dimensions} object-cover shadow-md relative z-10 transition-transform group-hover:scale-105 duration-200`}
+        className={`${dimensions} object-cover shadow-md border border-slate-700/40 dark:border-slate-700/60 relative z-10 transition-transform group-hover:scale-105 duration-200`}
       />
     </div>
   );
